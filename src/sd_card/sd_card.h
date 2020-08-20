@@ -12,6 +12,10 @@
 #include "../stepper_motor/stepper_motor.h"
 #include "../accell_gyro/accell_gyro.h"
 
+#ifndef USE_SD_CARD
+    #define USE_SD_CARD true
+#endif
+
 #define SD_CS_PIN 53                //SPI Chip Select Pin
 #define DEL_FILE_ON_OPEN false      //Delete the file before it is opened
 #define LOG_FILE_SIZE 0 //768           //Size of the split files - If 0 then it wont be split

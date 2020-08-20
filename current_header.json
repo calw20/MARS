@@ -12,11 +12,11 @@
         "post_guard": "",
         "pre_footer": ""
     },
-    "build_date": "20-08-20 - 12:50:42",
+    "build_date": "20-08-20 - 13:55:46",
     "build_version": [
         0,
         4,
-        4,
+        31,
         "Alpha"
     ],
     "other_headers": [
@@ -30,6 +30,18 @@
         ],
         [
             "PRINT_PRAGMA_MESSAGES",
+            false
+        ],
+        [
+            "USE_ACCELL",
+            false
+        ],
+        [
+            "USE_PRESSURE_SENSOR",
+            false
+        ],
+        [
+            "USE_SD_CARD",
             false
         ]
     ]

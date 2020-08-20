@@ -84,23 +84,31 @@ float PressureSensor::genSeaLevelPressure(){
 bool PressureSensor::init(){
     //Cry, I mean error out if the BMP280 is not initalized
     DBG_FPRINTLN("Initalizing BMP280...");
-    if (!BMP280.begin()) {
-        DBG_FPRINTLN("Could not find a valid BMP280 sensor, check wiring!");
-        CRITICAL_FAIL();
-    }
-    DBG_FPRINTLN("BMP280 Initialized.");
+    #if USE_PRESSURE_SENSOR
+        if (!BMP280.begin()) {
+            DBG_FPRINTLN("Could not find a valid BMP280 sensor, check wiring!");
+            CRITICAL_FAIL();
+        }
+        DBG_FPRINTLN("BMP280 Initialized.");
+        
+        //Setup the BMP280
+        //Default settings from datasheet
+        DBG_FPRINTLN("Configuring BMP280");
+        BMP280.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+                        Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                        Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                        Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                        Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+        DBG_FPRINTLN("Configured BMP280");
+        sea_level_pressure = SEA_LEVEL_PRESSURE;
+    #else
+        sea_level_pressure = 1;
+        DBG_FPRINTLN("Hardware disabled in settings!");
+        minorFailure(__FUNCTION__, __FILE__, __LINE__);
+    #endif
 
-    //Setup the BMP280
-    //Default settings from datasheet
-    DBG_FPRINTLN("Configuring BMP280");
-    BMP280.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
-                       Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
-                       Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
-                       Adafruit_BMP280::FILTER_X16,      /* Filtering. */
-                       Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
-    DBG_FPRINTLN("Configured BMP280");
 
-    sea_level_pressure = SEA_LEVEL_PRESSURE;
+    
     DBG_FPRINTFN("Sea Level Pressure set to: ", "%.3f", sea_level_pressure);
     return true;
 }
@@ -113,8 +121,12 @@ void PressureSensor::printDebug(String printValues){
         
     if (CHK_LETTER("H")) DBG_FPRINTLN("===================== Pressure Sensor Info =====================");
     
+    DBG_FPRINT("fhgkhjgkfjhgkjh");
+
     //BMP280
-    bool bmpAvailable = (BMP280.getStatus() != 255); //Check that the BMP280 is connected and initialized
+    bool bmpAvailable = (USE_PRESSURE_SENSOR && BMP280.getStatus() != 255); //Check that the BMP280 is connected and initialized
+    DBG_FPRINT("fhgkhjgkfjhgkjh");
+
     //Sensor Catch
     if (!bmpAvailable && (CHK_LETTER("B") || CHK_LETTER("P") || CHK_LETTER("A") || CHK_LETTER("D")))
         DBG_FPRINTLN("BMP280 is not detected. Check wiring!");

@@ -30,7 +30,12 @@ File SDCardAdapter::openFile(char* logFileName, bool delFileOnOpen){
     File LocalFile = sdCard.open(logFileName, O_WRITE | O_CREAT);
     if (!LocalFile) {
         DBG_FPRINT_SVLN("Could not open file: ", logFileName);
-        CRITICAL_FAIL();
+        #if USE_SD_CARD
+            CRITICAL_FAIL();
+        #else
+             DBG_FPRINTLN("Hardware disabled in settings!");
+            minorFailure(__FUNCTION__, __FILE__, __LINE__);
+        #endif
     }
     DBG_FPRINT_SVLN("Successfully opened file: ", logFileName);
     return LocalFile;
@@ -39,9 +44,12 @@ File SDCardAdapter::openFile(char* logFileName, bool delFileOnOpen){
 
 bool SDCardAdapter::init(){
     DBG_FPRINTLN("Initalizing SD Card...");
-    if (!sdCard.begin(SD_CS_PIN)) {
+    if (!sdCard.begin(SD_CS_PIN) && USE_SD_CARD) {
         DBG_FPRINTLN("Could not find a valid SD Card, check wiring!");
         CRITICAL_FAIL();
+    } else if (!USE_SD_CARD){
+        DBG_FPRINTLN("Hardware disabled in settings!");
+        minorFailure(__FUNCTION__, __FILE__, __LINE__);
     }
     DBG_FPRINTLN("SD Card Initialized.");
    

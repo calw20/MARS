@@ -9,6 +9,9 @@
 #include <Wire.h>
 #include <Adafruit_BMP280.h>
 
+#ifndef USE_PRESSURE_SENSOR
+    #define USE_PRESSURE_SENSOR true
+#endif
 
 #ifndef ALT_SAMPLE_COUNT
     #define ALT_SAMPLE_COUNT 10

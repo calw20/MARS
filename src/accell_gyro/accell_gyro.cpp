@@ -9,11 +9,20 @@ bool AccellGyro::init(){
 
     DBG_FPRINTLN("Attemping to start Accell/Gyro Hardware...");
     AccellGyroSensor.initialize();
-    DBG_FPRINTLN("Hardware started.");
+    #if USE_ACCELL
+        DBG_FPRINTLN("Hardware started.");
+    #else
+        DBG_FPRINTLN("Hardware disabled in settings!");
+    #endif
     
     if (!AccellGyroSensor.testConnection()) {
         DBG_FPRINTLN("Could not connect to Accell/Gyro, check wiring!");
-        CRITICAL_FAIL();
+        
+        #if USE_ACCELL
+            CRITICAL_FAIL();
+        #else
+            minorFailure(__FUNCTION__, __FILE__, __LINE__);
+        #endif
     }
     DBG_FPRINTLN("Accell/Gyro Initialized.");
    

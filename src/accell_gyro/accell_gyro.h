@@ -10,6 +10,10 @@
 #include "MPU6050.h"
 #include <Wire.h>
 
+#ifndef USE_ACCELL
+    #define USE_ACCELL true
+#endif
+
 
 class AccellGyro : public CrashableModule {
     public:

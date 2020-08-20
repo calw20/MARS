@@ -7,13 +7,26 @@ bool FanController::init(){
     pinMode(STEP_DIREC_PIN, OUTPUT); //StepMC Direction Pin
     pinMode(STEP_ENABL_PIN, OUTPUT); //StepMC Enable Pin
     */
-    DBG_FPRINT("Initializing Fan Controllers...");
-    ESC.attach(ESC_PIN,1000,2000);
-    DBG_FPRINT("Arming Fan Controllers...");
-    ESC.setSpeed(0);
-    DBG_FPRINT("Please Wait...");
-    delay(1500); //Wait for amring
-    DBG_FPRINT("Armed and Operational.");
+    DBG_FPRINTLN("Initializing Fan Controllers...");
+        ESC.attach(ESC_PIN,1000,2000);
+    
+    DBG_FPRINTLN("Arming Fan Controllers...");
+        setSpeed(0);
+    
+    #if DO_DEBUG
+        DBG_FPRINT("Please Wait");
+            delay(400);
+        DBG_FPRINT(".");
+            delay(400);
+        DBG_FPRINT(".");
+            delay(400);
+        DBG_FPRINT(".");
+            delay(300);
+    #else
+        delay(1500); //Wait for amring
+    #endif
+    DBG_FPRINTLN("Armed and Operational.");
+    
     DBG_FPRINT("Initialized Fan Controllers.");
 
     return true;
