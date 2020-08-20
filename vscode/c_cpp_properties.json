@@ -1,0 +1,23 @@
+{
+    "env":{
+        "otherIncludePaths": [
+			"${env:userprofile}\\Documents\\Arduino\\libraries\\**",
+			"${workspaceFolder}\\src\\**"
+		]
+    },
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:\\Program Files (x86)\\Arduino\\tools\\**",
+                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",
+                "${otherIncludePaths}"
+            ],
+            "forcedInclude": [
+                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
+            ],
+            "intelliSenseMode": "msvc-x64"
+        }
+    ],
+    "version": 4
+}
