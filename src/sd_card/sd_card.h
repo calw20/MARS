@@ -21,7 +21,8 @@
 #define FORCE_WRITE_CYCLES 100      //How many cycles need to happen before a write is forced
 #define ROLL_TO_NEXT_FILE false      //!Should every boot have its own file?
 
-#define MAX_FLIGHT_DATA_STRING_SIZE 128
+//128
+#define MAX_FLIGHT_DATA_STRING_SIZE 256
 
 //Update to the log file name
 #define SET_LOG_FILE_NUM(fileNum) \
@@ -56,7 +57,7 @@ class SDCardAdapter : public CrashableModule {
         u8 currentFileCount = 0;
         char logFileName[20];
         u8 writeCycle = 0;
-
+        
         PressureSensor* prsSensor;
         StepperMotor* stpMotor;
         AccellGyro* acGyro;

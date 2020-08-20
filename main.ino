@@ -6,6 +6,7 @@
 #include "src/stepper_motor/stepper_motor.h"
 #include "src/sd_card/sd_card.h"
 #include "src/accell_gyro/accell_gyro.h"
+#include "src/fan_controllers/fan_controllers.h"
 
 //Define some noice things to have
 //^You really should only have to change these...
@@ -16,6 +17,7 @@ PressureSensor pressureSensor(MARS_RootModule);
 SDCardAdapter sdCard(MARS_RootModule);
 StepperMotor sandwitch(MARS_RootModule);
 AccellGyro accellGyro(MARS_RootModule);
+FanController fanController(MARS_RootModule);
 
 /*
 void mainAirLoop(){
@@ -96,15 +98,26 @@ void setup(){
 
     DBG_FPRINTLN("System is setup and configured!");
 
-    mainAirLoop();
+    //mainAirLoop();
 
+    while(1){
+        for(int i = 0; i<=180; i++){
+            fanController.setSpeed(i);
+            delay(100);
+        }
+        for(int i = 180; i>=0; i--){
+            fanController.setSpeed(i);
+            delay(100);
+        }
+    }
 
+    /*
     while(1){
         //sdCard.writeCSVData();
         pressureSensor.updateAltPressure();
         accellGyro.getMotion();
         sdCard.printCSVData(true);
-    }
+    }*/
     
 }
 
