@@ -1,0 +1,6 @@
+/.vscode
+genHeaders.py
+/arduino-files
+build_headers.h
+*.code-workspace
+*-ncomp*
