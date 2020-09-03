@@ -10,6 +10,10 @@
 #include <Servo.h>
 
 #define ESC_PIN 9
+#define UPPER_SERVO_MAP 180
+#define LOWER_SERVO_MAP 0
+#define UPPER_D_ESC_MAP 180
+#define LOWER_D_ESC_MAP 0
 
 class FanController : public CrashableModule {
     public:
@@ -22,10 +26,16 @@ class FanController : public CrashableModule {
     public:
         void setSpeed(int steps);
         int  getSpeed();
+        void testRunLoop();
+
+    public:
+        int upperESCmap = UPPER_D_ESC_MAP;
+        int lowerESCmap = LOWER_D_ESC_MAP;
 
     private:
         Servo ESC;
-        int currentSpeed = 0;      
+        int currentSpeed = 0;
+
 };
 
 #endif

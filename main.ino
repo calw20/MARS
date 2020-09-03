@@ -98,8 +98,10 @@ void setup(){
 
     DBG_FPRINTLN("System is setup and configured!");
 
-    //mainAirLoop();
+    fanController.testRunLoop();
 
+    //mainAirLoop();
+    /*
     while(1){
         for(int i = 0; i<=180; i++){
             DBG_FPRINT_SVLN("Speed: ", i);
@@ -111,7 +113,7 @@ void setup(){
             fanController.setSpeed(i);
             delay(100);
         }
-    }
+    }*/
 
     /*
     while(1){
