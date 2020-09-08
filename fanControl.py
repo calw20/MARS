@@ -12,8 +12,9 @@ def limitToDigit(P):
 
 
 def update_values():
-    upperESClimitInput.set(upperESClimit)
-    lowerESClimitInput.set(lowerESClimit)
+    pass
+    #upperESClimitInput.set(upperESClimit)
+    #lowerESClimitInput.set(lowerESClimit)
 
 def send_values():
     print("Sending Values: V{}, U{}, L{}".format(fanSpeed, lowerESClimit, upperESClimit))
@@ -23,7 +24,7 @@ def get_values():
 
 root = tk.Tk()
 root.title("MARS Fan Speed Control Software V1.0")
-tk.Label(root, text="MARS Fan Speed Control Software V1.0").grid(row=0, columnspan = 3)
+tk.Label(root, text="MARS Fan Speed Control Software V1.0").grid(row=0, columnspan = 2)
 tk.Label(root, text="Fan Speed").grid(row=1)
 tk.Label(root, text="Fan Speed").grid(row=2)
 tk.Label(root, text="Upper Limit").grid(row=3)
@@ -36,7 +37,8 @@ lowerESClimitInput = tk.Entry(root, validate='all', validatecommand=(root.regist
 
 tk.Button(root, text='Send Fan Speed to Arduino', command=send_values).grid(row=5, column=0, sticky=tk.W, pady=4)
 tk.Button(root, text='Get Fan Speed from Arduino', command=get_values).grid(row=5, column=1, sticky=tk.W, pady=4)
-tk.Button(root, text='Quit', command=root.quit).grid(row=5, column=2, sticky=tk.W, pady=4)
+tk.Button(root, text='Reset Fan Speed Settings on Arduino', command=root.quit).grid(row=6, column=0, sticky=tk.W, pady=4)
+tk.Button(root, text='Quit', command=root.quit).grid(row=6, column=1, sticky=tk.W, pady=4)
 
 #Grab Values
 get_values()
