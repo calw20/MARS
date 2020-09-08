@@ -284,7 +284,7 @@ if ($null -eq $boards[0].address){
 } else {
     Write-Output ("Found a " + $boards[0].boards.name + " on " + $boards[0].address)
     $serialPort = "--port " + $boards[0].address
-    $boardType = "--board " + $boards[0].boards.FQBN;
+    if ($null-eq $boardType) $boardType = "--board " + $boards[0].boards.FQBN;
 }
 
 #5) Run PreBuild
