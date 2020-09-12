@@ -54,11 +54,12 @@ void FanController::printDebug(String printValues){
 
 int FanController::getSpeed(){
     //[TODO] Make Consts - The inverse of below
-    return map(currentSpeed, 0, 180, 0, 180);
+    return map(currentSpeed, LOWER_SERVO_MAP, UPPER_SERVO_MAP, lowerESCmap, upperESCmap);
 }
 
 void FanController::setSpeed(int newSpeed){
     //[TODO] Make Consts
-    currentSpeed = map(newSpeed, 0, 180, 0, 180);
+    currentSpeed = map(newSpeed, lowerESCmap, upperESCmap, LOWER_SERVO_MAP, UPPER_SERVO_MAP);
+    DBG_FPRINT_SVLN("New FanSpeed: ", currentSpeed);
     ESC.write(currentSpeed);
 }
