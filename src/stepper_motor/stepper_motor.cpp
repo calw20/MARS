@@ -10,7 +10,7 @@ bool StepperMotor::init(){
     //is the sandwich rotateing.... (•‿•)
     digitalWrite(STEP_ENABL_PIN, HIGH);
     maxFilterNumber = sizeof(filterHeights)/sizeof(*filterHeights);
-    parent->data.maxFilterNumber = maxFilterNumber;
+    marsRoot->data.maxFilterNumber = maxFilterNumber;
     return true;
 }
 
@@ -81,6 +81,6 @@ void StepperMotor::nextFilter(u8& currentFilter){
 }
 
 bool StepperMotor::updatePayloadData(bool forceDataUpdate){
-    parent->data.currentFilter = getCurrentFilter();
+    marsRoot->data.currentFilter = getCurrentFilter();
     return true;
 }

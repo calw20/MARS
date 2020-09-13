@@ -89,8 +89,7 @@ void AccellGyro::getMotion(){
 
 bool AccellGyro::updatePayloadData(bool forceDataUpdate){
     if (forceDataUpdate) getMotion();
-    parent->data.a = a;
-    parent->data.g = g;
-    
+    marsRoot->data.a = a;
+    marsRoot->data.g = g;
     return true;
 };

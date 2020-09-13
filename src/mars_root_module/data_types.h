@@ -107,6 +107,7 @@ struct payloadData {
     bool rotateOnButton;
     bool rotateOnAltitude;
 
+    /* Not Needed
     void update(fStoredData prs, fStoredData alt, i16V3d accell, i16V3d gyro,
          bool hApg, bool rob, bool roa){
         pressure = prs;
@@ -116,7 +117,7 @@ struct payloadData {
         hitApogee = hApg;
         rotateOnButton = rob;
         rotateOnAltitude = roa;
-    }
+    }*/
 };
 
 #endif

@@ -58,4 +58,41 @@ void RootModule::printDebug(String printValues){
 
 }
 
-bool MARSCrashableModule::updatePayloadData(bool forceDataUpdate){};
+bool RootModule::updatePayloadData(bool forceDataUpdate){
+    for (int i = 0; i < (sizeof(modules)/sizeof(modules[0])); i++){
+        if (modules[i]){
+            modules[i]->updatePayloadData(forceDataUpdate);
+        }
+    }
+    return true;
+}
+
+bool RootModule::addModule(MARSCrashableModule &module){
+    for (int i = 0; i < (sizeof(modules)/sizeof(modules[0])); i++){
+        if (!modules[i]) {
+            modules[i] = &module;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool RootModule::addModule(MARSCrashableModule &module, int id){
+    if (id >= sizeof(modules)/sizeof(modules[0]))
+        return false;
+
+    modules[id] = &module;
+    return true;
+}
+
+bool MARSCrashableModule::updatePayloadData(bool forceDataUpdate){
+    return true;
+}
+
+MARSCrashableModule::MARSCrashableModule(RootModule &uncrashableParent, bool addSelfToParent)
+        : CrashableModule((UnCrashable&) uncrashableParent, addSelfToParent) {
+    
+    marsRoot = &uncrashableParent;
+    //pData = &uncrashableParent.data;
+    if (addSelfToParent) marsRoot->addModule(*this); //Add itself to the parent.
+}

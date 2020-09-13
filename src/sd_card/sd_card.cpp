@@ -44,7 +44,6 @@ File SDCardAdapter::openFile(char* logFileName, bool delFileOnOpen){
 
 bool SDCardAdapter::init(){
     DBG_FPRINTLN("Initalizing SD Card...");
-        pData = &(parent->data);
     if (!sdCard.begin(SD_CS_PIN) && USE_SD_CARD) {
         DBG_FPRINTLN("Could not find a valid SD Card, check wiring!");
         CRITICAL_FAIL();
@@ -59,10 +58,10 @@ bool SDCardAdapter::init(){
 
 bool SDCardAdapter::initFlightDataFile(PressureSensor &prsSensorModule, 
     StepperMotor &sandwitchMotorModule, AccellGyro &accellGyroModule){
-    
-    prsSensor = &prsSensorModule;
-    stpMotor = &sandwitchMotorModule;
-    acGyro = &accellGyroModule;
+       
+    PressureSensor* prsSensor = &prsSensorModule;
+    StepperMotor* stpMotor = &sandwitchMotorModule;
+    AccellGyro* acGyro = &accellGyroModule;
     
     //Attempt to open the file
     SET_LOG_FILE_NUM(0);
@@ -89,41 +88,30 @@ bool SDCardAdapter::initFlightDataFile(PressureSensor &prsSensorModule,
     return true;
 }
 
-int SDCardAdapter::genCSVData(bool doUpdate){    
-    return sprintf(fmtedFlightData, /*sizeof(fmtFlightData),*/
-        "%lu,%f,%f,%hi,%hi,%hi,%hi,%hi,%hi,%f,%f", 
-        millis(), prsSensor->pressure[0], prsSensor->altitude[0],
-        acGyro->ax, acGyro->ay, acGyro->az,
-        acGyro->gx, acGyro->gy, acGyro->gz,
-        prsSensor->readTemperature(), stpMotor->getCurrentFilter()
+int SDCardAdapter::genCSVData(bool pollNewData, bool forceDataUpdate){
+    if (pollNewData) marsRoot->updatePayloadData(forceDataUpdate);
+    return sprintf(fmtedFlightData, "%lu,%f,%f,%hi,%hi,%hi,%hi,%hi,%hi,%f,%u",
+        millis(), marsRoot->data.pressure[0], marsRoot->data.altitude[0],
+        marsRoot->data.a.x, marsRoot->data.a.y, marsRoot->data.a.z,
+        marsRoot->data.g.x, marsRoot->data.g.y, marsRoot->data.g.z,
+        marsRoot->data.temp[0], marsRoot->data.currentFilter
     );
 }
 
-void SDCardAdapter::printCSVData(bool doUpdate){
-    //acGyro->getMotion();
-    /*
-    printfn(Serial, "%lu,%f,%f,%hi,%hi,%hi,%hi,%hi,%hi,%f,%f", 
-        millis(), prsSensor->pressure[0], prsSensor->altitude[0],
-        acGyro->ax, acGyro->ay, acGyro->az,
-        acGyro->gx, acGyro->gy, acGyro->gz,
-        prsSensor->readTemperature(), stpMotor->getCurrentFilter()
-    );*/
+/*
+int SDCardAdapter::genCSVData(bool pollNewData) {
+    return genCSVData(pollNewData, false);
+}*/
 
-    if (doUpdate) genCSVData();
+void SDCardAdapter::printCSVData(bool doUpdate, bool forceDataUpdate){
+    genCSVData(doUpdate, forceDataUpdate);
     Serial.println(fmtedFlightData);
 }
 
 void SDCardAdapter::writeCSVData(){
-    //! Nope we are just going to print the data //Get the accell/gyro data
-    //acGyro->getMotion();
+    genCSVData(false);
+    FlightDataFile.println(fmtedFlightData);
 
-    printfn(FlightDataFile, "%lu,%f,%f,%hi,%hi,%hi,%hi,%hi,%hi,%f,%f", 
-        millis(),prsSensor->pressure[1], prsSensor->altitude[0],
-        acGyro->ax, acGyro->ay, acGyro->az,
-        acGyro->gx, acGyro->gy, acGyro->gz,
-        prsSensor->readTemperature(), stpMotor->getCurrentFilter()
-    );
-    
     //Only force a write to the card every FORCE_WRITE_CYCLES cycles
     //This is to ensure we actually have the data
     writeCycle++;

@@ -50,8 +50,9 @@ class SDCardAdapter : public MARSCrashableModule {
     public:
         bool initFlightDataFile(PressureSensor &prsSensorModule, StepperMotor &sandwitchMotorModule, AccellGyro &accellGyroModule);
         void writeCSVData();
-        void printCSVData(bool doUpdate = false);
-        int genCSVData(bool doUpdate = true);
+        void printCSVData(bool doUpdate = false, bool forceDataUpdate = false);
+        //int genCSVData(bool pollNewData = true);
+        int genCSVData(bool pollNewData = true, bool forceDataUpdate = false);
 
     public:
         char fmtedFlightData[MAX_FLIGHT_DATA_STRING_SIZE];
@@ -64,11 +65,6 @@ class SDCardAdapter : public MARSCrashableModule {
         u8 currentFileCount = 0;
         char logFileName[20];
         u8 writeCycle = 0;
-        
-        PressureSensor* prsSensor;
-        StepperMotor* stpMotor;
-        AccellGyro* acGyro;
-
 };
 
 #endif

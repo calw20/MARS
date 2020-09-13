@@ -100,10 +100,9 @@ void setup(){
 
     //mainAirLoop();
     while(1){
-        //sdCard.writeCSVData();
-        pressureSensor.updateAltPressure();
-        accellGyro.getMotion();
-        sdCard.printCSVData(true);
+        MARS_RootModule.updatePayloadData(true);
+        sdCard.writeCSVData();
+        sdCard.printCSVData();
     }
     
 }

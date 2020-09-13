@@ -157,9 +157,9 @@ void PressureSensor::printDebug(String printValues){
 
 bool PressureSensor::updatePayloadData(bool forceDataUpdate){
     if (forceDataUpdate) updateTempAltPressure();
-    parent->data.pressure = pressure;
-    parent->data.altitude = altitude;
-    parent->data.temp     = temp;
+    marsRoot->data.pressure = pressure;
+    marsRoot->data.altitude = altitude;
+    marsRoot->data.temp     = temp;
     return true;
 }
 

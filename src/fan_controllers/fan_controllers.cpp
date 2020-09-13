@@ -3,8 +3,8 @@
 //Makes things look neater I guess?
 bool FanController::init(){
     DBG_FPRINTLN("Initializing Fan Controllers...");
-        parent->data.transFanSpeed[1] = LOWER_SERVO_MAP; //These dont change
-        parent->data.transFanSpeed[2] = UPPER_SERVO_MAP;
+        marsRoot->data.transFanSpeed[1] = LOWER_SERVO_MAP; //These dont change
+        marsRoot->data.transFanSpeed[2] = UPPER_SERVO_MAP;
         ESC.attach(ESC_PIN,1000,2000); //Init the ESC
     
     DBG_FPRINTLN("Arming Fan Controllers...");
@@ -63,10 +63,9 @@ void FanController::setSpeed(int newSpeed){
 }
 
 bool FanController::updatePayloadData(bool forceDataUpdate){
-    parent->data.transFanSpeed[0] = currentSpeed; 
-    parent->data.fanSpeed[0] = getSpeed();
-        parent->data.fanSpeed[1] = lowerESCmap;
-        parent->data.fanSpeed[2] = upperESCmap;
-
+    marsRoot->data.transFanSpeed[0] = currentSpeed; 
+    marsRoot->data.fanSpeed[0] = getSpeed();
+        marsRoot->data.fanSpeed[1] = lowerESCmap;
+        marsRoot->data.fanSpeed[2] = upperESCmap;
     return true;
 }
