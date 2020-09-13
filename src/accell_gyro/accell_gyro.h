@@ -5,6 +5,7 @@
 #include "../debug/debug.h"
 #include "../../payload_settings.h"
 #include "../mars_root_module/data_types.h"
+#include "../mars_root_module/mars_root_module.h"
 
 #include "I2Cdev.h"
 #include "MPU6050.h"
@@ -15,18 +16,22 @@
 #endif
 
 
-class AccellGyro : public CrashableModule {
+class AccellGyro : public MARSCrashableModule {
     public:
-        AccellGyro(UnCrashable &uncrashableParent, bool addSelfToParent = true) 
-            : CrashableModule(uncrashableParent, addSelfToParent) {};
+        AccellGyro(RootModule &uncrashableParent, bool addSelfToParent = true) 
+            : MARSCrashableModule(uncrashableParent, addSelfToParent) {};
         bool init() override;
         void genericError(const char* func, const char* file, u16 failLine) override;
         void printDebug(String = "AG") override;
+        bool updatePayloadData(bool forceDataUpdate) override;
 
     public:
         void getMotion();
 
     public:
+        i16V3d a; //Accelerometer Values
+        i16V3d g; //Gyro Values
+
         int16_t ax, ay, az; //Accelerometer Values
         int16_t gx, gy, gz; //Gyro Values
 

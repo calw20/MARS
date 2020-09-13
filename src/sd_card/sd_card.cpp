@@ -44,6 +44,7 @@ File SDCardAdapter::openFile(char* logFileName, bool delFileOnOpen){
 
 bool SDCardAdapter::init(){
     DBG_FPRINTLN("Initalizing SD Card...");
+        pData = &(parent->data);
     if (!sdCard.begin(SD_CS_PIN) && USE_SD_CARD) {
         DBG_FPRINTLN("Could not find a valid SD Card, check wiring!");
         CRITICAL_FAIL();
@@ -76,8 +77,8 @@ bool SDCardAdapter::initFlightDataFile(PressureSensor &prsSensorModule,
     FlightDataFile.println("Millis, Pressure, Altitude, Ax, Ay, Az, Gx, Gy, Gz, Temperature, Current Filter");
     printfn(FlightDataFile, "%lu,%f,%f,%hi,%hi,%hi,%hi,%hi,%hi,%f,%f", 
         millis(), prsSensor->readPressure(), prsSensor->readAltitude(),
-        acGyro->ax, acGyro->ay, acGyro->az,
-        acGyro->gx, acGyro->gy, acGyro->gz,
+        acGyro->a.x, acGyro->a.y, acGyro->a.z,
+        acGyro->g.x, acGyro->g.y, acGyro->g.z,
         prsSensor->readTemperature(), prsSensor->getSeaLevelPressure()
     );
 

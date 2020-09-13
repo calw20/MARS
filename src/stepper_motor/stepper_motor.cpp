@@ -10,6 +10,7 @@ bool StepperMotor::init(){
     //is the sandwich rotateing.... (•‿•)
     digitalWrite(STEP_ENABL_PIN, HIGH);
     maxFilterNumber = sizeof(filterHeights)/sizeof(*filterHeights);
+    parent->data.maxFilterNumber = maxFilterNumber;
     return true;
 }
 
@@ -77,4 +78,9 @@ void StepperMotor::nextFilter(u8& currentFilter){
     } else {
         DBG_FPRINTLN("Request to rotate, however already completed one full turn!");
     }
+}
+
+bool StepperMotor::updatePayloadData(bool forceDataUpdate){
+    parent->data.currentFilter = getCurrentFilter();
+    return true;
 }

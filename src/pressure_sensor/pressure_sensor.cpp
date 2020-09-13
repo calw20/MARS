@@ -25,15 +25,17 @@ float PressureSensor::readTemperature() {
 }
 
 void PressureSensor::updateAltPressure(){
-    //pressure.previous = pressure.current;
-    //pressure.current = readPressure();
-    
-    //altitude.previous = altitude.current;
-    //altitude.current = readAltitude();
-
     pressure = readPressure();
     altitude = readAltitude();
+}
 
+void PressureSensor::updateTemp(){
+    temp = readTemperature();
+}
+
+void PressureSensor::updateTempAltPressure() {
+    updateAltPressure();
+    updateTemp();
 }
 
 float PressureSensor::getPressure(){
@@ -46,10 +48,14 @@ float PressureSensor::getAltitude(){
     return altitude.current;
 }
 
+float PressureSensor::getTemp(){
+    updateTemp();
+    return temp.current;
+}
+
 float PressureSensor::getSeaLevelPressure() {
     return sea_level_pressure;
 }
-
 
 //Now the fun values.
 float PressureSensor::genSeaLevelPressure(){
@@ -120,12 +126,9 @@ void PressureSensor::printDebug(String printValues){
     if (CHK_LETTER("-H")) printValues = "B";
         
     if (CHK_LETTER("H")) DBG_FPRINTLN("===================== Pressure Sensor Info =====================");
-    
-    DBG_FPRINT("fhgkhjgkfjhgkjh");
 
     //BMP280
     bool bmpAvailable = (USE_PRESSURE_SENSOR && BMP280.getStatus() != 255); //Check that the BMP280 is connected and initialized
-    DBG_FPRINT("fhgkhjgkfjhgkjh");
 
     //Sensor Catch
     if (!bmpAvailable && (CHK_LETTER("B") || CHK_LETTER("P") || CHK_LETTER("A") || CHK_LETTER("D")))
@@ -135,17 +138,29 @@ void PressureSensor::printDebug(String printValues){
         DBG_FPRINTFN("Approximate Altitude: ", "%.3fm", readAltitude());
         DBG_FPRINTFN("Pressure at Sea Level: ", "%.3fhPa", sea_level_pressure);
         DBG_FPRINTFN("Pressure (hPa): ", "%.3fhpa", readPressure()/100);
-        DBG_FPRINTFN("Current (Stored) Altitude (hPa): ", "%.3fm", altitude.current);
+        DBG_FPRINTFN("Current (Stored) Altitude (hPa): ",  "%.3fm", altitude.current);
         DBG_FPRINTFN("Previous (Stored) Altitude (hPa): ", "%.3fm", altitude.previous);
     }
     //Pressure
     if (bmpAvailable && (CHK_LETTER("P") || CHK_LETTER("B")))
         DBG_FPRINTFN("Pressure (Pa): ", "%.3fPa", readPressure());
-        DBG_FPRINTFN("Current (Stored) Pressure (hPa): ", "%.3fhpa", pressure.current/100);
+        DBG_FPRINTFN("Current (Stored) Pressure (hPa): ",  "%.3fhpa", pressure.current/100);
         DBG_FPRINTFN("Previous (Stored) Pressure (hPa): ", "%.3fhpa", pressure.previous/100);
     //Temp
-    if (bmpAvailable && (CHK_LETTER("D") || CHK_LETTER("B")))
-        DBG_FPRINTFN("Temperature: ", "%.3f*C", readTemperature()); //None of this FreedomHeight Nonsense
+    if (bmpAvailable && (CHK_LETTER("D") || CHK_LETTER("B"))){
+        //None of this FreedomHeight Nonsense
+        DBG_FPRINTFN("Temperature: ", "%.3f*C", readTemperature());
+        DBG_FPRINTFN("Current (Stored) Temperature: ",  "%.3f*C", temp.current);
+        DBG_FPRINTFN("Previous (Stored) Temperature: ", "%.3f*C", temp.previous);
+    }
+}
+
+bool PressureSensor::updatePayloadData(bool forceDataUpdate){
+    if (forceDataUpdate) updateTempAltPressure();
+    parent->data.pressure = pressure;
+    parent->data.altitude = altitude;
+    parent->data.temp     = temp;
+    return true;
 }
 
 

@@ -5,7 +5,7 @@
 #include "../debug/debug.h"
 #include "../../payload_settings.h"
 #include "../mars_root_module/data_types.h"
-//#include "../mars_root_module/mars_root_module.h"
+#include "../mars_root_module/mars_root_module.h"
 
 #define LED_PIN LED_BUILTIN     //Diagnostic LED Pin
 #define STEP_PULSE_PIN 7        //Stepper Motor Controller Pulse Pin (pwm)
@@ -16,14 +16,15 @@
 
 const int filterHeights[] = FILTER_HEIGHTS;
 
-class StepperMotor : public CrashableModule {
+class StepperMotor : public MARSCrashableModule {
     public:
-        StepperMotor(UnCrashable &uncrashableParent, bool addSelfToParent = true) 
-            : CrashableModule(uncrashableParent, addSelfToParent) {};
+        StepperMotor(RootModule &uncrashableParent, bool addSelfToParent = true) 
+            : MARSCrashableModule(uncrashableParent, addSelfToParent) {};
         bool init() override;
         void printDebug(String = "Z") override;
         void genericError(const char* func, const char* file, u16 failLine) override;
-
+        bool updatePayloadData(bool forceDataUpdate) override;
+        
     public:
         void rotateSandwitch(long int steps);
         void nextFilter(u8& currentFilter);

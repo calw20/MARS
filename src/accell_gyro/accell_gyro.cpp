@@ -69,21 +69,28 @@ void AccellGyro::printDebug(String printValues){
     //*Print Accel Info
     if (CHK_LETTER("A")){
         DBG_PRINT(F("Accelerometer X, Y, Z: "));
-            DBG_PRINT(ax); DBG_PRINT(F(", "));
-            DBG_PRINT(ay); DBG_PRINT(F(", "));
-            DBG_PRINTLN(az);
+            DBG_PRINT(a.x); DBG_PRINT(F(", "));
+            DBG_PRINT(a.y); DBG_PRINT(F(", "));
+            DBG_PRINTLN(a.z);
     }
 
     //*Print Gyro Info
     if (CHK_LETTER("G")){
         DBG_PRINT(F("Gyro X, Y, Z: "));
-            DBG_PRINT(gx); DBG_PRINT(F(", "));
-            DBG_PRINT(gy); DBG_PRINT(F(", "));
-            DBG_PRINTLN(gz);
+            DBG_PRINT(g.x); DBG_PRINT(F(", "));
+            DBG_PRINT(g.y); DBG_PRINT(F(", "));
+            DBG_PRINTLN(g.z);
     }
 }
 
-
 void AccellGyro::getMotion(){
-    AccellGyroSensor.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+    AccellGyroSensor.getMotion6(&a[0], &a[1], &a[2], &g[0], &g[1], &g[2]);
 }
+
+bool AccellGyro::updatePayloadData(bool forceDataUpdate){
+    if (forceDataUpdate) getMotion();
+    parent->data.a = a;
+    parent->data.g = g;
+    
+    return true;
+};

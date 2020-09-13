@@ -5,6 +5,7 @@
 #include "../debug/debug.h"
 #include "../../payload_settings.h"
 #include "../mars_root_module/data_types.h"
+#include "../mars_root_module/mars_root_module.h"
 
 #include <Wire.h>
 #include <Adafruit_BMP280.h>
@@ -22,13 +23,14 @@
     #define SEA_LEVEL_PRESSURE genSeaLevelPressure()
 #endif
 
-class PressureSensor : public CrashableModule {
+class PressureSensor : public MARSCrashableModule {
     public:
-        PressureSensor(UnCrashable &uncrashableParent, bool addSelfToParent = true) 
-            : CrashableModule(uncrashableParent, addSelfToParent) {};
+        PressureSensor(RootModule &uncrashableParent, bool addSelfToParent = true) 
+            : MARSCrashableModule(uncrashableParent, addSelfToParent) {};
         bool init() override;
         void printDebug(String = "B") override;
         void genericError(const char* func, const char* file, u16 failLine) override;
+        bool updatePayloadData(bool forceDataUpdate) override;
 
     public:
         float genSeaLevelPressure();
@@ -40,12 +42,16 @@ class PressureSensor : public CrashableModule {
         float readTemperature();
 
     public:
-        void updateAltPressure();
-        float getPressure();
-            fStoredData pressure;            
-        float getAltitude();
-            fStoredData altitude;
-        
+        void updateTempAltPressure();
+            void updateAltPressure();
+                float getPressure();
+                    fStoredData pressure;            
+                float getAltitude();
+                    fStoredData altitude;
+            void updateTemp();
+                float getTemp();
+                    fStoredData temp;
+
     private:
         Adafruit_BMP280 BMP280;
         float sea_level_pressure;

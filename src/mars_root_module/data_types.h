@@ -87,14 +87,21 @@ union V3d {
 
 //typedef V3d<i16StoredData> i16SdV3d;
 typedef V3d<int16_t> i16V3d;
+typedef V3d<int> iV3d;
 
 struct payloadData {
     fStoredData pressure;
     fStoredData altitude;
+    fStoredData temp;
     
     i16V3d a; //Accell Data
     i16V3d g; //Gyro Data
 
+    int fanSpeed[3];
+    int transFanSpeed[3];
+
+    u8 currentFilter;
+    u8 maxFilterNumber;
 
     bool hitApogee;
     bool rotateOnButton;

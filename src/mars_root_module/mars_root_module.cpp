@@ -57,3 +57,5 @@ void RootModule::printDebug(String printValues){
     
 
 }
+
+bool MARSCrashableModule::updatePayloadData(bool forceDataUpdate){};

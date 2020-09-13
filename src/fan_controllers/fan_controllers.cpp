@@ -2,13 +2,10 @@
 
 //Makes things look neater I guess?
 bool FanController::init(){
-    /*
-    pinMode(STEP_PULSE_PIN, OUTPUT); //StepMC Pulse Pin
-    pinMode(STEP_DIREC_PIN, OUTPUT); //StepMC Direction Pin
-    pinMode(STEP_ENABL_PIN, OUTPUT); //StepMC Enable Pin
-    */
     DBG_FPRINTLN("Initializing Fan Controllers...");
-        ESC.attach(ESC_PIN,1000,2000);
+        parent->data.transFanSpeed[1] = LOWER_SERVO_MAP; //These dont change
+        parent->data.transFanSpeed[2] = UPPER_SERVO_MAP;
+        ESC.attach(ESC_PIN,1000,2000); //Init the ESC
     
     DBG_FPRINTLN("Arming Fan Controllers...");
         setSpeed(0);
@@ -49,6 +46,7 @@ void FanController::printDebug(String printValues){
     
     if (CHK_LETTER("I")){
         DBG_FPRINT_SVLN("Current Fan Speed: ", currentSpeed);
+        
     }
 }
 
@@ -62,4 +60,13 @@ void FanController::setSpeed(int newSpeed){
     currentSpeed = map(newSpeed, lowerESCmap, upperESCmap, LOWER_SERVO_MAP, UPPER_SERVO_MAP);
     DBG_FPRINT_SVLN("New FanSpeed: ", currentSpeed);
     ESC.write(currentSpeed);
+}
+
+bool FanController::updatePayloadData(bool forceDataUpdate){
+    parent->data.transFanSpeed[0] = currentSpeed; 
+    parent->data.fanSpeed[0] = getSpeed();
+        parent->data.fanSpeed[1] = lowerESCmap;
+        parent->data.fanSpeed[2] = upperESCmap;
+
+    return true;
 }

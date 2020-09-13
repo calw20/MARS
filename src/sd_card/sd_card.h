@@ -6,6 +6,7 @@
 #include "../debug/debug.h"
 #include "../../payload_settings.h"
 #include "../mars_root_module/data_types.h"
+#include "../mars_root_module/mars_root_module.h"
 
 #include <SdFat.h>
 #include "../pressure_sensor/pressure_senor.h"
@@ -34,10 +35,10 @@
 
 #define NEXT_FILE(...) largeFileRollover(Flight_Data_File, currentFileCount) //May not include this :/
 
-class SDCardAdapter : public CrashableModule {
+class SDCardAdapter : public MARSCrashableModule {
     public:
-        SDCardAdapter(UnCrashable &uncrashableParent, bool addSelfToParent = true) 
-            : CrashableModule(uncrashableParent, addSelfToParent) {};
+        SDCardAdapter(RootModule &uncrashableParent, bool addSelfToParent = true) 
+            : MARSCrashableModule(uncrashableParent, addSelfToParent) {};
         bool init() override;
         void printDebug(String = "S") override;
         void genericError(const char* func, const char* file, u16 failLine) override;
@@ -56,6 +57,8 @@ class SDCardAdapter : public CrashableModule {
         char fmtedFlightData[MAX_FLIGHT_DATA_STRING_SIZE];
 
     private:
+        RootModule *parent;
+        payloadData *pData;
         SdFat sdCard;
         File FlightDataFile;
         u8 currentFileCount = 0;

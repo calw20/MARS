@@ -15,13 +15,14 @@
 #define UPPER_D_ESC_MAP 180
 #define LOWER_D_ESC_MAP 0
 
-class FanController : public CrashableModule {
+class FanController : public MARSCrashableModule {
     public:
-        FanController(UnCrashable &uncrashableParent, bool addSelfToParent = true) 
-            : CrashableModule(uncrashableParent, addSelfToParent) {};
+        FanController(RootModule &uncrashableParent, bool addSelfToParent = true) 
+            : MARSCrashableModule(uncrashableParent, addSelfToParent) {};
         bool init() override;
         void printDebug(String = "I") override;
         void genericError(const char* func, const char* file, u16 failLine) override;
+        bool updatePayloadData(bool forceDataUpdate) override;
 
     public:
         void setSpeed(int steps);
