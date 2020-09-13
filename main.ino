@@ -99,27 +99,12 @@ void setup(){
     DBG_FPRINTLN("System is setup and configured!");
 
     //mainAirLoop();
-
-    while(1){
-        for(int i = 0; i<=180; i++){
-            DBG_FPRINT_SVLN("Speed: ", i);
-            fanController.setSpeed(i);
-            delay(100);
-        }
-        for(int i = 180; i>=0; i--){
-            DBG_FPRINT_SVLN("Speed: ", i);
-            fanController.setSpeed(i);
-            delay(100);
-        }
-    }
-
-    /*
     while(1){
         //sdCard.writeCSVData();
         pressureSensor.updateAltPressure();
         accellGyro.getMotion();
         sdCard.printCSVData(true);
-    }*/
+    }
     
 }
 
