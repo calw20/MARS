@@ -19,11 +19,17 @@ void RootModule::criticalFailure(const char* func, const char* file, u16 failLin
     genericError(func, file, failLine);
 
     while(inError){
-        digitalWrite(CRITICAL_LED, HIGH);   
+        cLED1->setColour(LEDColours::RED);   
         delay(100);
-        digitalWrite(CRITICAL_LED, LOW);   
+        cLED1->setColour(LEDColours::BLACK);
         delay(100);
     }
+}
+
+bool RootModule::init(){
+    cLED1 = new ColourLED(LEDPIN_R_1, LEDPIN_G_1, LEDPIN_B_1);
+    cLED2 = new ColourLED(LEDPIN_R_2, LEDPIN_G_2, LEDPIN_B_2);
+    return UnCrashable::init();
 }
 
 void RootModule::printDebug(String printValues){
