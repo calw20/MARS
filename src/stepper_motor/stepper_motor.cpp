@@ -66,10 +66,12 @@ void StepperMotor::rotateSandwitch(long int steps){
     }
 }
 
+
+/*//[TODO] I think this can be removed??
 //Move to the next filter
 void StepperMotor::nextFilter(u8& currentFilter){
     //Only allow for one rotaion
-    if (currentFilter < maxFilterNumber) {
+    if (isAbleToRotate()) {
         DBG_FPRINT_SVLN("Currently on filter: ", currentFilter);
         currentFilter++;
         //#warning Actual rotaion is disabled, only going to act as rotating!
@@ -78,9 +80,27 @@ void StepperMotor::nextFilter(u8& currentFilter){
     } else {
         DBG_FPRINTLN("Request to rotate, however already completed one full turn!");
     }
+}*/
+
+bool StepperMotor::nextFilter(){
+    if (isAbleToRotate()) {
+        DBG_FPRINT_SVLN("Currently on filter: ", currentFilter);
+        currentFilter++;
+        rotateSandwitch(STEPS_PER_ROTATION);
+        DBG_FPRINT_SVLN("Now on filter: ", currentFilter);
+        return true;
+    } else {
+        DBG_FPRINTLN("Request to rotate, however already completed one full turn!");
+        return false;
+    }
+}
+
+bool StepperMotor::isAbleToRotate(){
+    return currentFilter < maxFilterNumber;
 }
 
 bool StepperMotor::updatePayloadData(bool forceDataUpdate){
     marsRoot->data.currentFilter = getCurrentFilter();
     return true;
 }
+

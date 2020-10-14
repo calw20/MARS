@@ -1,6 +1,7 @@
 //Include the right libs
 #include "payload_settings.h" //This holds all the payload settings. I.E Rotaion Heights, Apogee Height, ect
 #include "src/debug/debug.h"
+#include "src/mars_root_module/data_types.h"
 #include "src/mars_root_module/mars_root_module.h"
 #include "src/pressure_sensor/pressure_senor.h"
 #include "src/stepper_motor/stepper_motor.h"
@@ -11,6 +12,7 @@
 //Define some noice things to have
 //^You really should only have to change these...
 #define SERIAL_BAUD 115200
+#define BUTTON_PIN A0
 
 RootModule MARS_RootModule;
 PressureSensor pressureSensor(MARS_RootModule);
@@ -18,6 +20,11 @@ SDCardAdapter sdCard(MARS_RootModule);
 StepperMotor sandwitch(MARS_RootModule);
 AccellGyro accellGyro(MARS_RootModule);
 FanController fanController(MARS_RootModule);
+
+//Simple Redirection
+ColourLED* cLED1 = MARS_RootModule.cLED1;
+ColourLED* cLED2 = MARS_RootModule.cLED2;
+payloadData &pData = MARS_RootModule.data;
 
 /*
 void mainAirLoop(){
@@ -75,6 +82,54 @@ void mainAirLoop(){
     
 };
 
+const float apogeeHeight = APOGEE_HEIGHT;
+
+void fakeAirLoop(){
+    
+    cLED1->setColour(LEDColours::GREEN);
+    while(sandwitch.isAbleToRotate()){
+        MARS_RootModule.updatePayloadData(true);
+        sdCard.writeCSVData();
+        sdCard.printCSVData();
+
+        //See if we have hit Apogee
+        if (!pData.hitApogee & pData.currentAltitude > apogeeHeight){ //* Apogee detection enabled.
+            pData.hitApogee = true;
+            DBG_FPRINT_SVLN("Just hit Apogee at: ", pData.currentAltitude);
+            DBG_FPRINTLN("Engaging the sandwich!");
+            cLED2->setColour(LEDColours::MAGENTA);
+        }
+
+        //Rotate on button press
+        if (pData.rotateOnButton && !digitalRead(BUTTON_PIN)){
+            DBG_FPRINTLN("Button has been pressed!");
+            cLED1->setColour(LEDColours::MAGENTA);
+            sandwitch.nextFilter();
+            
+            while(!digitalRead(BUTTON_PIN));
+            cLED1->setColour(LEDColours::BLACK);
+            DBG_FPRINTLN("Button has been released!");
+        }
+
+        //^ I hope this works (´。＿。｀)
+        //\ (╯°□°）╯︵ ┻━┻) - The drift is killing me
+        //Rotate once we have passed the right Altitudes
+        if(pData.rotateOnAltitude && pData.hitApogee){ //* Enable - Enabled in  ./payload_settings.h 
+            if (currentAltitude < filterHeights[currentFilter]){
+                DBG_FPRINT_SV("Reached current filter height ", pData.altitude);
+                DBG_FPRINT_SVLN(", for filter number ", pData.currentFilter);
+                sandwitch.nextFilter();
+
+            }
+        }
+    }
+    DBG_FPRINTLN("All samples collected!");
+    DBG_FPRINTLN("Please reset the Mega.");
+    MARS_RootModule.updatePayloadData(true);
+    sdCard.writeCSVData();
+    sdCard.close();
+}
+
 void setup(){
     //Serial Setup
     #if DO_DEBUG
@@ -98,12 +153,19 @@ void setup(){
 
     DBG_FPRINTLN("System is setup and configured!");
 
-    //mainAirLoop();
-    while(1){
-        MARS_RootModule.updatePayloadData(true);
-        sdCard.writeCSVData();
-        sdCard.printCSVData();
+    //Hang until armed
+    //[TODO] Add timeout to this
+    //[TODO] Enable this ¯\_(ツ)_/¯
+    DBG_FPRINTLN("System not armed, wating for signal!");
+    while(!MARS_RootModule.systemArmed){
+        cLED2->setColour(LEDColours::CYAN);
+        while(!digitalRead(BUTTON_PIN)){}//Wait for button press
+        cLED2->setColour(LEDColours::BLACK);
     }
+    DBG_FPRINTLN("System armed. Begining Flight Loop!");
+    
+    //mainAirLoop();
+    fakeAirLoop();
     
 }
 

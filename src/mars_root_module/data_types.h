@@ -23,7 +23,16 @@ union StoredData {
         return val[i];
     }
 
+
+    bool& operator>(T x) {
+        return val.current > x;
+    }
     
+    bool& operator<(T x) {
+        return val.current < x;
+    }
+
+
     //Move the value to previous via an assignment
     StoredData& operator=(T i){
         previous = current;
@@ -94,6 +103,8 @@ struct payloadData {
     fStoredData altitude;
     fStoredData temp;
     
+    fStoredData currentAltitude;
+
     i16V3d a; //Accell Data
     i16V3d g; //Gyro Data
 
