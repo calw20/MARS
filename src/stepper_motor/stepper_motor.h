@@ -31,6 +31,7 @@ class StepperMotor : public MARSCrashableModule {
         bool nextFilter();
         u8 getCurrentFilter();
         bool isAbleToRotate();
+        bool shouldRotate(float currentAltitude);
 
     private:
         u8 currentFilter = 0;

@@ -42,6 +42,16 @@ File SDCardAdapter::openFile(char* logFileName, bool delFileOnOpen){
 };
 
 
+bool SDCardAdapter::closeFile(){
+    if(FlightDataFile){
+        FlightDataFile.flush();
+        FlightDataFile.close();
+        return true; //[TODO] Should make this return the .close func
+    } else {
+        return false;
+    }
+}
+
 bool SDCardAdapter::init(){
     DBG_FPRINTLN("Initalizing SD Card...");
     if (!sdCard.begin(SD_CS_PIN) && USE_SD_CARD) {

@@ -23,14 +23,14 @@ union StoredData {
         return val[i];
     }
 
-
+    /*
     bool& operator>(T x) {
         return val.current > x;
     }
     
     bool& operator<(T x) {
         return val.current < x;
-    }
+    }*/
 
 
     //Move the value to previous via an assignment

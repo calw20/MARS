@@ -55,12 +55,17 @@ int FanController::getSpeed(){
     return map(currentSpeed, LOWER_SERVO_MAP, UPPER_SERVO_MAP, lowerESCmap, upperESCmap);
 }
 
+void FanController::writeSpeed(){
+    ESC.write(currentSpeed);
+}
+
 void FanController::setSpeed(int newSpeed){
     //[TODO] Make Consts
     currentSpeed = map(newSpeed, lowerESCmap, upperESCmap, LOWER_SERVO_MAP, UPPER_SERVO_MAP);
     DBG_FPRINT_SVLN("New FanSpeed: ", currentSpeed);
-    ESC.write(currentSpeed);
+    writeSpeed();
 }
+
 
 bool FanController::updatePayloadData(bool forceDataUpdate){
     marsRoot->data.transFanSpeed[0] = currentSpeed; 

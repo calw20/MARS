@@ -99,8 +99,15 @@ bool StepperMotor::isAbleToRotate(){
     return currentFilter < maxFilterNumber;
 }
 
+bool StepperMotor::shouldRotate(float currentAltitude){
+    if (currentFilter < maxFilterNumber){
+        return currentAltitude < filterHeights[currentFilter];
+    } else {
+        return false;
+    }
+}
+
 bool StepperMotor::updatePayloadData(bool forceDataUpdate){
     marsRoot->data.currentFilter = getCurrentFilter();
     return true;
 }
-

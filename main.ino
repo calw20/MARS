@@ -21,9 +21,12 @@ StepperMotor sandwitch(MARS_RootModule);
 AccellGyro accellGyro(MARS_RootModule);
 FanController fanController(MARS_RootModule);
 
+//Redeine Consts
+const float apogeeHeight = APOGEE_HEIGHT;
+
 //Simple Redirection
-ColourLED* cLED1 = MARS_RootModule.cLED1;
-ColourLED* cLED2 = MARS_RootModule.cLED2;
+ColourLED *cLED1;
+ColourLED *cLED2;
 payloadData &pData = MARS_RootModule.data;
 
 /*
@@ -82,31 +85,32 @@ void mainAirLoop(){
     
 };
 
-const float apogeeHeight = APOGEE_HEIGHT;
-
 void fakeAirLoop(){
+    while(digitalRead(BUTTON_PIN)){};
     
     cLED1->setColour(LEDColours::GREEN);
     while(sandwitch.isAbleToRotate()){
         MARS_RootModule.updatePayloadData(true);
         sdCard.writeCSVData();
-        sdCard.printCSVData();
+        //sdCard.printCSVData();
 
         //See if we have hit Apogee
-        if (!pData.hitApogee & pData.currentAltitude > apogeeHeight){ //* Apogee detection enabled.
+        if (!pData.hitApogee & pData.currentAltitude[0] > apogeeHeight){ //* Apogee detection enabled.
             pData.hitApogee = true;
-            DBG_FPRINT_SVLN("Just hit Apogee at: ", pData.currentAltitude);
+            DBG_FPRINT_SVLN("Just hit Apogee at: ", pData.currentAltitude[0]);
             DBG_FPRINTLN("Engaging the sandwich!");
             cLED2->setColour(LEDColours::MAGENTA);
         }
 
         //Rotate on button press
-        if (pData.rotateOnButton && !digitalRead(BUTTON_PIN)){
+        if (pData.rotateOnButton && digitalRead(BUTTON_PIN)){
             DBG_FPRINTLN("Button has been pressed!");
             cLED1->setColour(LEDColours::MAGENTA);
             sandwitch.nextFilter();
-            
-            while(!digitalRead(BUTTON_PIN));
+            if(sandwitch.getCurrentFilter() > 0 && sandwitch.getCurrentFilter() < pData.maxFilterNumber)
+                fanController.setSpeed(100); //[TODO] Make const
+
+            while(digitalRead(BUTTON_PIN));
             cLED1->setColour(LEDColours::BLACK);
             DBG_FPRINTLN("Button has been released!");
         }
@@ -114,20 +118,20 @@ void fakeAirLoop(){
         //^ I hope this works (´。＿。｀)
         //\ (╯°□°）╯︵ ┻━┻) - The drift is killing me
         //Rotate once we have passed the right Altitudes
-        if(pData.rotateOnAltitude && pData.hitApogee){ //* Enable - Enabled in  ./payload_settings.h 
-            if (currentAltitude < filterHeights[currentFilter]){
-                DBG_FPRINT_SV("Reached current filter height ", pData.altitude);
-                DBG_FPRINT_SVLN(", for filter number ", pData.currentFilter);
-                sandwitch.nextFilter();
-
-            }
+        if(pData.rotateOnAltitude && pData.hitApogee && sandwitch.shouldRotate(pData.altitude[0])){ //* Enable - Enabled in  ./payload_settings.h 
+            DBG_FPRINT_SV("Reached current filter height ", pData.altitude[0]);
+            DBG_FPRINT_SVLN(", for filter number ", pData.currentFilter);
+            sandwitch.nextFilter();
         }
+
+        fanController.writeSpeed();
     }
+    fanController.setSpeed(0);
     DBG_FPRINTLN("All samples collected!");
     DBG_FPRINTLN("Please reset the Mega.");
     MARS_RootModule.updatePayloadData(true);
     sdCard.writeCSVData();
-    sdCard.close();
+    sdCard.closeFile();
 }
 
 void setup(){
@@ -138,10 +142,13 @@ void setup(){
         DBG_FPRINTFN("Build Version: ", "%s", BUILD_VERSION);
     #endif
 
+
     //Build and Initialize all the modules
     DBG_FPRINTLN("Begining Initialization....");
     MARS_RootModule.init();
     sdCard.initFlightDataFile(pressureSensor, sandwitch, accellGyro);
+    cLED1 = MARS_RootModule.cLED1;
+    cLED2 = MARS_RootModule.cLED2;
 
     //[TODO] Latching {Or further down}
     
@@ -159,7 +166,8 @@ void setup(){
     DBG_FPRINTLN("System not armed, wating for signal!");
     while(!MARS_RootModule.systemArmed){
         cLED2->setColour(LEDColours::CYAN);
-        while(!digitalRead(BUTTON_PIN)){}//Wait for button press
+        while(digitalRead(BUTTON_PIN)){}//Wait for button press
+        MARS_RootModule.systemArmed = true;
         cLED2->setColour(LEDColours::BLACK);
     }
     DBG_FPRINTLN("System armed. Begining Flight Loop!");

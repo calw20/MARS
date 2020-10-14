@@ -5,6 +5,7 @@
 #include "../debug/debug.h"
 #include "./data_types.h"
 #include "../ledDriver/ledDriver.h"
+#include "../../payload_settings.h"
 
 #define LEDPIN_R_1 22
 #define LEDPIN_G_1 24

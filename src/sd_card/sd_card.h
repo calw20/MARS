@@ -45,6 +45,7 @@ class SDCardAdapter : public MARSCrashableModule {
 
     public:
         File openFile(char* logFileName, bool delFileOnOpen = false);
+        bool closeFile();
         
 
     public:
