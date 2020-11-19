@@ -53,6 +53,7 @@ typedef StoredData<float> fStoredData;
 
 //2D Vectors
 /*//! Not used so why waste space??
+//? Actually I think the compiler-chain removes junk so this *could* be left in
 template <typename T>
 union v2d {
     struct {
@@ -99,6 +100,7 @@ typedef V3d<int16_t> i16V3d;
 typedef V3d<int> iV3d;
 
 struct payloadData {
+    //Basic Sensor Data
     fStoredData pressure;
     fStoredData altitude;
     fStoredData temp;
@@ -117,18 +119,6 @@ struct payloadData {
     bool hitApogee;
     bool rotateOnButton;
     bool rotateOnAltitude;
-
-    /* Not Needed
-    void update(fStoredData prs, fStoredData alt, i16V3d accell, i16V3d gyro,
-         bool hApg, bool rob, bool roa){
-        pressure = prs;
-        altitude = alt;
-        a = accell;
-        g = gyro;
-        hitApogee = hApg;
-        rotateOnButton = rob;
-        rotateOnAltitude = roa;
-    }*/
 };
 
 #endif

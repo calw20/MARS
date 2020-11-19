@@ -7,7 +7,7 @@
 #Debug Keywords
 #Classes
 LED          KEYWORD1
-ColourLED    KEYWORD1
+TriColourLED    KEYWORD1
 
 #################################################
 #Methods, Functions and PreCompiler Mappings

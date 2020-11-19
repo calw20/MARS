@@ -6,7 +6,7 @@
 #include "ledDriver.h"
 
 //MonoColour
-LED:: LED(int sPin, LEDColours sColour){
+LED::LED(int sPin, LEDColours sColour){
     pin = sPin;
     colour = sColour;
     
@@ -18,7 +18,7 @@ LED:: LED(int sPin, LEDColours sColour){
 bool LED::setColour(LEDColours newColour){
     //Ignore calls to change it to green if its a red led
     //This can be done due to the way the LEDColours is defined
-    currentColour = newColour & colour;
+    currentColour = static_cast<LEDColours>(newColour & colour);
     
     pinMode(pin, currentColour);
 
@@ -31,7 +31,7 @@ LEDColours LED::getColour(){
 
 
 //TriColour
-ColourLED::ColourLED(int sPinR, int sPinG, int sPinB){
+TriColourLED::TriColourLED(int sPinR, int sPinG, int sPinB) : LED(0, WHITE){
     pinR = sPinR;
     pinG = sPinG;
     pinB = sPinB;
@@ -43,7 +43,7 @@ ColourLED::ColourLED(int sPinR, int sPinG, int sPinB){
     setColour(currentColour);
 }
 
-bool ColourLED::setColour(LEDColours newColour){
+bool TriColourLED::setColour(LEDColours newColour){
     currentColour = newColour;
     digitalWrite(pinR, (currentColour & B100));
     digitalWrite(pinG, (currentColour & B010));

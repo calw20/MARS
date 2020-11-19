@@ -29,10 +29,10 @@ class LED {
         bool setColour(LEDColours newColour);
     
     private:
-        int pin
+        int pin;
         LEDColours currentColour = LEDColours::BLACK;
         LEDColours colour = LEDColours::WHITE; //Will basically only work on B/W
-}
+};
 
 /*[TODO] Implement BiColour LED's
 class BiColourLED: public LED {
@@ -50,7 +50,7 @@ class BiColourLED: public LED {
 
 class TriColourLED: public LED {
     public:
-        ColourLED(int sPinR, int sPinG, int sPinB);        
+        TriColourLED(int sPinR, int sPinG, int sPinB);        
         bool init(); 
     
     public:

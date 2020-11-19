@@ -24,8 +24,8 @@ FanController fanController(MARS_RootModule);
 const float apogeeHeight = APOGEE_HEIGHT;
 
 //Simple Redirection
-ColourLED *cLED1;
-ColourLED *cLED2;
+TriColourLED *cLED1;
+TriColourLED *cLED2;
 payloadData &pData = MARS_RootModule.data;
 
 /*

@@ -30,8 +30,8 @@ class RootModule : public UnCrashable {
 
     public:
         payloadData data;
-        ColourLED* cLED1;
-        ColourLED* cLED2;
+        TriColourLED* cLED1;
+        TriColourLED* cLED2;
         bool systemArmed = false; //System will remain lock until armed
     
     protected:
