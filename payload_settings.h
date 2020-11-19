@@ -8,3 +8,8 @@
 #define ROTATE_ON_ALTITUDE true        //Should the filter plate rotate at the altitudes below?
 #define ROTATE_ON_BUTTON   true        //Should the filter plate rotate on button presses?
 #define FILTER_HEIGHTS {500, 400, 300, 200, 100} //When does the sandwich need to turn (m)
+
+#define FAN_SPEED_LIMIT 25
+
+#define RADIO_TIMEOUT 5*100 //[milli]Seconds
+#define ARMING_TIMEOUT 30*100 //[milli]Seconds

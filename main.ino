@@ -9,13 +9,9 @@
 #include "src/accell_gyro/accell_gyro.h"
 #include "src/fan_controllers/fan_controllers.h"
 
-//Define some noice things to have
 //^You really should only have to change these...
 #define SERIAL_BAUD 115200
 #define BUTTON_PIN A0
-
-//[TODO] Move to file??
-#define FAN_SPEED_LIMIT 25
 
 RootModule MARS_RootModule;
 PressureSensor pressureSensor(MARS_RootModule);
@@ -24,7 +20,7 @@ StepperMotor sandwitch(MARS_RootModule);
 AccellGyro accellGyro(MARS_RootModule);
 FanController fanController(MARS_RootModule);
 
-//Redeine Consts
+//Define a constant array - this defined in ./payload_settings.h
 const float apogeeHeight = APOGEE_HEIGHT;
 
 //Simple Redirection
