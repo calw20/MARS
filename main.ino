@@ -112,7 +112,7 @@ void mainAirLoop(){
         }
 
         //Rotate once we have passed the right Altitudes
-        if(pData.rotateOnAltitude && pData.hitApogee && sandwitch.shouldRotate(pData.altitude[0])){ //* Enable - Enabled in  ./payload_settings.h 
+        if(pData.rotateOnAltitude && pData.hitApogee && sandwitch.shouldRotate()){ //* Enable - Enabled in  ./payload_settings.h 
             DBG_FPRINT_SV("Reached current filter height ", pData.altitude[0]);
             DBG_FPRINT_SVLN(", for filter number ", pData.currentFilter);
             sandwitch.nextFilter();
