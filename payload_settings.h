@@ -11,5 +11,7 @@
 
 #define FAN_SPEED_LIMIT 25
 
+//Timeouts
+//NOTE: If these are 0 then there will be no timeout condition
 #define RADIO_TIMEOUT 5*100 //[milli]Seconds
 #define ARMING_TIMEOUT 30*100 //[milli]Seconds

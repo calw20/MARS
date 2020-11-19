@@ -80,11 +80,7 @@ void mainAirLoop(){
     
 }*/
 
-void mainAirLoop(){   
-    
-};
-
-void fakeAirLoop(){
+void mainAirLoop(){
     while(digitalRead(BUTTON_PIN)){};
     
     cLED1->setColour(LEDColours::GREEN);
@@ -149,31 +145,46 @@ void setup(){
     cLED1 = MARS_RootModule.cLED1;
     cLED2 = MARS_RootModule.cLED2;
 
-    //[TODO] Latching {Or further down}
-    
     //Blink the light ~5? times
     for(int i = 0; i <= 12 ; i++){
-        digitalWrite(13, (i%2 == 1)); //Shhh whilst this *could* be non-const whats the point?
-        //delay(200); //This slows things down..... *wow* :/
+        cLED1.setColour((i%2 == 1) ? LEDColours::GREEN : LEDColours::BLACK)
+        if DO_INIT_DELAY: delay(200); //This slows things down..... *wow* :/
     }
 
     DBG_FPRINTLN("System is setup and configured!");
 
     //Hang until armed
-    //[TODO] Add timeout to this
     //[TODO] Enable this ¯\_(ツ)_/¯
     DBG_FPRINTLN("System not armed, wating for signal!");
+    unsigned long beginArmWait = millis();
+    unsigned long cLoop = beginArmWait;
     while(!MARS_RootModule.systemArmed){
-        cLED2->setColour(LEDColours::CYAN);
-        while(digitalRead(BUTTON_PIN)){}//Wait for button press
-        MARS_RootModule.systemArmed = true;
-        cLED2->setColour(LEDColours::BLACK);
+        //Flash the light
+        if (millis()-cLoop > 500): cLoop = millis();
+        cLED2->setColour((millis()-cLoop > 500) ? LEDColours::CYAN : LEDColours::BLACK);
+
+        //[TODO] Radio Loop Here
+
+        //Check if there has been a button press
+        if (digitalRead(BUTTON_PIN)){
+            DBG_PRINTLN("Button Press Detected!");
+            cLED2->setColour(LEDColours::YELLOW);
+            while(!digitalRead(BUTTON_PIN)){} //Wait for button release
+            DBG_PRINTLN("Button Release Detected! Armming from button press");
+            cLED2->setColour(LEDColours::BLACK);
+            MARS_RootModule.systemArmed = true;
+        }
+
+        //Arming Timeout
+        if (ARMING_TIMEOUT > 0 && millis()-beginArmWait > ARMING_TIMEOUT){
+            DBG_PRINTLN("Arming order timed out. System will arm based on this.");
+            MARS_RootModule.systemArmed = true;
+        }
     }
+
     DBG_FPRINTLN("System armed. Begining Flight Loop!");
     
-    //mainAirLoop();
-    fakeAirLoop();
-    
+    mainAirLoop();
 }
 
 //NOP

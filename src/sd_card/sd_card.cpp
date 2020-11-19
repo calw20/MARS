@@ -77,8 +77,6 @@ bool SDCardAdapter::initFlightDataFile(PressureSensor &prsSensorModule,
     SET_LOG_FILE_NUM(0);
     FlightDataFile = openFile(logFileName);
 
-    //if (ROLL_TO_NEXT_FILE) nextFile(sdCard, FlightDataFile, currentFileCount, true);
-
     //Get the accell/gyro data
     acGyro->getMotion();
 

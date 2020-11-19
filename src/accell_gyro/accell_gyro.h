@@ -35,7 +35,7 @@ class AccellGyro : public MARSCrashableModule {
         int16_t ax, ay, az; //Accelerometer Values
         int16_t gx, gy, gz; //Gyro Values
 
-        /*
+        /* //[TODO] Make these dynamic and Radio Receivable
         //[TODO] Get the real values of theses
         //? Calibration Factors
         const float mod_offset = 1670.13252568;

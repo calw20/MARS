@@ -25,12 +25,16 @@
             true
         ],
         [
-            "DO_DATA_LOG",
-            true
-        ],
-        [
             "PRINT_PRAGMA_MESSAGES",
             false
+        ],
+        [
+            "DO_INIT_DELAY",
+            false
+        ],
+        [
+            "DO_DATA_LOG",
+            true
         ],
         [
             "USE_ACCELL",
