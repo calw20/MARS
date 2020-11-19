@@ -41,11 +41,11 @@ u8 StepperMotor::getCurrentFilter(){
 }
 
 //Rotate the sandwich a number of steps
-//[TODO] This seems to be rotateing the wrong way ://
-//[TODO] 12-06: Fixed?
+//[TODO] 19-11: This need in person testing as I have disabled fliping the step direction
+//\ here and also the negative in STEPS_PER_ROTATION /payload_settings.h ¯\_(ツ)_/¯
 void StepperMotor::rotateSandwitch(long int steps){
     //Need to flip steps so that it goes the right direction
-    steps *= -1;
+    //steps *= -1;
 
     long int absSteps = abs(steps); //Argh this is a macro and for "speed" reasons Ill do this 
         //it could be more memory efficient to use the macro everywhere but meh, its a mega
@@ -70,7 +70,14 @@ bool StepperMotor::nextFilter(){
     if (isAbleToRotate()) {
         DBG_FPRINT_SVLN("Currently on filter: ", currentFilter);
         currentFilter++;
+        
+        //Only change the LED colour if a filter change is requested
+        //nextFilter is more of a MARS func then rotate
+        LEDColours currentColour = marsRoot->cLED1.getColour()
+        marsRoot->cLED1.setColour(LEDColours::YELLOW)
         rotateSandwitch(STEPS_PER_ROTATION);
+        marsRoot->cLED1.setColour(currentColour)
+
         DBG_FPRINT_SVLN("Now on filter: ", currentFilter);
         return true;
     } else {

@@ -42,3 +42,16 @@ Stage 3 (Landed / On the ground):
         [TODO] Flashing Yellow -> Sending co-ords / data
         [TODO] Rapidly Blinks Blue -> Command Received from Radio
         [TODO] Solid Blue -> Completing command from wireless radio
+
+Critical Error:
+    LED 1:
+        Flashing Red - Critical Error
+    LED 2:
+        Solid Black (Off) ->
+        Solid White ->
+        Solid Red ->
+        Solid Green ->
+        Solid Blue ->
+        Solid Yellow ->
+        Solid Cyan ->
+        Solid Magenta ->
