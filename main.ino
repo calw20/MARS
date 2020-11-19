@@ -14,6 +14,9 @@
 #define SERIAL_BAUD 115200
 #define BUTTON_PIN A0
 
+//[TODO] Move to file??
+#define FAN_SPEED_LIMIT 25
+
 RootModule MARS_RootModule;
 PressureSensor pressureSensor(MARS_RootModule);
 SDCardAdapter sdCard(MARS_RootModule);
@@ -108,7 +111,7 @@ void fakeAirLoop(){
             cLED1->setColour(LEDColours::MAGENTA);
             sandwitch.nextFilter();
             if(sandwitch.getCurrentFilter() > 0 && sandwitch.getCurrentFilter() < pData.maxFilterNumber)
-                fanController.setSpeed(100); //[TODO] Make const
+                fanController.setSpeed(FAN_SPEED_LIMIT); //[TODO] Rename const
 
             while(digitalRead(BUTTON_PIN));
             cLED1->setColour(LEDColours::BLACK);
