@@ -20,7 +20,8 @@ bool FanController::init(){
         DBG_FPRINT(".");
             delay(300);
     #else
-        delay(1500); //Wait for amring
+        DBG_FPRINTLN("Please Wait...");
+            delay(1500); //Wait for amring
     #endif
     DBG_FPRINTLN("Armed and Operational.");
     

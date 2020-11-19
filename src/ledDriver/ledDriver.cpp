@@ -5,6 +5,32 @@
 
 #include "ledDriver.h"
 
+//MonoColour
+LED:: LED(int sPin, LEDColours sColour){
+    pin = sPin;
+    colour = sColour;
+    
+    pinMode(pin, OUTPUT);
+
+    setColour(currentColour);
+}
+
+bool LED::setColour(LEDColours newColour){
+    //Ignore calls to change it to green if its a red led
+    //This can be done due to the way the LEDColours is defined
+    currentColour = newColour & colour;
+    
+    pinMode(pin, currentColour);
+
+    return true;
+}
+
+LEDColours LED::getColour(){
+    return currentColour;
+}
+
+
+//TriColour
 ColourLED::ColourLED(int sPinR, int sPinG, int sPinB){
     pinR = sPinR;
     pinG = sPinG;
@@ -15,10 +41,6 @@ ColourLED::ColourLED(int sPinR, int sPinG, int sPinB){
     pinMode(pinB, OUTPUT);
 
     setColour(currentColour);
-}
-
-LEDColours ColourLED::getColour(){
-    return currentColour;
 }
 
 bool ColourLED::setColour(LEDColours newColour){

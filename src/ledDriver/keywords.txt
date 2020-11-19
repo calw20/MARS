@@ -6,6 +6,7 @@
 
 #Debug Keywords
 #Classes
+LED          KEYWORD1
 ColourLED    KEYWORD1
 
 #################################################
@@ -13,7 +14,7 @@ ColourLED    KEYWORD1
 #################################################
 
 ##Class Methods
-init	KEYWORD2
+init	    KEYWORD2
 getColour	KEYWORD2
 setColour	KEYWORD2
 

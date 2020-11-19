@@ -20,13 +20,40 @@ enum LEDColours {
     MAGENTA = B101
 };
 
-class ColourLED {
+class LED {
+    public:
+        LED(int sPin, LEDColours sColour = RED);
+    
+    public:
+        LEDColours getColour();
+        bool setColour(LEDColours newColour);
+    
+    private:
+        int pin
+        LEDColours currentColour = LEDColours::BLACK;
+        LEDColours colour = LEDColours::WHITE; //Will basically only work on B/W
+}
+
+/*[TODO] Implement BiColour LED's
+class BiColourLED: public LED {
+        public:
+        BiColourLED(int sPinA, int sPinB, bool commonGround);        
+        bool init(); 
+    
+    public:
+        bool setColour(LEDColours newColour);
+
+    private:
+        int pinA, pinB;
+        LEDColours currentColour = LEDColours::BLACK;
+}*/
+
+class TriColourLED: public LED {
     public:
         ColourLED(int sPinR, int sPinG, int sPinB);        
         bool init(); 
     
     public:
-        LEDColours getColour();
         bool setColour(LEDColours newColour);
 
     private:
