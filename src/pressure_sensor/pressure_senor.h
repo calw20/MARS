@@ -18,6 +18,10 @@
     #define ALT_SAMPLE_COUNT 10
 #endif
 
+#ifndef MIN_PRESS_DIFF_FOR_SEA_LVL
+    #define MIN_PRESS_DIFF_FOR_SEA_LVL 5
+#endif
+
 //Use the ground as 0m if a SEA_LEVEL_PRESSURE is not given
 #ifndef SEA_LEVEL_PRESSURE
     #define SEA_LEVEL_PRESSURE genSeaLevelPressure()
@@ -45,16 +49,17 @@ class PressureSensor : public MARSCrashableModule {
         void updateTempAltPressure();
             void updateAltPressure();
                 float getPressure();
-                    fStoredData pressure;            
                 float getAltitude();
-                    fStoredData altitude;
             void updateTemp();
                 float getTemp();
-                    fStoredData temp;
 
     private:
         Adafruit_BMP280 BMP280;
         float sea_level_pressure;
+        
+        fStoredData pressure;            
+        fStoredData altitude;
+        fStoredData temp;
         
 };
 #endif

@@ -57,11 +57,11 @@ float PressureSensor::getSeaLevelPressure() {
     return sea_level_pressure;
 }
 
-//Now the fun values.
+//Take the average of a number of current alt readings as the sea lvl
 float PressureSensor::genSeaLevelPressure(){
     DBG_FPRINTLN("Generating Sea Level Pressure.");
     
-    int minDiff = 5;
+    int minDiff = MIN_PRESS_DIFF_FOR_SEA_LVL;
     int inLoop = 0;
     float pressure1, pressure2, avgPressure;
     bool inRange;
@@ -155,11 +155,12 @@ void PressureSensor::printDebug(String printValues){
     }
 }
 
+//[TODO] See if we need to be calcing the altitude here
 bool PressureSensor::updatePayloadData(bool forceDataUpdate){
-    if (forceDataUpdate) updateTempAltPressure();
-    marsRoot->data.pressure = pressure;
-    marsRoot->data.altitude = altitude;
-    marsRoot->data.temp     = temp;
+    if (forceDataUpdate && USE_PRESSURE_SENSOR) updateTempAltPressure(); //Can't Update if its not enabled
+    marsRoot->data.pressure    = pressure;
+    marsRoot->data.prsAltitude = altitude;
+    marsRoot->data.temp        = temp;
     return true;
 }
 

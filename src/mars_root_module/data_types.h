@@ -99,23 +99,34 @@ union V3d {
 typedef V3d<int16_t> i16V3d;
 typedef V3d<int> iV3d;
 
+
 struct payloadData {
     //Basic Sensor Data
+    //Pressure Sensor (BMP280)
     fStoredData pressure;
-    fStoredData altitude;
+    fStoredData prsAltitude;
     fStoredData temp;
     
-    fStoredData altitude;
-
+    //Accell/Gyro (MPU6050)
+    //[TODO] Make these StoredData
     i16V3d a; //Accell Data
     i16V3d g; //Gyro Data
 
+    //GPS
+
+
+
+    fStoredData altitude;
+
+    //Fan Control Info - Doesn't rely change
     int fanSpeed[3];
     int transFanSpeed[3];
 
+    //Sandwitch Info
     u8 currentFilter;
     u8 maxFilterNumber;
 
+    //System Info
     bool hitApogee;
     bool rotateOnButton;
     bool rotateOnAltitude;
