@@ -83,6 +83,7 @@ bool StepperMotor::isAbleToRotate(){
     return currentFilter < maxFilterNumber;
 }
 
+//[TODO] Should this rely on marsRoot->data?
 bool StepperMotor::shouldRotate(float currentAltitude){
     if (currentFilter < maxFilterNumber){
         return currentAltitude < filterHeights[currentFilter];

@@ -36,8 +36,8 @@ void mainAirLoop(){
      while(sandwitch.currentFilter < sandwitch.maxFilterNumber || true){ //! Forced to be always enabled
         //Get Alt/Pressure
         pressureSensor.updateAltPressure();
-        if (pressureSensor.currentAltitude != pressureSensor.lastAltitude){
-            DBG_FPRINT_SVLN("Current Altitude: ", pressureSensor.currentAltitude);
+        if (pressureSensor.altitude != pressureSensor.lastAltitude){
+            DBG_FPRINT_SVLN("Current Altitude: ", pressureSensor.altitude);
         }
 
         //Get Accell/Gyro Data
@@ -48,9 +48,9 @@ void mainAirLoop(){
         sdCard.writeCSVData();
         
         //See if we have hit Apogee
-        if (!hitApogee & pressureSensor.currentAltitude > APOGEE_HEIGHT){ //* Apogee detection enabled.
+        if (!hitApogee & pressureSensor.altitude > APOGEE_HEIGHT){ //* Apogee detection enabled.
             hitApogee = true;
-            DBG_FPRINT_SVLN("Just hit Apogee at: ", pressureSensor.currentAltitude);
+            DBG_FPRINT_SVLN("Just hit Apogee at: ", pressureSensor.altitude);
             DBG_FPRINTLN("Engaging the sandwich!");
             
         }
@@ -70,8 +70,8 @@ void mainAirLoop(){
         //\ (╯°□°）╯︵ ┻━┻) - The drift is killing me
         //Rotate once we have passed the right Altitudes
         if(rotateOnAltitude && hitApogee){ //* Enable - Enabled in  ./payload_settings.h 
-            if (currentAltitude < filterHeights[currentFilter]){
-                DBG_FPRINT_SV("Reached current filter height ", currentAltitude);
+            if (altitude < filterHeights[currentFilter]){
+                DBG_FPRINT_SV("Reached current filter height ", altitude);
                 DBG_FPRINT_SVLN(", for filter number ", currentFilter);
                 NEXT_FILTER(); //Next Filter
             }
@@ -81,37 +81,36 @@ void mainAirLoop(){
 }*/
 
 void mainAirLoop(){
-    while(digitalRead(BUTTON_PIN)){};
-    
-    cLED1->setColour(LEDColours::GREEN);
+    cLED1->setColour(LEDColours::CYAN);
     while(sandwitch.isAbleToRotate()){
-        MARS_RootModule.updatePayloadData(true);
+        MARS_RootModule.updatePayloadData(true); //Update paloadData struct
         sdCard.writeCSVData();
         //sdCard.printCSVData();
+        
+        //[TODO] Do wireless Logic on the pad ie alt change sml
+        //if (abs(pData.altitude[0] - pData.altitude[1]) < 5) WirlessUpdate()
 
         //See if we have hit Apogee
-        if (!pData.hitApogee & pData.currentAltitude[0] > apogeeHeight){ //* Apogee detection enabled.
+        //Check if we have passed a pre-determined apogee height or if the altitude has decreased
+        //No _Automatic_ Flight Logic is performed if apogee has not been passed
+        if (!pData.hitApogee && (pData.altitude[0] > apogeeHeight | pData.altitude[0] < pData.altitude[1])){
             pData.hitApogee = true;
-            DBG_FPRINT_SVLN("Just hit Apogee at: ", pData.currentAltitude[0]);
+            DBG_FPRINT_SVLN("Just hit Apogee at: ", pData.altitude[0]);
             DBG_FPRINTLN("Engaging the sandwich!");
-            cLED2->setColour(LEDColours::MAGENTA);
+            cLED1->setColour(LEDColours::GREEN);
         }
 
         //Rotate on button press
         if (pData.rotateOnButton && digitalRead(BUTTON_PIN)){
             DBG_FPRINTLN("Button has been pressed!");
-            cLED1->setColour(LEDColours::MAGENTA);
+            cLED2->setColour(LEDColours::MAGENTA);
             sandwitch.nextFilter();
-            if(sandwitch.getCurrentFilter() > 0 && sandwitch.getCurrentFilter() < pData.maxFilterNumber)
-                fanController.setSpeed(FAN_SPEED_LIMIT); //[TODO] Rename const
 
             while(digitalRead(BUTTON_PIN));
-            cLED1->setColour(LEDColours::BLACK);
+            cLED2->setColour(LEDColours::BLACK);
             DBG_FPRINTLN("Button has been released!");
         }
 
-        //^ I hope this works (´。＿。｀)
-        //\ (╯°□°）╯︵ ┻━┻) - The drift is killing me
         //Rotate once we have passed the right Altitudes
         if(pData.rotateOnAltitude && pData.hitApogee && sandwitch.shouldRotate(pData.altitude[0])){ //* Enable - Enabled in  ./payload_settings.h 
             DBG_FPRINT_SV("Reached current filter height ", pData.altitude[0]);
@@ -119,14 +118,25 @@ void mainAirLoop(){
             sandwitch.nextFilter();
         }
 
+        //^ I hope this works (´。＿。｀)
+        //If the sandwitch is engaged run the fans
+        if(pData.currentFilter > 0 && pData.currentFilter < pData.maxFilterNumber && fanController.getSpeed() != FAN_SPEED_LIMIT)
+            fanController.setSpeed(FAN_SPEED_LIMIT);
+        else: 
+            fanController.setSpeed(0);
+
         fanController.writeSpeed();
     }
+    cLED1.setColour(LEDColours::WHITE)
     fanController.setSpeed(0);
     DBG_FPRINTLN("All samples collected!");
     DBG_FPRINTLN("Please reset the Mega.");
     MARS_RootModule.updatePayloadData(true);
     sdCard.writeCSVData();
     sdCard.closeFile();
+
+    //[TODO] Wireless Data
+    //while(true) {}
 }
 
 void setup(){
@@ -169,7 +179,7 @@ void setup(){
         if (digitalRead(BUTTON_PIN)){
             DBG_PRINTLN("Button Press Detected!");
             cLED2->setColour(LEDColours::YELLOW);
-            while(!digitalRead(BUTTON_PIN)){} //Wait for button release
+            while(digitalRead(BUTTON_PIN)){} //Wait for button release
             DBG_PRINTLN("Button Release Detected! Armming from button press");
             cLED2->setColour(LEDColours::BLACK);
             MARS_RootModule.systemArmed = true;

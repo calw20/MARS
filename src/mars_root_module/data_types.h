@@ -105,7 +105,7 @@ struct payloadData {
     fStoredData altitude;
     fStoredData temp;
     
-    fStoredData currentAltitude;
+    fStoredData altitude;
 
     i16V3d a; //Accell Data
     i16V3d g; //Gyro Data
