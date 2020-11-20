@@ -68,12 +68,18 @@ void RootModule::printDebug(String printValues){
 
 }
 
+//[TODO] Move this to GPS
+fStoredData RootModule::selectAltitude(){
+    return pData.prsAltitude;
+}
+
 bool RootModule::updatePayloadData(bool forceDataUpdate){
     for (int i = 0; i < (sizeof(modules)/sizeof(modules[0])); i++){
         if (modules[i]){
             modules[i]->updatePayloadData(forceDataUpdate);
         }
     }
+    pData.altitude = selectAltitude()
     return true;
 }
 

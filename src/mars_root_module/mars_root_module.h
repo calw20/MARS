@@ -26,6 +26,7 @@ class RootModule : public UnCrashable {
 
         bool init() override;
 
+        fStoredData selectAltitude();
         bool updatePayloadData(bool forceDataUpdate);
 
     public:
