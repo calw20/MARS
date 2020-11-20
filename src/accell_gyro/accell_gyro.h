@@ -39,8 +39,8 @@ class AccellGyro : public MARSCrashableModule {
         //[TODO] Get the real values of theses
         //? Calibration Factors
         float mod_offset = 1670.13252568;
-        f3dv aOff = {110.0, 765.0, (0.0 * mod_offset)}
-        f3dv gOff = {80.0, -11.0, -13.0}
+        fV3d aOff = {110.0, 765.0, (0.0 * mod_offset)};
+        fV3d gOff = {80.0, -11.0, -13.0};
         int xGyro = 80, yGyro = -11, zGyro = -13;
 
     protected:

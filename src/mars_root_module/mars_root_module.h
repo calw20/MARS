@@ -33,7 +33,7 @@ class RootModule : public UnCrashable {
         payloadData data;
         TriColourLED* cLED1;
         TriColourLED* cLED2;
-        bool systemArmed = false; //System will remain lock until armed
+        bool systemArmed = false; //\Is this needed??
     
     protected:
         MARSCrashableModule *modules[MIN_CHILDREN_LENGTH];

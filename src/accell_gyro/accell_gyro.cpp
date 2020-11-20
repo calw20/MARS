@@ -34,12 +34,12 @@ bool AccellGyro::init(){
         DBG_PRINT(AccellGyroSensor.getYGyroOffset());  DBG_PRINT(", ");
         DBG_PRINT(AccellGyroSensor.getZGyroOffset());  DBG_PRINTLN();
     
-    AccellGyroSensor.setXGyroOffset(xOffset);
-        AccellGyroSensor.setYGyroOffset(yOffset);
-        AccellGyroSensor.setZGyroOffset(zOffset);
-    AccellGyroSensor.setXAccelOffset(xOffset);
-        AccellGyroSensor.setYAccelOffset(yOffset);
-        AccellGyroSensor.setZAccelOffset(zOffset);
+    AccellGyroSensor.setXGyroOffset(gOff.x);
+        AccellGyroSensor.setYGyroOffset(gOff.y);
+        AccellGyroSensor.setZGyroOffset(gOff.z);
+    AccellGyroSensor.setXAccelOffset(aOff.x);
+        AccellGyroSensor.setYAccelOffset(aOff.y);
+        AccellGyroSensor.setZAccelOffset(aOff.z);
     
     DBG_PRINT(AccellGyroSensor.getXAccelOffset()); DBG_PRINT(", ");
         DBG_PRINT(AccellGyroSensor.getYAccelOffset()); DBG_PRINT(", ");

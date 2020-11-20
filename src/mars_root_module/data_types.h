@@ -98,7 +98,7 @@ union V3d {
 //typedef V3d<i16StoredData> i16SdV3d;
 typedef V3d<int16_t> i16V3d;
 typedef V3d<int> iV3d;
-
+typedef V3d<float> fV3d;
 
 struct payloadData {
     //Basic Sensor Data

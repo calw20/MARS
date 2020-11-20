@@ -70,7 +70,7 @@ void RootModule::printDebug(String printValues){
 
 //[TODO] Move this to GPS
 fStoredData RootModule::selectAltitude(){
-    return pData.prsAltitude;
+    return data.prsAltitude;
 }
 
 bool RootModule::updatePayloadData(bool forceDataUpdate){
@@ -79,7 +79,7 @@ bool RootModule::updatePayloadData(bool forceDataUpdate){
             modules[i]->updatePayloadData(forceDataUpdate);
         }
     }
-    pData.altitude = selectAltitude()
+    data.altitude = selectAltitude();
     return true;
 }
 

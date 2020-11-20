@@ -51,8 +51,8 @@ void FanController::printDebug(String printValues){
     }
 }
 
+//The inverse of setSpeed; Returns a value from [LOWER_SERVO_MAP, UPPER_SERVO_MAP] in [lowerESCmap, upperESCmap]
 int FanController::getSpeed(){
-    //[TODO] Make Consts - The inverse of below
     return map(currentSpeed, LOWER_SERVO_MAP, UPPER_SERVO_MAP, lowerESCmap, upperESCmap);
 }
 
@@ -60,6 +60,7 @@ void FanController::writeSpeed(){
     ESC.write(currentSpeed);
 }
 
+//Convert a value in [lowerESCmap, upperESCmap] to [LOWER_SERVO_MAP, UPPER_SERVO_MAP] for the Servo Lib
 void FanController::setSpeed(int newSpeed){
     //[TODO] Make Consts
     currentSpeed = map(newSpeed, lowerESCmap, upperESCmap, LOWER_SERVO_MAP, UPPER_SERVO_MAP);
