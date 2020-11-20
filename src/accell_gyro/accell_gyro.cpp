@@ -26,7 +26,7 @@ bool AccellGyro::init(){
     }
     DBG_FPRINTLN("Accell/Gyro Initialized.");
    
-    /*//[TODO] Actually enable this
+    //[TODO] Get the correct values for this
     DBG_PRINT(AccellGyroSensor.getXAccelOffset()); DBG_PRINT(", ");
         DBG_PRINT(AccellGyroSensor.getYAccelOffset()); DBG_PRINT(", ");
         DBG_PRINT(AccellGyroSensor.getZAccelOffset()); DBG_PRINTLN();
@@ -47,7 +47,7 @@ bool AccellGyro::init(){
     DBG_PRINT(AccellGyroSensor.getXGyroOffset());  DBG_PRINT(", ");
         DBG_PRINT(AccellGyroSensor.getYGyroOffset());  DBG_PRINT(", ");
         DBG_PRINT(AccellGyroSensor.getZGyroOffset());  DBG_PRINTLN();
-    */
+    
 
     return true;
 }
