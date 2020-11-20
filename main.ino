@@ -122,12 +122,12 @@ void mainAirLoop(){
         //If the sandwitch is engaged run the fans
         if(pData.currentFilter > 0 && pData.currentFilter < pData.maxFilterNumber && fanController.getSpeed() != FAN_SPEED_LIMIT)
             fanController.setSpeed(FAN_SPEED_LIMIT);
-        else: 
+        else
             fanController.setSpeed(0);
 
         fanController.writeSpeed();
     }
-    cLED1.setColour(LEDColours::WHITE)
+    cLED1->setColour(LEDColours::WHITE);
     fanController.setSpeed(0);
     DBG_FPRINTLN("All samples collected!");
     DBG_FPRINTLN("Please reset the Mega.");
@@ -157,8 +157,8 @@ void setup(){
 
     //Blink the light ~5? times
     for(int i = 0; i <= 12 ; i++){
-        cLED1.setColour((i%2 == 1) ? LEDColours::GREEN : LEDColours::BLACK)
-        if DO_INIT_DELAY: delay(200); //This slows things down..... *wow* :/
+        cLED1->setColour(((i%2 == 1) ? LEDColours::GREEN : LEDColours::BLACK));
+        if (DO_INIT_DELAY) delay(200); //This slows things down..... *wow* :/
     }
 
     DBG_FPRINTLN("System is setup and configured!");
@@ -170,7 +170,7 @@ void setup(){
     unsigned long cLoop = beginArmWait;
     while(!MARS_RootModule.systemArmed){
         //Flash the light
-        if (millis()-cLoop > 500): cLoop = millis();
+        if (millis()-cLoop > 500) cLoop = millis();
         cLED2->setColour((millis()-cLoop > 500) ? LEDColours::CYAN : LEDColours::BLACK);
 
         //[TODO] Radio Loop Here

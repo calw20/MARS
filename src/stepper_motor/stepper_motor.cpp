@@ -73,10 +73,10 @@ bool StepperMotor::nextFilter(){
         
         //Only change the LED colour if a filter change is requested
         //nextFilter is more of a MARS func then rotate
-        LEDColours currentColour = marsRoot->cLED1.getColour()
-        marsRoot->cLED1.setColour(LEDColours::YELLOW)
+        LEDColours currentColour = marsRoot->cLED1->getColour();
+        marsRoot->cLED1->setColour(LEDColours::YELLOW);
         rotateSandwitch(STEPS_PER_ROTATION);
-        marsRoot->cLED1.setColour(currentColour)
+        marsRoot->cLED1->setColour(currentColour);
 
         DBG_FPRINT_SVLN("Now on filter: ", currentFilter);
         return true;
