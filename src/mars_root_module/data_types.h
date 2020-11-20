@@ -23,7 +23,16 @@ union StoredData {
         return val[i];
     }
 
+    /*
+    bool& operator>(T x) {
+        return val.current > x;
+    }
     
+    bool& operator<(T x) {
+        return val.current < x;
+    }*/
+
+
     //Move the value to previous via an assignment
     StoredData& operator=(T i){
         previous = current;
@@ -44,6 +53,7 @@ typedef StoredData<float> fStoredData;
 
 //2D Vectors
 /*//! Not used so why waste space??
+//? Actually I think the compiler-chain removes junk so this *could* be left in
 template <typename T>
 union v2d {
     struct {
@@ -88,36 +98,38 @@ union V3d {
 //typedef V3d<i16StoredData> i16SdV3d;
 typedef V3d<int16_t> i16V3d;
 typedef V3d<int> iV3d;
+typedef V3d<float> fV3d;
 
 struct payloadData {
+    //Basic Sensor Data
+    //Pressure Sensor (BMP280)
     fStoredData pressure;
-    fStoredData altitude;
+    fStoredData prsAltitude;
     fStoredData temp;
     
+    //Accell/Gyro (MPU6050)
+    //[TODO] Make these StoredData
     i16V3d a; //Accell Data
     i16V3d g; //Gyro Data
 
+    //GPS
+
+
+
+    fStoredData altitude;
+
+    //Fan Control Info - Doesn't rely change
     int fanSpeed[3];
     int transFanSpeed[3];
 
+    //Sandwitch Info
     u8 currentFilter;
     u8 maxFilterNumber;
 
+    //System Info
     bool hitApogee;
     bool rotateOnButton;
     bool rotateOnAltitude;
-
-    /* Not Needed
-    void update(fStoredData prs, fStoredData alt, i16V3d accell, i16V3d gyro,
-         bool hApg, bool rob, bool roa){
-        pressure = prs;
-        altitude = alt;
-        a = accell;
-        g = gyro;
-        hitApogee = hApg;
-        rotateOnButton = rob;
-        rotateOnAltitude = roa;
-    }*/
 };
 
 #endif

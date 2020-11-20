@@ -42,6 +42,16 @@ File SDCardAdapter::openFile(char* logFileName, bool delFileOnOpen){
 };
 
 
+bool SDCardAdapter::closeFile(){
+    if(FlightDataFile){
+        FlightDataFile.flush();
+        FlightDataFile.close();
+        return true; //[TODO] Should make this return the .close func
+    } else {
+        return false;
+    }
+}
+
 bool SDCardAdapter::init(){
     DBG_FPRINTLN("Initalizing SD Card...");
     if (!sdCard.begin(SD_CS_PIN) && USE_SD_CARD) {
@@ -66,8 +76,6 @@ bool SDCardAdapter::initFlightDataFile(PressureSensor &prsSensorModule,
     //Attempt to open the file
     SET_LOG_FILE_NUM(0);
     FlightDataFile = openFile(logFileName);
-
-    //if (ROLL_TO_NEXT_FILE) nextFile(sdCard, FlightDataFile, currentFileCount, true);
 
     //Get the accell/gyro data
     acGyro->getMotion();

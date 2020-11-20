@@ -26,6 +26,7 @@ class FanController : public MARSCrashableModule {
 
     public:
         void setSpeed(int steps);
+        void writeSpeed();
         int  getSpeed();
         void testRunLoop();
 

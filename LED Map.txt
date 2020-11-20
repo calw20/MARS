@@ -1,0 +1,57 @@
+LED Map - This should be markdown-ed at some point
++---------+     +----------+
+| Colours |     |  States  |
++---------+     +----------+
+| BLACK   |     | Solid    |
+| WHITE   |     | Flashing |
+| RED     |     +----------+
+| GREEN   |
+| BLUE    |
+| YELLOW  |
+| CYAN    |
+| MAGENTA |
++---------+
+
+Stage 0 (Initialization):
+    LED 1: 
+        Blink 5 Times -> System Initialized
+
+Stage 1 (Arming):
+    LED 1:
+        [TODO] Solid Blue -> Completing command from wireless radio
+    LED 2:
+        Flashing Cyan -> System not armed
+        Solid Yellow -> Waiting for button release
+        [TODO] Rapidly Blinks Blue -> Command Received from Radio
+        [TODO] Blinks Yellow -> Armed via Wireless Radio
+
+Stage 2 (On the pad / mid air):
+    LED 1:
+        Solid Cyan  -> Armed but has not passed apogee
+        Solid Green -> Passed apogee
+        [TODO] Solid Yellow -> Rotating Sandwich
+    LED 2:
+        [TODO] Rapidly Blinks Blue -> Command Received from Radio
+        [TODO] Solid Blue -> Completing command from wireless radio
+        Solid Magenta -> Handling rotation from button press (ie need to release)
+    
+Stage 3 (Landed / On the ground):
+    LED 1:
+        Solid White -> All samples collected
+    LED 2:
+        [TODO] Flashing Yellow -> Sending co-ords / data
+        [TODO] Rapidly Blinks Blue -> Command Received from Radio
+        [TODO] Solid Blue -> Completing command from wireless radio
+
+Critical Error:
+    LED 1:
+        Flashing Red - Critical Error
+    LED 2:
+        Solid Black (Off) ->
+        Solid White ->
+        Solid Red ->
+        Solid Green ->
+        Solid Blue ->
+        Solid Yellow ->
+        Solid Cyan ->
+        Solid Magenta ->

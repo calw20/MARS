@@ -19,11 +19,21 @@ void RootModule::criticalFailure(const char* func, const char* file, u16 failLin
     genericError(func, file, failLine);
 
     while(inError){
-        digitalWrite(CRITICAL_LED, HIGH);   
+        cLED1->setColour(LEDColours::RED);   
         delay(100);
-        digitalWrite(CRITICAL_LED, LOW);   
+        cLED1->setColour(LEDColours::BLACK);
         delay(100);
     }
+}
+
+bool RootModule::init(){
+    cLED1 = new TriColourLED(LEDPIN_R_1, LEDPIN_G_1, LEDPIN_B_1);
+    cLED2 = new TriColourLED(LEDPIN_R_2, LEDPIN_G_2, LEDPIN_B_2);
+    data.rotateOnAltitude = ROTATE_ON_ALTITUDE;
+    data.rotateOnButton = ROTATE_ON_BUTTON;
+    bool baseInit = UnCrashable::init();
+    cLED2->setColour(LEDColours::BLACK);
+    return baseInit;
 }
 
 void RootModule::printDebug(String printValues){
@@ -58,12 +68,18 @@ void RootModule::printDebug(String printValues){
 
 }
 
+//[TODO] Move this to GPS
+fStoredData RootModule::selectAltitude(){
+    return data.prsAltitude;
+}
+
 bool RootModule::updatePayloadData(bool forceDataUpdate){
     for (int i = 0; i < (sizeof(modules)/sizeof(modules[0])); i++){
         if (modules[i]){
             modules[i]->updatePayloadData(forceDataUpdate);
         }
     }
+    data.altitude = selectAltitude();
     return true;
 }
 

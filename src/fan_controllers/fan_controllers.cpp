@@ -20,7 +20,8 @@ bool FanController::init(){
         DBG_FPRINT(".");
             delay(300);
     #else
-        delay(1500); //Wait for amring
+        DBG_FPRINTLN("Please Wait...");
+            delay(1500); //Wait for amring
     #endif
     DBG_FPRINTLN("Armed and Operational.");
     
@@ -50,17 +51,22 @@ void FanController::printDebug(String printValues){
     }
 }
 
+//The inverse of setSpeed; Returns a value from [LOWER_SERVO_MAP, UPPER_SERVO_MAP] in [lowerESCmap, upperESCmap]
 int FanController::getSpeed(){
-    //[TODO] Make Consts - The inverse of below
     return map(currentSpeed, LOWER_SERVO_MAP, UPPER_SERVO_MAP, lowerESCmap, upperESCmap);
 }
 
-void FanController::setSpeed(int newSpeed){
-    //[TODO] Make Consts
-    currentSpeed = map(newSpeed, lowerESCmap, upperESCmap, LOWER_SERVO_MAP, UPPER_SERVO_MAP);
-    DBG_FPRINT_SVLN("New FanSpeed: ", currentSpeed);
+void FanController::writeSpeed(){
     ESC.write(currentSpeed);
 }
+
+//Convert a value in [lowerESCmap, upperESCmap] to [LOWER_SERVO_MAP, UPPER_SERVO_MAP] for the Servo Lib
+void FanController::setSpeed(int newSpeed){
+    currentSpeed = map(newSpeed, lowerESCmap, upperESCmap, LOWER_SERVO_MAP, UPPER_SERVO_MAP);
+    DBG_FPRINT_SVLN("New FanSpeed: ", currentSpeed);
+    writeSpeed();
+}
+
 
 bool FanController::updatePayloadData(bool forceDataUpdate){
     marsRoot->data.transFanSpeed[0] = currentSpeed; 

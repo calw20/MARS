@@ -41,11 +41,11 @@ u8 StepperMotor::getCurrentFilter(){
 }
 
 //Rotate the sandwich a number of steps
-//[TODO] This seems to be rotateing the wrong way ://
-//[TODO] 12-06: Fixed?
+//[TODO] 19-11: This need in person testing as I have disabled fliping the step direction
+//\ here and also the negative in STEPS_PER_ROTATION /payload_settings.h ¯\_(ツ)_/¯
 void StepperMotor::rotateSandwitch(long int steps){
     //Need to flip steps so that it goes the right direction
-    steps *= -1;
+    //steps *= -1;
 
     long int absSteps = abs(steps); //Argh this is a macro and for "speed" reasons Ill do this 
         //it could be more memory efficient to use the macro everywhere but meh, its a mega
@@ -66,17 +66,35 @@ void StepperMotor::rotateSandwitch(long int steps){
     }
 }
 
-//Move to the next filter
-void StepperMotor::nextFilter(u8& currentFilter){
-    //Only allow for one rotaion
-    if (currentFilter < maxFilterNumber) {
+bool StepperMotor::nextFilter(){
+    if (isAbleToRotate()) {
         DBG_FPRINT_SVLN("Currently on filter: ", currentFilter);
         currentFilter++;
-        //#warning Actual rotaion is disabled, only going to act as rotating!
-        rotateSandwitch(STEPS_PER_ROTATION); //! DISABLED!!!!
+        
+        //Only change the LED colour if a filter change is requested
+        //nextFilter is more of a MARS func then rotate
+        LEDColours currentColour = marsRoot->cLED1->getColour();
+        marsRoot->cLED1->setColour(LEDColours::YELLOW);
+        rotateSandwitch(STEPS_PER_ROTATION);
+        marsRoot->cLED1->setColour(currentColour);
+
         DBG_FPRINT_SVLN("Now on filter: ", currentFilter);
+        return true;
     } else {
         DBG_FPRINTLN("Request to rotate, however already completed one full turn!");
+        return false;
+    }
+}
+
+bool StepperMotor::isAbleToRotate(){
+    return currentFilter < maxFilterNumber;
+}
+
+bool StepperMotor::shouldRotate(){
+    if (currentFilter < maxFilterNumber){
+        return  marsRoot->data.altitude[0] < filterHeights[currentFilter];
+    } else {
+        return false;
     }
 }
 

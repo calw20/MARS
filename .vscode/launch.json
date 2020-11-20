@@ -11,6 +11,14 @@
             "script": "${workspaceFolder}/Upload.ps1",
             "cwd": "${workspaceFolder}",
             "args": ["-forceNoInput"]
+        },
+        {
+            "name": "Compile and Verify",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${workspaceFolder}/Upload.ps1",
+            "cwd": "${workspaceFolder}",
+            "args": ["-forceNoInput", ""]
         }
     ]
 }

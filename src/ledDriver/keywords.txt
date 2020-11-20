@@ -1,0 +1,25 @@
+#################################################
+#Syntax Coloring for the default Arduino IDE
+#################################################
+#Class
+#################################################
+
+#Debug Keywords
+#Classes
+LED          KEYWORD1
+TriColourLED    KEYWORD1
+
+#################################################
+#Methods, Functions and PreCompiler Mappings
+#################################################
+
+##Class Methods
+init	    KEYWORD2
+getColour	KEYWORD2
+setColour	KEYWORD2
+
+#################################################
+#Constants and Structures
+#################################################
+
+LEDColours	    KEYWORD3
