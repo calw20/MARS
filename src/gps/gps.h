@@ -7,7 +7,8 @@
 #include "../mars_root_module/data_types.h"
 #include "../mars_root_module/mars_root_module.h"
 
-#include <TinyGPS++.h>
+//TinyGPS++ Is an included lib, see ../TinyGPSPlus/README.md for more info
+#include "../TinyGPSPlus/src/TinyGPS++.h"
 #include <SoftwareSerial.h>
 
 #define GPS_RX 5
