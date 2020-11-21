@@ -111,13 +111,13 @@ struct payloadData {
     fStoredData temp;
     
     //Accell/Gyro (MPU6050)
-    //[TODO] Make these StoredData
+    //[TODO] Make these StoredData?
     i16V3d a; //Accell Data
     i16V3d g; //Gyro Data
 
     //GPS
+    dStoredData gpsAltitude; //meters
     uint32_t time; //How often will this be used really? (Is that forshadowing? :P)
-    dStoredData gpsAltitude;
     dV2d position; //I don't care about previous positions its just usefull to have
 
 
