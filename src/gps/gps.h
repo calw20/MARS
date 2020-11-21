@@ -30,10 +30,16 @@ class GPSModule : public MARSCrashableModule {
 
     public:
         bool fetchGPSData();
-        TinyGPSAltitude getAltitude();
-        TinyGPSLocation getLocation();
-        TinyGPSTime getTime();
+        TinyGPSAltitude getGPSAltitude();
+        TinyGPSLocation getGPSLocation();
+        TinyGPSTime getGPSTime();
         TinyGPSPlus getGPS();
+
+    public:
+        double getAltitude();
+        uint32_t getTime();
+        dV2d getLatLong();
+
 
     private:
         TinyGPSPlus gps;

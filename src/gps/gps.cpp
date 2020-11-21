@@ -10,50 +10,6 @@ void GPSModule::genericError(const char* func, const char* file, u16 failLine){
     DBG_PRINTLN();
 };
 
-//Initialize the GPS Radio
-bool GPSModule::init(){
-    DBG_FPRINTLN("Initalizing GPS...");
-    #if USE_GPS
-        if (!fetchGPSData()) {
-            DBG_FPRINTLN("Failed detection on first check, attempting again...");
-            if (!fetchGPSData()){
-                DBG_FPRINTLN("Could not find a valid GPS Radio, check wiring!");
-                CRITICAL_FAIL();
-            }
-        }
-        DBG_FPRINTLN("GPS Initialized.");
-        
-    #else
-        DBG_FPRINTLN("Hardware disabled in settings!");
-        minorFailure(__FUNCTION__, __FILE__, __LINE__);
-    #endif
-    
-    return true;
-};
-
-bool GPSModule::fetchGPSData(){
-    //[TODO] See if this timeout could be better
-    unsigned long startTime = millis();
-    while (ss.available() > 0)
-        gps.encode(ss.read());
-
-    //[TODO] See if this is a valid timeout method....
-    if (millis()-startTime > GPS_TIMEOUT && gps.charsProcessed() < 10)
-        return false;
-    
-    /*//[TODO] This may not be compilent to standard.... :/ 
-    //Fail if we didn't get a valid location & time
-    if (gps.location.isValid() && gps.time.isValid())
-        return false;
-    */
-    return true;
-}
-
-TinyGPSAltitude GPSModule::getAltitude(){ return gps.altitude; }
-TinyGPSLocation GPSModule::getLocation(){ return gps.location; }
-TinyGPSTime GPSModule::getTime(){ return gps.time; }
-TinyGPSPlus GPSModule::getGPS(){ return gps; }
-
 //GPS Debug Output
 void GPSModule::printDebug(String printValues){
     //^ Defined in debug.h? //#define CHK_LETTER(letter) printValues.indexOf(letter) > -1
@@ -115,12 +71,69 @@ void GPSModule::printDebug(String printValues){
     }
 }
 
+//Initialize the GPS Radio
+bool GPSModule::init(){
+    DBG_FPRINTLN("Initalizing GPS...");
+    #if USE_GPS
+        if (!fetchGPSData()) {
+            DBG_FPRINTLN("Failed detection on first check, attempting again...");
+            if (!fetchGPSData()){
+                DBG_FPRINTLN("Could not find a valid GPS Radio, check wiring!");
+                CRITICAL_FAIL();
+            }
+        }
+        DBG_FPRINTLN("GPS Initialized.");
+        
+    #else
+        DBG_FPRINTLN("Hardware disabled in settings!");
+        minorFailure(__FUNCTION__, __FILE__, __LINE__);
+    #endif
+    
+    return true;
+};
+
+//Get an update from the module
+bool GPSModule::fetchGPSData(){
+    //[TODO] See if this timeout could be better
+    unsigned long startTime = millis();
+    while (ss.available() > 0)
+        gps.encode(ss.read());
+
+    //[TODO] See if this is a valid timeout method....
+    if (millis()-startTime > GPS_TIMEOUT && gps.charsProcessed() < 10)
+        return false;
+    
+    /*//[TODO] This may not be compilent to standard.... :/ 
+    //Fail if we didn't get a valid location & time
+    if (gps.location.isValid() && gps.time.isValid())
+        return false;
+    */
+    return true;
+}
+
+//If wanted return compontes
+TinyGPSAltitude GPSModule::getGPSAltitude(){ return gps.altitude; }
+TinyGPSLocation GPSModule::getGPSLocation(){ return gps.location; }
+TinyGPSTime GPSModule::getGPSTime(){ return gps.time; }
+TinyGPSPlus GPSModule::getGPS(){ return gps; }
+
+//Return the raw values
+double GPSModule::getAltitude(){ return gps.altitude.meters(); }
+uint32_t GPSModule::getTime(){ return gps.time.value(); }
+
+dV2d GPSModule::getLatLong(){
+    dV2d pos;
+    pos[0] = gps.location.lat();
+    pos[0] = gps.location.lng();
+
+    return pos;
+}
+
 bool GPSModule::updatePayloadData(bool forceDataUpdate){
     if (forceDataUpdate && USE_GPS) fetchGPSData();
-    marsRoot->data.gpsAltitude = gps.altitude.meters();
-    marsRoot->data.time = gps.time.value();
-    marsRoot->data.position[0] = gps.location.lat();
-    marsRoot->data.position[1] = gps.location.lng();
+    marsRoot->data.gpsAltitude = getAltitude();
+    marsRoot->data.time = getTime();
+    marsRoot->data.position = getLatLong();
 
    return true;
 }
