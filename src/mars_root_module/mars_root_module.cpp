@@ -68,9 +68,9 @@ void RootModule::printDebug(String printValues){
 
 }
 
-//[TODO] Move this to GPS
 fStoredData RootModule::selectAltitude(){
-    return data.prsAltitude;
+    fStoredData alt = data.gpsAltitude; //Cast to fStoredData
+    return alt;
 }
 
 bool RootModule::updatePayloadData(bool forceDataUpdate){

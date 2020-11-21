@@ -49,13 +49,12 @@ union StoredData {
 };
 
 typedef StoredData<float> fStoredData;
+typedef StoredData<double> dStoredData;
 //typedef StoredData<int16_t> i16StoredData;
 
 //2D Vectors
-/*//! Not used so why waste space??
-//? Actually I think the compiler-chain removes junk so this *could* be left in
 template <typename T>
-union v2d {
+union V2d {
     struct {
         T x;
         T y;
@@ -71,7 +70,11 @@ union v2d {
         y = vec.y;
         return *this;
     }
-};*/
+};
+
+typedef V2d<float> fV2d;
+typedef V2d<double> dV2d;
+ 
 
 //3D Vectors
 template <typename T>
@@ -113,7 +116,9 @@ struct payloadData {
     i16V3d g; //Gyro Data
 
     //GPS
-
+    uint32_t time; //How often will this be used really? (Is that forshadowing? :P)
+    dStoredData gpsAltitude;
+    dV2d position; //I don't care about previous positions its just usefull to have
 
 
     fStoredData altitude;
