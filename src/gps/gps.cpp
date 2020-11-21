@@ -75,13 +75,28 @@ void GPSModule::printDebug(String printValues){
 bool GPSModule::init(){
     DBG_FPRINTLN("Initalizing GPS...");
     #if USE_GPS
-        if (!fetchGPSData()) {
-            DBG_FPRINTLN("Failed detection on first check, attempting again...");
-            if (!fetchGPSData()){
+        Serial1.begin(GPS_BAUD);
+        DBG_FPRINTLN("Waiting for GPS Lock...");
+        
+        unsigned long initTime = millis();
+        unsigned long endTime = initTime;
+
+        while (gps.satellites.value() < 1 && millis()-initTime < GPS_INIT_TIMEOUT){
+            fetchGPSData();
+            endTime = millis();
+        }
+        
+        if (fetchGPSData()){
+                DBG_FPRINTFN("GPS Lock Found! ", "%lu Satellites found in %f seconds.", (unsigned long)gps.satellites.value(), endTime/1000.00);
+        } else if (endTime-initTime > GPS_INIT_TIMEOUT) {
+                DBG_FPRINTFN("No GPS Lock found in ", "%f seconds.", endTime/1000.00);
+        } else {
                 DBG_FPRINTLN("Could not find a valid GPS Radio, check wiring!");
                 CRITICAL_FAIL();
-            }
         }
+        
+        marsRoot->data.altGndLvlOffset = genAltitudeOffset();
+
         DBG_FPRINTLN("GPS Initialized.");
         
     #else
@@ -96,8 +111,8 @@ bool GPSModule::init(){
 bool GPSModule::fetchGPSData(){
     //[TODO] See if this timeout could be better
     unsigned long startTime = millis();
-    while (ss.available() > 0)
-        gps.encode(ss.read());
+    while (Serial1.available() > 0)
+        gps.encode(Serial1.read());
 
     //[TODO] See if this is a valid timeout method....
     if (millis()-startTime > GPS_TIMEOUT && gps.charsProcessed() < 10)
@@ -124,9 +139,36 @@ uint32_t GPSModule::getTime(){ return gps.time.value(); }
 dV2d GPSModule::getLatLong(){
     dV2d pos;
     pos[0] = gps.location.lat();
-    pos[0] = gps.location.lng();
+    pos[1] = gps.location.lng();
 
     return pos;
+}
+
+double GPSModule::genAltitudeOffset(){
+    DBG_FPRINTLN("Generating ground level altitude offset.");
+    
+    int inLoop = 0;
+    double alt1, alt2, avgAlt;
+    bool inHeightRange = false;
+    while (inLoop < ALT_GPS_SAMPLE_COUNT) {
+        unsigned long startTime = millis();
+        fetchGPSData(); alt1 = getAltitude();
+        while(!gps.altitude.isUpdated() && millis()-startTime < GPS_GEN_TIMEOUT) fetchGPSData();
+        fetchGPSData(); alt2 = getAltitude();
+        inHeightRange = abs(alt1 - alt2) < MAX_HEIGHT_DIFF_FOR_GND_LVL;
+        
+        if (inHeightRange) avgAlt += alt2;
+        inLoop += (int)inHeightRange;
+
+        DBG_PRINTFN("Attempt %d: %f - %f = %f < %dm? %s", inLoop, 
+            alt1, alt2, alt1-alt2, MAX_HEIGHT_DIFF_FOR_GND_LVL, inHeightRange ? "Yes!" : "No.");
+    }
+    
+    avgAlt = avgAlt/(double)ALT_GPS_SAMPLE_COUNT;
+
+    DBG_FPRINTFN("Ground Level Altitude Offset is set to: ", "%.3fm", avgAlt);
+
+    return avgAlt;
 }
 
 bool GPSModule::updatePayloadData(bool forceDataUpdate){

@@ -120,7 +120,7 @@ struct payloadData {
     uint32_t time; //How often will this be used really? (Is that forshadowing? :P)
     dV2d position; //I don't care about previous positions its just usefull to have
 
-
+    double altGndLvlOffset = 0;
     fStoredData altitude;
 
     //Fan Control Info - Doesn't rely change

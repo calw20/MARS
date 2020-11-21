@@ -72,8 +72,8 @@ fStoredData RootModule::selectAltitude(){
     //Cast to fStoredData
     //There is *some* precision loss here but for our application I dont think this is an issue. 
     fStoredData alt;
-    alt[0] = data.gpsAltitude[0];
-    alt[1] = data.gpsAltitude[1];
+    alt[0] = data.gpsAltitude[0] - data.altGndLvlOffset;
+    alt[1] = data.gpsAltitude[1] - data.altGndLvlOffset;
      
     return alt;
 }
