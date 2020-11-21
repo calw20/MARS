@@ -62,12 +62,12 @@ void AccellGyro::genericError(const char* func, const char* file, u16 failLine){
 }
 
 void AccellGyro::printDebug(String printValues){
-    if (CHK_LETTER("-H")) printValues = "AG";
+    if (CHK_LETTER("-H")) printValues = "Ag";
 
     if (CHK_LETTER("H")) DBG_FPRINTLN("======================= Accell/Gyro Info =======================");
     
     //*Print Accel Info
-    if (CHK_LETTER("A")){
+    if (CHK_LETTER("a")){
         DBG_PRINT(F("Accelerometer X, Y, Z: "));
             DBG_PRINT(a.x); DBG_PRINT(F(", "));
             DBG_PRINT(a.y); DBG_PRINT(F(", "));
@@ -75,7 +75,7 @@ void AccellGyro::printDebug(String printValues){
     }
 
     //*Print Gyro Info
-    if (CHK_LETTER("G")){
+    if (CHK_LETTER("g")){
         DBG_PRINT(F("Gyro X, Y, Z: "));
             DBG_PRINT(g.x); DBG_PRINT(F(", "));
             DBG_PRINT(g.y); DBG_PRINT(F(", "));

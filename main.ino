@@ -8,6 +8,7 @@
 #include "src/sd_card/sd_card.h"
 #include "src/accell_gyro/accell_gyro.h"
 #include "src/fan_controllers/fan_controllers.h"
+#include "src/gps/gps.h"
 
 //^You really should only have to change these...
 #define SERIAL_BAUD 115200
@@ -19,6 +20,7 @@ SDCardAdapter sdCard(MARS_RootModule);
 StepperMotor sandwitch(MARS_RootModule);
 AccellGyro accellGyro(MARS_RootModule);
 FanController fanController(MARS_RootModule);
+GPSModule gpsRadio(MARS_RootModule);
 
 //Define a constant array - this defined in ./payload_settings.h
 const float apogeeHeight = APOGEE_HEIGHT;
