@@ -8,7 +8,7 @@
 #include "../mars_root_module/mars_root_module.h"
 
 #include <TinyGPS++.h>
-#include <SoftwareSerial>
+#include <SoftwareSerial.h>
 
 #define GPS_RX 5
 #define GPS_TX 4
@@ -22,7 +22,7 @@
 class GPSModule : public MARSCrashableModule {
     public:
         GPSModule(RootModule &uncrashableParent, bool addSelfToParent = true) 
-            : MARSCrashableModule(uncrashableParent, addSelfToParent) {};
+            : ss(GPS_RX, GPS_TX), MARSCrashableModule(uncrashableParent, addSelfToParent) {};
         bool init() override;
         void printDebug(String = "G") override;
         void genericError(const char* func, const char* file, u16 failLine) override;
@@ -37,7 +37,7 @@ class GPSModule : public MARSCrashableModule {
 
     private:
         TinyGPSPlus gps;
-        SoftwareSerial ss(GPS_RX, GPS_TX);
+        SoftwareSerial ss;
 
 };
 #endif

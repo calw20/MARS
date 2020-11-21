@@ -65,7 +65,7 @@ union V2d {
         return val[i];
     }
 
-    v2d& operator=(v2d vec){
+    V2d& operator=(V2d vec){
         x = vec.x;
         y = vec.y;
         return *this;

@@ -90,24 +90,24 @@ void GPSModule::printDebug(String printValues){
         DBG_FPRINT_SVLN("GPS Time Age: ", gps.time.age());
         DBG_FPRINT("GPS Time: ");
         //Hour
-        if (gps.time.hour() < 10) DBG_FPRINT("0")
+        if (gps.time.hour() < 10) DBG_FPRINT("0");
         DBG_PRINT(gps.time.hour());
         //Minute
-        DBG_PRINT(":")
-        if (gps.time.minute() < 10) DBG_FPRINT("0")
+        DBG_PRINT(":");
+        if (gps.time.minute() < 10) DBG_FPRINT("0");
         DBG_PRINT(gps.time.minute());
         //Seconds
-        DBG_FPRINT(":")
-        if (gps.time.second() < 10) DBG_FPRINT("0")
+        DBG_FPRINT(":");
+        if (gps.time.second() < 10) DBG_FPRINT("0");
         DBG_PRINT(gps.time.second());
         //Centi-Seconds
-        DBG_FPRINT(".")
-        if (gps.time.centisecond() < 10) DBG_FPRINT("0")
+        DBG_FPRINT(".");
+        if (gps.time.centisecond() < 10) DBG_FPRINT("0");
         DBG_PRINTLN(gps.time.centisecond());
     }
 
     if ((CHK_LETTER("d") || CHK_LETTER("G"))){
-        DBG_FPRINTLN("GPS Date Age: ", gps.time.age());
+        DBG_FPRINT_SVLN("GPS Date Age: ", gps.time.age());
         DBG_FPRINT("GPS Date: ");
         DBG_PRINT(gps.date.day()); DBG_FPRINT("/");
         DBG_PRINT(gps.date.month()); DBG_FPRINT("/");
@@ -119,8 +119,8 @@ bool GPSModule::updatePayloadData(bool forceDataUpdate){
     if (forceDataUpdate && USE_GPS) fetchGPSData();
     marsRoot->data.gpsAltitude = gps.altitude.meters();
     marsRoot->data.time = gps.time.value();
-    marsRoot->data.position[0] = gps.position.lat();
-    marsRoot->data.position[1] = gps.position.lng();
+    marsRoot->data.position[0] = gps.location.lat();
+    marsRoot->data.position[1] = gps.location.lng();
 
    return true;
 }

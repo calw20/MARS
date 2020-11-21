@@ -69,7 +69,11 @@ void RootModule::printDebug(String printValues){
 }
 
 fStoredData RootModule::selectAltitude(){
-    fStoredData alt = data.gpsAltitude; //Cast to fStoredData
+    //Cast to fStoredData
+    fStoredData alt;
+    alt[0] = data.gpsAltitude[0];
+    alt[1] = data.gpsAltitude[1];
+     
     return alt;
 }
 
