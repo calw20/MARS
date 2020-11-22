@@ -3,13 +3,7 @@
 
 #define CE_PIN 49
 #define CS_PIN 48
-
-#ifndef RADIOMODE
-    #define RADIOMODE 0
-#endif
-
-#ifndef RADIO_TIMEOUT
-    #define RADIO_TIMEOUT 500UL //ms
-#endif
+#define RADIOMODE 0
+#define RADIO_TIMEOUT 500UL //ms
 
 #endif

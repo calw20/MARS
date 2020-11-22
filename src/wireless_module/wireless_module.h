@@ -7,7 +7,10 @@
 #include "../mars_root_module/data_types.h"
 #include "../mars_root_module/mars_root_module.h"
 
-#define RADIOMODE 0
+#include "../wireless_radio/wireless_datatypes.h"
+#include "wireless_settings.h"
+#include "../wireless_radio/wireless_radio.h"
+
 
 class WirelessModule : public MARSCrashableModule {
     public:

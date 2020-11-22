@@ -10,9 +10,25 @@
 #include <SPI.h>
 #include <RF24.h>
 #include "wireless_datatypes.h"
-#include "wireless_settings.h"
+#include "../wireless_module/wireless_settings.h"
+#include "../wireless_module/wireless_module.h"
 
-#include "wireless_module.h"
+#ifndef CE_PIN
+    #define CE_PIN 8
+#endif
+
+#ifndef CS_PIN
+    #define CS_PIN 9
+#endif
+
+#ifndef RADIOMODE
+    #define RADIOMODE 0
+#endif
+
+#ifndef RADIO_TIMEOUT
+    #define RADIO_TIMEOUT 100UL //ms
+#endif
+
 
 class WirelessRadio{
     friend class WirelessModule;
