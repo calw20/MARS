@@ -158,11 +158,14 @@ void setup(){
 
     //[TODO] Move this to SDCard Module?
     //Write all the consts to a file
-    File constFile = sdCard.openFile("flightConsts.csv");
+    char constFileName[14] = "constFile.csv";
+    File constFile = sdCard.openFile(constFileName);
     constFile.println("UTC Date,Altitude Offset,Sea Level Pressure");
-    sprintf(fmtedFlightData, "%lu,%lu,%f", 
-        (unsigned long)gpsRadio.getDate(), (unsigned long)pData.altGndLvlOffset, PressureSensor.getSeaLevelPressure()
+    char __constFileBuff__[128];
+    sprintf(__constFileBuff__, "%lu,%lu,%f", 
+        (unsigned long)gpsRadio.getDate(), (unsigned long)pData.altGndLvlOffset, pressureSensor.getSeaLevelPressure()
     );
+    constFile.println(__constFileBuff__);
     constFile.flush();
     constFile.close();
 

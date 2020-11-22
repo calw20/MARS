@@ -92,7 +92,7 @@ int SDCardAdapter::genCSVData(bool pollNewData, bool forceDataUpdate){
         millis(), pData.pressure[0],
         pData.a.x, pData.a.y, pData.a.z,
         pData.g.x, pData.g.y, pData.g.z, 
-        (pData.hitApogee ? "True", "False") //[TODO] Should this be an int (0/1) as everything else is.....
+        (pData.hitApogee ? "True" : "False") //[TODO] Should this be an int (0/1) as everything else is.....
     );
 }
 
