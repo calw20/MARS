@@ -20,8 +20,11 @@ bool WirelessRadio::begin(){
     DBG_FPRINT("Initialized Radio");
 }
 
-bool WirelessRadio::sendCommand(WirelessCommands cmd, void* data){
+//[TODO] Re-order cmd/rsp & timeout??
+
+size_t WirelessRadio::commandDataSize(WirelessCommands cmd){
     size_t dataSize = 0;
+    
     switch (cmd){
     case SystemInitialized:
     case NoCommand:
@@ -31,10 +34,15 @@ bool WirelessRadio::sendCommand(WirelessCommands cmd, void* data){
     case ResetSystem:
     case AcceptSystemReset:
         break;
-
     default:
-        return false;
+        break;
     }
+
+    return dataSize;
+}
+
+bool WirelessRadio::sendCommand(WirelessCommands cmd, void* data){
+    size_t dataSize = commandDataSize(cmd);
 
     bool returnValue = true;
     returnValue &= radio.write(&cmd, sizeof(cmd));
@@ -53,25 +61,25 @@ WirelessCommands waitForCommand(void* data, unsigned long timeout){
             break;
         }
 
-    //size_t dataSize = 0;
-    switch (cmd) {
-    case NoCommand:
-    case SendState:
-    case ArmPayload:
-    case ForceFilterRotation:
-    case ResetSystem:
-    case AcceptSystemReset:
-    default:
-        break;
+    size_t dataSize = commandDataSize(cmd);
+    if (data && dataSize > 0){
+        timeoutStart = millis();
+        while (radio.available() || millis()-timeoutStart < timeout)
+            if (radio.available()){
+                radio.read(&cmd, sizeof(WirelessCommands));
+                break;
+            }
     }
 
     return cmd;
 
 }
 
-bool WirelessRadio::sendResponse(WirelessResponses cmd, void* data){
+size_t WirelessRadio::responseDataSize(WirelessResponses rsp){
     size_t dataSize = 0;
     switch (cmd){
+    case NoResponse:
+        break;
     case SystemInitialized:
         dataSize = sizeof(unsigned long);
         break;
@@ -82,8 +90,13 @@ bool WirelessRadio::sendResponse(WirelessResponses cmd, void* data){
         dataSize = sizeof(payloadData);
         break;
     default:
-        return false;
+        break;
     }
+    return dataSize;
+}
+
+bool WirelessRadio::sendResponse(WirelessResponses cmd, void* data){
+    size_t dataSize = responseDataSize(cmd);
 
     bool returnValue = true;
     returnValue &= radio.write(&cmd, sizeof(cmd));
@@ -94,7 +107,7 @@ bool WirelessRadio::sendResponse(WirelessResponses cmd, void* data){
 }
 
 WirelessResponses waitForResponse(void* data, unsigned long timeout){
-    WirelessResponses rsp = NoCommand;
+    WirelessResponses rsp = NoResponse;
     unsigned long timeoutStart = millis();
     while (radio.available() || millis()-timeoutStart < timeout)
         if (radio.available()){
@@ -102,25 +115,15 @@ WirelessResponses waitForResponse(void* data, unsigned long timeout){
             break;
         }
     
-    //[TODO] Move these to there own functions
-    size_t dataSize = 0;
-    switch (rsp) {
-    case SystemInitialized:
-        size_t dataSize = sizeof(unsigned long);
-    case SystemArmed:
-        size_t dataSize = sizeof(bool);
-    case SystemState:
-        size_t dataSize = sizeof(payloadData);
-    default:
-        break;
-    }
-
-    if (data && dataSize > 0)
+    size_t dataSize = responseDataSize(rsp);
+    if (data && dataSize > 0){
+        timeoutStart = millis();
         while (radio.available() || millis()-timeoutStart < timeout)
             if (radio.available()){
                 radio.read(data, dataSize);
                 break;
             }
+    }
 
     return rsp;
 

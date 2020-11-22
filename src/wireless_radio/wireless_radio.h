@@ -36,8 +36,11 @@ class WirelessRadio{
         WirelessRadio() : RF24(CE_PIN, CS_PIN){};
         bool begin();
         
+        size_t commandDataSize(WirelessCommands cmd);
         bool sendCommand(WirelessCommands cmd, void* data = nullptr);
         WirelessCommands waitForCommand(void* data = nullptr, unsigned long timeout = RADIO_TIMEOUT); //May not have timeout?
+        
+        size_t responseDataSize(WirelessResponses rsp);
         bool sendResponse(WirelessResponses rsp, void* data = nullptr);
         WirelessResponses waitForResponse(void* data = nullptr, unsigned long timeout = RADIO_TIMEOUT); //May not have timeout?
 

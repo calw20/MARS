@@ -8,19 +8,19 @@
 #define RADIOPIPENAMES {"MARS_TX","MARS_RX"}
 
 enum class WirelessCommands : u16_t {
-    NoCommand,  //Null
-    SendState, //Null
-    ArmPayload, //Null
-    ForceFilterRotation, //Null 
-    ResetSystem, //Null
-    AcceptSystemReset, //Null
+    NoCommand,  //None
+    SendState, //None
+    ArmPayload, //None
+    ForceFilterRotation, //None 
+    ResetSystem, //None
+    AcceptSystemReset, //None
 };
 
 enum WirelessResponses : u16_t {
+    NoResponse, //None
     SystemInitialized, //Unsigned Long
     SystemArmed, //Bool
     SystemState, //PayloadData
-
 };
 
 
