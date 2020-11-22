@@ -71,7 +71,7 @@ bool SDCardAdapter::initFlightDataFile(){
     FlightDataFile = openFile(logFileName);
 
     //Print all the inital values to the board
-    FlightDataFile.println("UTC Timestamp,Altitude,Current Filter,Temperature,Latitude,Longitude,Millis,Pressure,Ax,Ay,Az,Gx,Gy,Gz"); //Print Header
+    FlightDataFile.println("UTC Timestamp,Altitude,Current Filter,Temperature,Latitude,Longitude,Millis,Pressure,Ax,Ay,Az,Gx,Gy,Gz,Passed Apogee"); //Print Header
     genCSVData(true, true); //Force write base values
 
     FlightDataFile.flush();
@@ -81,16 +81,18 @@ bool SDCardAdapter::initFlightDataFile(){
     return true;
 }
 
+//[TODO] Add fan speed?
 int SDCardAdapter::genCSVData(bool pollNewData, bool forceDataUpdate){
     if (pollNewData) marsRoot->updatePayloadData(forceDataUpdate);
     
     payloadData &pData = marsRoot->data;
-    return sprintf(fmtedFlightData, "%lu,%f,%u,%f,%lu,%lu,%lu,%hi,%hi,%hi,%hi,%hi,%hi",
+    return sprintf(fmtedFlightData, "%lu,%f,%u,%f,%lu,%lu,%lu,%hi,%hi,%hi,%hi,%hi,%hi,%s",
         pData.time, pData.altitude[0], pData.currentFilter, pData.temp[0],
         (unsigned long)pData.position[0], (unsigned long)pData.position[1],
         millis(), pData.pressure[0],
         pData.a.x, pData.a.y, pData.a.z,
         pData.g.x, pData.g.y, pData.g.z, 
+        (pData.hitApogee ? "True", "False") //[TODO] Should this be an int (0/1) as everything else is.....
     );
 }
 

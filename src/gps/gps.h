@@ -52,6 +52,7 @@ class GPSModule : public MARSCrashableModule {
     public:
         double getAltitude();
         uint32_t getTime();
+        uint32_t getDate();
         dV2d getLatLong();
         double genAltitudeOffset();
 
