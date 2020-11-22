@@ -11,10 +11,9 @@ bool WirelessRadio::begin(){
 
     //Send Init Code
     radio.stopListening();
-    WirelessResponses sendCode = SystemInitialized;
     unsigned long cTime = millis();
+    sendResponse(SystemInitialized, *cTime);
     
-    radio.write(&cTime, sizeof(cTime));
     radio.startListening();
 
     DBG_FPRINT("Initialized Radio");
