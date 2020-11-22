@@ -10,6 +10,8 @@
 #include "src/fan_controllers/fan_controllers.h"
 #include "src/gps/gps.h"
 
+#include <SdFat.h>
+
 //^You really should only have to change these...
 #define SERIAL_BAUD 115200
 #define BUTTON_PIN A0
@@ -153,7 +155,21 @@ void setup(){
     //Build and Initialize all the modules
     DBG_FPRINTLN("Begining Initialization....");
     MARS_RootModule.init();
-    sdCard.initFlightDataFile(pressureSensor, sandwitch, accellGyro);
+
+    //[TODO] Move this to SDCard Module?
+    //Write all the consts to a file
+    char constFileName[14] = "constFile.csv";
+    File constFile = sdCard.openFile(constFileName);
+    constFile.println("UTC Date,Altitude Offset,Sea Level Pressure");
+    char __constFileBuff__[128];
+    sprintf(__constFileBuff__, "%lu,%lu,%f", 
+        (unsigned long)gpsRadio.getDate(), (unsigned long)pData.altGndLvlOffset, pressureSensor.getSeaLevelPressure()
+    );
+    constFile.println(__constFileBuff__);
+    constFile.flush();
+    constFile.close();
+
+    sdCard.initFlightDataFile();
     cLED1 = MARS_RootModule.cLED1;
     cLED2 = MARS_RootModule.cLED2;
 

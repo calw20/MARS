@@ -135,6 +135,7 @@ TinyGPSPlus GPSModule::getGPS(){ return gps; }
 //Return the raw values
 double GPSModule::getAltitude(){ return gps.altitude.meters(); }
 uint32_t GPSModule::getTime(){ return gps.time.value(); }
+uint32_t GPSModule::getDate(){ return gps.date.value(); }
 
 dV2d GPSModule::getLatLong(){
     dV2d pos;

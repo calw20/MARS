@@ -45,8 +45,7 @@ File SDCardAdapter::openFile(char* logFileName, bool delFileOnOpen){
 bool SDCardAdapter::closeFile(){
     if(FlightDataFile){
         FlightDataFile.flush();
-        FlightDataFile.close();
-        return true; //[TODO] Should make this return the .close func
+        return FlightDataFile.close();
     } else {
         return false;
     }
@@ -66,28 +65,14 @@ bool SDCardAdapter::init(){
     return true;
 }
 
-bool SDCardAdapter::initFlightDataFile(PressureSensor &prsSensorModule, 
-    StepperMotor &sandwitchMotorModule, AccellGyro &accellGyroModule){
-       
-    PressureSensor* prsSensor = &prsSensorModule;
-    StepperMotor* stpMotor = &sandwitchMotorModule;
-    AccellGyro* acGyro = &accellGyroModule;
-    
+bool SDCardAdapter::initFlightDataFile(){    
     //Attempt to open the file
     SET_LOG_FILE_NUM(0);
     FlightDataFile = openFile(logFileName);
 
-    //Get the accell/gyro data
-    acGyro->getMotion();
-
     //Print all the inital values to the board
-    FlightDataFile.println("Millis, Pressure, Altitude, Ax, Ay, Az, Gx, Gy, Gz, Temperature, Current Filter");
-    printfn(FlightDataFile, "%lu,%f,%f,%hi,%hi,%hi,%hi,%hi,%hi,%f,%f", 
-        millis(), prsSensor->readPressure(), prsSensor->readAltitude(),
-        acGyro->a.x, acGyro->a.y, acGyro->a.z,
-        acGyro->g.x, acGyro->g.y, acGyro->g.z,
-        prsSensor->readTemperature(), prsSensor->getSeaLevelPressure()
-    );
+    FlightDataFile.println("UTC Timestamp,Altitude,Current Filter,Temperature,Latitude,Longitude,Millis,Pressure,Ax,Ay,Az,Gx,Gy,Gz,Passed Apogee"); //Print Header
+    genCSVData(true, true); //Force write base values
 
     FlightDataFile.flush();
     
@@ -96,13 +81,18 @@ bool SDCardAdapter::initFlightDataFile(PressureSensor &prsSensorModule,
     return true;
 }
 
+//[TODO] Add fan speed?
 int SDCardAdapter::genCSVData(bool pollNewData, bool forceDataUpdate){
     if (pollNewData) marsRoot->updatePayloadData(forceDataUpdate);
-    return sprintf(fmtedFlightData, "%lu,%f,%f,%hi,%hi,%hi,%hi,%hi,%hi,%f,%u",
-        millis(), marsRoot->data.pressure[0], marsRoot->data.altitude[0],
-        marsRoot->data.a.x, marsRoot->data.a.y, marsRoot->data.a.z,
-        marsRoot->data.g.x, marsRoot->data.g.y, marsRoot->data.g.z,
-        marsRoot->data.temp[0], marsRoot->data.currentFilter
+    
+    payloadData &pData = marsRoot->data;
+    return sprintf(fmtedFlightData, "%lu,%f,%u,%f,%lu,%lu,%lu,%hi,%hi,%hi,%hi,%hi,%hi,%s",
+        pData.time, pData.altitude[0], pData.currentFilter, pData.temp[0],
+        (unsigned long)pData.position[0], (unsigned long)pData.position[1],
+        millis(), pData.pressure[0],
+        pData.a.x, pData.a.y, pData.a.z,
+        pData.g.x, pData.g.y, pData.g.z, 
+        (pData.hitApogee ? "True" : "False") //[TODO] Should this be an int (0/1) as everything else is.....
     );
 }
 
