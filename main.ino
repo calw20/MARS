@@ -153,7 +153,7 @@ void setup(){
     //Build and Initialize all the modules
     DBG_FPRINTLN("Begining Initialization....");
     MARS_RootModule.init();
-    sdCard.initFlightDataFile(pressureSensor, sandwitch, accellGyro);
+    sdCard.initFlightDataFile();
     cLED1 = MARS_RootModule.cLED1;
     cLED2 = MARS_RootModule.cLED2;
 
