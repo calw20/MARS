@@ -1,4 +1,4 @@
-#include "wireless_module.h"
+/*#include "wireless_module.h"
 
 //Makes things look neater I guess?
 bool WirelessModule::init(){
@@ -63,4 +63,4 @@ bool WirelessModule::waitForData(){
     radio->startListening();                                       // Now, resume listening so we catch the next packets.     
     printfn(Serial, "%lu,%lu", millis(), got_time);
   }
-}
+}*/

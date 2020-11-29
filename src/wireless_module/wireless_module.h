@@ -1,4 +1,4 @@
-#ifndef __MARS_WIRELESS_MODULE_H__
+/*#ifndef __MARS_WIRELESS_MODULE_H__
 #define __MARS_WIRELESS_MODULE_H__
 
 #include "Arduino.h"
@@ -25,7 +25,7 @@ class WirelessModule : public MARSCrashableModule {
         /*WirelessCommands getCommand();
         WirelessCommands waitForCommand();
         bool sendData();
-        bool sendCommand();*/
+        bool sendCommand();* /
         bool waitForData();
 
 
@@ -35,4 +35,4 @@ class WirelessModule : public MARSCrashableModule {
 
 };
 
-#endif
+#endif*/
