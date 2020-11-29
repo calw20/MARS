@@ -29,11 +29,15 @@
     #define RADIO_TIMEOUT 100UL //ms
 #endif
 
+#ifndef RESEND_REQUEST_TIMEOUT
+    #define RESEND_REQUEST_TIMEOUT 100UL //ms
+#endif
+
 
 class WirelessRadio{
     friend class WirelessModule;
     public:
-        WirelessRadio() : RF24(CE_PIN, CS_PIN){};
+        WirelessRadio(){ pRadio = new RF24(CE_PIN, CS_PIN); dataBuffer = malloc(sizeof(payloadData)); };
         bool begin();
         
         size_t commandDataSize(WirelessCommands cmd);
@@ -44,11 +48,14 @@ class WirelessRadio{
         bool sendResponse(WirelessResponses rsp, void* data = nullptr);
         WirelessResponses waitForResponse(void* data = nullptr, unsigned long timeout = RADIO_TIMEOUT); //May not have timeout?
 
+    protected:
+        size_t maxDataBufferSize();
 
     protected:
         byte radioPipeNames[2][8] = RADIOPIPENAMES;
-        RF24 radio;
-}
+        RF24 *pRadio;
+        void *dataBuffer;
+};
 
 
 
