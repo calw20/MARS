@@ -31,7 +31,7 @@ bool WirelessModule::handleWirelessCommand(WirelessCommands cmd, void *buffer){
     //case WirelessCommands::AcceptSystemReset:
     
     case WirelessCommands::ArmPayload:
-        marsRoot->systemArmed = true;
+        { marsRoot->systemArmed = true; }
     case WirelessCommands::SendArmState:
         rVal &= sendResponse(WirelessResponses::SystemArmed, &(marsRoot->systemArmed));
         break;
@@ -42,13 +42,13 @@ bool WirelessModule::handleWirelessCommand(WirelessCommands cmd, void *buffer){
         rVal &= sendResponse(WirelessResponses::SystemState, &(marsRoot->data));
         break;
     
-    case WirelessCommands::ResetSystem:
+    case WirelessCommands::ResetSystem:{
         WirelessCommands nCMD = waitForCommand(500);
         if (nCMD == WirelessCommands::AcceptSystemReset){} //Do reset
         unsigned long timeNow = millis();
         rVal &= sendResponse(WirelessResponses::SystemReinitialized, &timeNow);
-        break;
-        
+        } break;
+
     default:
         rVal &= sendResponse(WirelessResponses::NoResponse);
         break;
@@ -57,6 +57,6 @@ bool WirelessModule::handleWirelessCommand(WirelessCommands cmd, void *buffer){
 }
 
 bool WirelessModule::waitForHandledCommand(unsigned long timeout){
-   WirelessCommands cmd = waitForCommand(dataBuffer, timeout);
+   WirelessCommands cmd = waitForCommand(timeout, dataBuffer);
    return handleWirelessCommand(cmd, dataBuffer);
 }
