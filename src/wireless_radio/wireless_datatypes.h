@@ -13,15 +13,18 @@ enum class WirelessCommands : uint16_t {
     NoCommand,  //None
     ResendData, //None
     SendState, //None
+    SendArmState, //None
     ArmPayload, //None
     ForceFilterRotation, //None 
     ResetSystem, //None
     AcceptSystemReset, //None
+    PerformSelfTest, //None
 };
 
 enum class WirelessResponses : uint16_t {
     NoResponse, //None
     SystemInitialized, //Unsigned Long
+    SystemReinitialized, //Unsigned Long
     SystemArmed, //Bool
     SystemState, //PayloadData
 };

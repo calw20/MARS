@@ -39,10 +39,12 @@ size_t WirelessRadio::commandDataSize(WirelessCommands cmd){
     case WirelessCommands::NoCommand:
     case WirelessCommands::ResendData:
     case WirelessCommands::SendState:
+    case WirelessCommands::SendArmState:
     case WirelessCommands::ArmPayload:
     case WirelessCommands::ForceFilterRotation:
     case WirelessCommands::ResetSystem:
     case WirelessCommands::AcceptSystemReset:
+    case WirelessCommands::PerformSelfTest:
         break;
     default:
         break;
@@ -65,7 +67,7 @@ bool WirelessRadio::sendCommand(WirelessCommands cmd, void* data){
     return returnValue;
 }
 
-WirelessCommands WirelessRadio::waitForCommand(void* data, unsigned long timeout){
+WirelessCommands WirelessRadio::waitForCommand(unsigned long timeout, void* data){
     WirelessCommands cmd = WirelessCommands::NoCommand;
     unsigned long timeoutStart = millis();
     while (pRadio->available() || millis()-timeoutStart < timeout)
@@ -79,7 +81,7 @@ WirelessCommands WirelessRadio::waitForCommand(void* data, unsigned long timeout
         timeoutStart = millis();
         while (pRadio->available() || millis()-timeoutStart < timeout)
             if (pRadio->available()){
-                pRadio->read(&cmd, sizeof(WirelessCommands));
+                pRadio->read(data, dataSize);
                 break;
             }
     }
@@ -93,6 +95,8 @@ size_t WirelessRadio::responseDataSize(WirelessResponses rsp){
     switch (rsp){
     case WirelessResponses::NoResponse:
         break;
+
+    case WirelessResponses::SystemReinitialized:
     case WirelessResponses::SystemInitialized:
         dataSize = sizeof(unsigned long);
         break;

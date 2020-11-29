@@ -11,7 +11,7 @@
 #include <RF24.h>
 #include "wireless_datatypes.h"
 #include "../wireless_module/wireless_settings.h"
-#include "../wireless_module/wireless_module.h"
+//#include "../wireless_module/wireless_module.h"
 
 #ifndef CE_PIN
     #define CE_PIN 8
@@ -37,8 +37,7 @@
     #define RESEND_REQUEST_TIMEOUT 100UL //ms
 #endif
 
-
-class WirelessRadio{
+class WirelessRadio {
     friend class WirelessModule;
     public:
         WirelessRadio();
@@ -46,7 +45,7 @@ class WirelessRadio{
         
         size_t commandDataSize(WirelessCommands cmd);
         bool sendCommand(WirelessCommands cmd, void* data = nullptr);
-        WirelessCommands waitForCommand(void* data = nullptr, unsigned long timeout = RADIO_TIMEOUT); //May not have timeout?
+        WirelessCommands waitForCommand(unsigned long timeout = RADIO_TIMEOUT, void* data = nullptr); //May not have timeout?
         
         size_t responseDataSize(WirelessResponses rsp);
         bool sendResponse(WirelessResponses rsp, void* data = nullptr);
