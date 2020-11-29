@@ -1,5 +1,10 @@
 #include "wireless_radio.h"
 
+WirelessRadio::WirelessRadio(){
+    pRadio = new RF24(CE_PIN, CS_PIN); 
+    dataBuffer = malloc(maxDataBufferSize());
+};
+
 //Initialize the radio
 bool WirelessRadio::begin(){
     pRadio->begin();
@@ -20,6 +25,8 @@ bool WirelessRadio::begin(){
 }
 
 size_t WirelessRadio::maxDataBufferSize(){
+    //This is the largest thing to handle wirelessly, and insted of doing
+    //some mad enum looping stuff, I'll just make the buffer huge.
     return sizeof(payloadData);
 }
 
@@ -51,7 +58,7 @@ bool WirelessRadio::sendCommand(WirelessCommands cmd, void* data){
     returnValue &= pRadio->write(&cmd, sizeof(cmd));
     if (dataSize > 0 && data){
         returnValue &= pRadio->write(data, dataSize);
-        if (WirelessCommands::ResendData == waitForCommand(nullptr, RESEND_REQUEST_TIMEOUT))
+        if (WAIT_FOR_RESEND_REQUEST && WirelessCommands::ResendData == waitForCommand(nullptr, RESEND_REQUEST_TIMEOUT))
             returnValue &= pRadio->write(data, dataSize);
     }
     
@@ -108,7 +115,7 @@ bool WirelessRadio::sendResponse(WirelessResponses cmd, void* data){
     returnValue &= pRadio->write(&cmd, sizeof(cmd));
     if (dataSize > 0 && data){
         returnValue &= pRadio->write(data, dataSize);
-        if (WirelessCommands::ResendData == waitForCommand(nullptr, RESEND_REQUEST_TIMEOUT)) //Real short timeout
+        if (WAIT_FOR_RESEND_REQUEST && WirelessCommands::ResendData == waitForCommand(nullptr, RESEND_REQUEST_TIMEOUT)) //Real short timeout
             returnValue &= pRadio->write(data, dataSize);
     }
     

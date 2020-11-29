@@ -26,39 +26,4 @@ enum class WirelessResponses : uint16_t {
     SystemState, //PayloadData
 };
 
-
-/*
-template typename<T>
-struct messageHeader {
-    T id;
-    //size_t size = 0; //All sizes are known??
-}
-
-template typename<T>
-class message {
-    public:
-        messageHeader<T> header;
-        virtual size_t  size();
-}
-
-typedef messageHeader<WirelessCommands> commandHeader;
-typedef messageHeader<WirelessResponses> responseHeader;
-/ *
-typedef message<WirelessCommands> commandMessage;
-typedef message<WirelessResponses> responseMessage;
-
-class MsgPayloadData : responseMessage {
-    public:
-        MsgPayloadData(payloadData sPData) { pData = sPData; header.id = PayloadData; header.size = size()};
-        size_t size(){ return sizeof(pData); };
-        payloadData pData;
-}
-
-class MsgBool : responseHeader {
-    public:
-        MsgBool(bool sendValue, responseHeader sentHeader){ value = sendValue; header = sentHeader; };
-        size_t size(){ return sizeof(value); };
-        bool value;
-}*/
-
 #endif

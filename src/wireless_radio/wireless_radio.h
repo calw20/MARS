@@ -29,6 +29,10 @@
     #define RADIO_TIMEOUT 100UL //ms
 #endif
 
+#ifndef WAIT_FOR_RESEND_REQUEST
+    #define WAIT_FOR_RESEND_REQUEST true
+#endif
+
 #ifndef RESEND_REQUEST_TIMEOUT
     #define RESEND_REQUEST_TIMEOUT 100UL //ms
 #endif
@@ -37,7 +41,7 @@
 class WirelessRadio{
     friend class WirelessModule;
     public:
-        WirelessRadio(){ pRadio = new RF24(CE_PIN, CS_PIN); dataBuffer = malloc(sizeof(payloadData)); };
+        WirelessRadio();
         bool begin();
         
         size_t commandDataSize(WirelessCommands cmd);
