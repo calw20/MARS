@@ -1,5 +1,10 @@
 #include "wireless_module.h"
 
+WirelessModule::WirelessModule(RootModule &uncrashableParent, StepperMotor* ptrStepper, bool addSelfToParent) 
+    : WirelessRadio(), MARSCrashableModule(uncrashableParent, addSelfToParent) {
+    ptrSandwitch = ptrStepper;        
+};
+
 void WirelessModule::genericError(const char* func, const char* file, u16 failLine){
     DBG_FPRINTLN("################## Wireless Radio Error Info ##################");
     DBG_FPRINTF("The Fan Controllers have experienced an Error of type: ","[%s]\r\nMore Details;\r\n",

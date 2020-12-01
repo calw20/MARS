@@ -26,7 +26,7 @@ StepperMotor sandwitch(MARS_RootModule);
 AccellGyro accellGyro(MARS_RootModule);
 FanController fanController(MARS_RootModule);
 GPSModule gpsRadio(MARS_RootModule);
-WirelessModule radioModule(MARS_RootModule);
+WirelessModule radioModule(MARS_RootModule, &sandwitch);
 
 //Define a constant array - this defined in ./payload_settings.h
 const float apogeeHeight = APOGEE_HEIGHT;
