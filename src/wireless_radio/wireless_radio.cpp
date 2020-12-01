@@ -27,20 +27,20 @@ bool WirelessRadio::begin(){
 size_t WirelessRadio::maxDataBufferSize(){
     //This is the largest thing to handle wirelessly, and insted of doing
     //some mad enum looping stuff, I'll just make the buffer huge.
-    //return sizeof(payloadData);
+    return sizeof(payloadData);
 
-    size_t maxValue = 0;
-    WirelessCommands  cmdList[] = { WirelessCommands::NoCommand, WirelessCommands::ResendData, WirelessCommands::SendState, WirelessCommands::SendArmState, WirelessCommands::ArmPayload, WirelessCommands::ForceFilterRotation, WirelessCommands::ResetSystem, WirelessCommands::AcceptSystemReset, WirelessCommands::PerformSelfTest };
+    /*size_t maxValue = 0;
+    //WirelessCommands  cmdList[] = { WirelessCommands::NoCommand, WirelessCommands::ResendData, WirelessCommands::SendState, WirelessCommands::SendArmState, WirelessCommands::ArmPayload, WirelessCommands::ForceFilterRotation, WirelessCommands::ResetSystem, WirelessCommands::AcceptSystemReset, WirelessCommands::PerformSelfTest };
     WirelessResponses rspList[] = { WirelessResponses::NoResponse, WirelessResponses::SystemInitialized, WirelessResponses::SystemReinitialized, WirelessResponses::SystemArmed, WirelessResponses::SystemState };
 
-    for (const WirelessCommands &cmd : cmdList)
-        maxValue = max(maxValue, commandDataSize(cmd));
+    //Currently there is no command that has a return value
+    //for (const WirelessCommands &cmd : cmdList)
+    //    maxValue = max(maxValue, commandDataSize(cmd));
 
     for (const WirelessResponses &rsp : rspList)
         maxValue = max(maxValue, responseDataSize(rsp));
 
-    return maxValue;
-
+    return maxValue;*/
 }
 
 //[TODO] Re-order cmd/rsp & timeout??
