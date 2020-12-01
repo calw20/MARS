@@ -48,20 +48,22 @@ size_t WirelessRadio::maxDataBufferSize(){
 size_t WirelessRadio::commandDataSize(WirelessCommands cmd){
     size_t dataSize = 0;
     
-    switch (cmd){
-    case WirelessCommands::NoCommand:
-    case WirelessCommands::ResendData:
-    case WirelessCommands::SendState:
-    case WirelessCommands::SendArmState:
-    case WirelessCommands::ArmPayload:
-    case WirelessCommands::ForceFilterRotation:
-    case WirelessCommands::ResetSystem:
-    case WirelessCommands::AcceptSystemReset:
-    case WirelessCommands::PerformSelfTest:
-        break;
+    //Don't Need this
+    /*switch (cmd){
+    //Size of zero should be the default.
+        //case WirelessCommands::NoCommand:
+        //case WirelessCommands::ResendData:
+        //case WirelessCommands::SendState:
+        //case WirelessCommands::SendArmState:
+        //case WirelessCommands::ArmPayload:
+        //case WirelessCommands::ForceFilterRotation:
+        //case WirelessCommands::ResetSystem:
+        //case WirelessCommands::AcceptSystemReset:
+        //case WirelessCommands::PerformSelfTest:
+        //    break;
     default:
         break;
-    }
+    }*/
 
     return dataSize;
 }
@@ -83,7 +85,7 @@ bool WirelessRadio::sendCommand(WirelessCommands cmd, void* data){
 WirelessCommands WirelessRadio::waitForCommand(unsigned long timeout, void* data){
     WirelessCommands cmd = WirelessCommands::NoCommand;
     unsigned long timeoutStart = millis();
-    while (pRadio->available() || millis()-timeoutStart < timeout)
+    while (pRadio->available() || millis()-timeoutStart < timeout || timeout == 0)
         if (pRadio->available()){
             pRadio->read(&cmd, sizeof(WirelessCommands));
             break;
@@ -92,7 +94,7 @@ WirelessCommands WirelessRadio::waitForCommand(unsigned long timeout, void* data
     size_t dataSize = commandDataSize(cmd);
     if (data && dataSize > 0){
         timeoutStart = millis();
-        while (pRadio->available() || millis()-timeoutStart < timeout)
+        while (pRadio->available() || millis()-timeoutStart < timeout || timeout == 0)
             if (pRadio->available()){
                 pRadio->read(data, dataSize);
                 break;
@@ -142,7 +144,7 @@ bool WirelessRadio::sendResponse(WirelessResponses cmd, void* data){
 WirelessResponses WirelessRadio::waitForResponse(void* data, unsigned long timeout){
     WirelessResponses rsp = WirelessResponses::NoResponse;
     unsigned long timeoutStart = millis();
-    while (pRadio->available() || millis()-timeoutStart < timeout)
+    while (pRadio->available() || millis()-timeoutStart < timeout || timeout == 0)
         if (pRadio->available()){
             pRadio->read(&rsp, sizeof(WirelessResponses));
             break;
@@ -151,7 +153,7 @@ WirelessResponses WirelessRadio::waitForResponse(void* data, unsigned long timeo
     size_t dataSize = responseDataSize(rsp);
     if (data && dataSize > 0){
         timeoutStart = millis();
-        while (pRadio->available() || millis()-timeoutStart < timeout)
+        while (pRadio->available() || millis()-timeoutStart < timeout || timeout == 0)
             if (pRadio->available()){
                 pRadio->read(data, dataSize);
                 break;
