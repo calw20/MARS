@@ -1,0 +1,12 @@
++----------------------+
+|      Enum Value      |
++----------------------+
+| SendState            |
+| SendArmState         |
+| ArmPayload           |
+| ForceFilterRotation  |
+| ResetSystem          |
+| AcceptSystemReset    |
+| PerformSelfTest      |
+|                      |
++----------------------+

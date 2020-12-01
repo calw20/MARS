@@ -7,7 +7,7 @@ WirelessModule::WirelessModule(RootModule &uncrashableParent, StepperMotor* ptrS
 
 void WirelessModule::genericError(const char* func, const char* file, u16 failLine){
     DBG_FPRINTLN("################## Wireless Radio Error Info ##################");
-    DBG_FPRINTF("The Fan Controllers have experienced an Error of type: ","[%s]\r\nMore Details;\r\n",
+    DBG_FPRINTF("The Wireless Radio have experienced an Error of type: ","[%s]\r\nMore Details;\r\n",
         CrashTypeText[status]); //DBG_PRINTLN();
     printErrorInfo(func, file, failLine);
     printDebug("-H");
@@ -18,11 +18,14 @@ void WirelessModule::printDebug(String printValues){
     //^ Defined in debug.h? //#define CHK_LETTER(letter) printValues.indexOf(letter) > -1
     if (CHK_LETTER("-H")) printValues = "R";
 
-    if (CHK_LETTER("H")) DBG_FPRINTLN("===================== Fan Controllers Info =====================");
+    if (CHK_LETTER("H")) DBG_FPRINTLN("===================== Wireless Radio Info =====================");
     
     if (CHK_LETTER("R")){
-        //DBG_FPRINT_SVLN("Current Fan Speed: ", currentSpeed);
-        
+        DBG_FPRINTFN("Radio acting in ", "%s mode.", RADIOMODE ? "Rocket" : "Control");
+        DBG_FPRINT_SVLN("Max Buffer Size: ", maxDataBufferSize());
+        DBG_FPRINT_SVLN("Radio timeout (ms): ", RADIO_TIMEOUT);
+        DBG_FPRINT_SVLN("Radio data resend request timout (ms): ", RESEND_REQUEST_TIMEOUT);
+        DBG_FPRINT_SVLN("Wait for resend request? ", WAIT_FOR_RESEND_REQUEST ? F("Yes") : F("No"));
     }
 }
 
@@ -31,32 +34,39 @@ bool WirelessModule::handleWirelessCommand(WirelessCommands cmd, void *buffer){
     bool rVal = true;
     switch (cmd){
     //These *should* never be implimented (ie send a noResponse)
-    //case WirelessCommands::NoCommand:
-    //case WirelessCommands::ResendData:
-    //case WirelessCommands::AcceptSystemReset:
+    //NoCommand, ResendData, AcceptSystemReset
     
     case WirelessCommands::ArmPayload:
         { marsRoot->systemArmed = true; }
-    case WirelessCommands::SendArmState:
+    case WirelessCommands::SendArmState: {
         rVal &= sendResponse(WirelessResponses::SystemArmed, &(marsRoot->systemArmed));
-        break;
+    } break;
 
-    case WirelessCommands::ForceFilterRotation:
-        //[TODO] Rotate System
-    case WirelessCommands::SendState:
+    case WirelessCommands::ForceFilterRotation: {
+        bool val = ptrSandwitch->nextFilter();
+        //Not an important value to track but nice to have
+        sendResponse(WirelessResponses::CommandSucceeded, &val);
         rVal &= sendResponse(WirelessResponses::SystemState, &(marsRoot->data));
-        break;
-    
-    case WirelessCommands::ResetSystem:{
+    } break;
+
+    case WirelessCommands::SendState: {
+        rVal &= sendResponse(WirelessResponses::SystemState, &(marsRoot->data));
+    } break;
+
+    case WirelessCommands::PerformSelfTest: {
+        //[TODO] Self Checks
+    } break;
+
+    case WirelessCommands::ResetSystem: {
         WirelessCommands nCMD = waitForCommand(500);
         if (nCMD == WirelessCommands::AcceptSystemReset){} //Do reset
         unsigned long timeNow = millis();
         rVal &= sendResponse(WirelessResponses::SystemReinitialized, &timeNow);
-        } break;
+    } break;
 
-    default:
+    default: {
         rVal &= sendResponse(WirelessResponses::NoResponse);
-        break;
+    } break;
     }
     return rVal;
 }

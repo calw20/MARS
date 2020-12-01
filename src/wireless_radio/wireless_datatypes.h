@@ -26,7 +26,8 @@ enum class WirelessResponses : uint16_t {
     SystemInitialized, //Unsigned Long
     SystemReinitialized, //Unsigned Long
     SystemArmed, //Bool
-    SystemState, //PayloadData
+    SystemState, //PayloadData,
+    CommandSucceeded, //Bool
 };
 
 #endif
