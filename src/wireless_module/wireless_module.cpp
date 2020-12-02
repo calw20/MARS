@@ -29,7 +29,9 @@ void WirelessModule::printDebug(String printValues){
     }
 }
 
-//[TODO] Functionise these 🤔🤔 
+//[TODO] Functionise these 🤔🤔
+//There is a lot of sending back payloadData on command completion,
+//May want to make this recursive
 bool WirelessModule::handleWirelessCommand(WirelessCommands cmd, void *buffer){
     bool rVal = true;
     switch (cmd){
@@ -57,6 +59,7 @@ bool WirelessModule::handleWirelessCommand(WirelessCommands cmd, void *buffer){
         //[TODO] Self Checks
     } break;
 
+    //[TODO] Do reset :/
     case WirelessCommands::ResetSystem: {
         WirelessCommands nCMD = waitForCommand(500);
         if (nCMD == WirelessCommands::AcceptSystemReset){} //Do reset
