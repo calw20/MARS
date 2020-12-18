@@ -56,7 +56,11 @@ bool WirelessModule::handleWirelessCommand(WirelessCommands cmd, void *buffer){
     } break;
 
     case WirelessCommands::PerformSelfTest: {
-        //[TODO] Self Checks
+        PerfromTest testCMD = PerfromTest::NoTest;
+        WirelessCommands nCMD = waitForCommand(500, &testCMD);
+        if (nCMD == WirelessCommands::PerformSelfTest){} //Do reset
+
+        rVal &= sendResponse(WirelessResponses::SystemState, &(marsRoot->data));        
     } break;
 
     //[TODO] Do reset :/

@@ -32,6 +32,8 @@ enum class WirelessResponses : uint16_t {
 
 //May want to move this to the test module
 enum class PerformTest : uint16_t {
+    NoTest,
+    FullCheck,
     FullStepperCheck,
 
 }
