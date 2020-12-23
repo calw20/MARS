@@ -10,6 +10,9 @@
 #include "src/fan_controllers/fan_controllers.h"
 #include "src/gps/gps.h"
 
+#include "src/wireless_module/wireless_module.h"
+#include "src/wireless_radio/wireless_datatypes.h"
+
 #include <SdFat.h>
 
 //^You really should only have to change these...
@@ -23,6 +26,7 @@ StepperMotor sandwitch(MARS_RootModule);
 AccellGyro accellGyro(MARS_RootModule);
 FanController fanController(MARS_RootModule);
 GPSModule gpsRadio(MARS_RootModule);
+WirelessModule radioModule(MARS_RootModule, &sandwitch);
 
 //Define a constant array - this defined in ./payload_settings.h
 const float apogeeHeight = APOGEE_HEIGHT;
@@ -155,6 +159,7 @@ void setup(){
     //Build and Initialize all the modules
     DBG_FPRINTLN("Begining Initialization....");
     MARS_RootModule.init();
+    
 
     //[TODO] Move this to SDCard Module?
     //Write all the consts to a file
@@ -191,8 +196,6 @@ void setup(){
         if (millis()-cLoop > 500) cLoop = millis();
         cLED2->setColour((millis()-cLoop > 500) ? LEDColours::CYAN : LEDColours::BLACK);
 
-        //[TODO] Radio Loop Here
-
         //Check if there has been a button press
         if (digitalRead(BUTTON_PIN)){
             DBG_PRINTLN("Button Press Detected!");
@@ -202,6 +205,9 @@ void setup(){
             cLED2->setColour(LEDColours::BLACK);
             MARS_RootModule.systemArmed = true;
         }
+
+        //Wireless Command Handling
+        radioModule.waitForHandledCommand();
 
         //Arming Timeout
         if (ARMING_TIMEOUT > 0 && millis()-beginArmWait > ARMING_TIMEOUT){
