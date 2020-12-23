@@ -70,20 +70,22 @@ bool StepperMotor::nextFilter(){
     if (isAbleToRotate()) {
         DBG_FPRINT_SVLN("Currently on filter: ", currentFilter);
         currentFilter++;
-        
-        //Only change the LED colour if a filter change is requested
-        //nextFilter is more of a MARS func then rotate
-        LEDColours currentColour = marsRoot->cLED1->getColour();
-        marsRoot->cLED1->setColour(LEDColours::YELLOW);
-        rotateSandwitch(STEPS_PER_ROTATION);
-        marsRoot->cLED1->setColour(currentColour);
-
+        rotateAndSignal(STEPS_PER_ROTATION);
         DBG_FPRINT_SVLN("Now on filter: ", currentFilter);
         return true;
     } else {
         DBG_FPRINTLN("Request to rotate, however already completed one full turn!");
         return false;
     }
+}
+
+void StepperMotor::rotateAndSignal(long int steps){
+        //Change the LED colour when rotation is requested
+        //[Thought] nextFilter is more of a MARS func then rotate
+        LEDColours currentColour = marsRoot->cLED1->getColour();
+        marsRoot->cLED1->setColour(LEDColours::YELLOW);
+        rotateSandwitch(steps);
+        marsRoot->cLED1->setColour(currentColour);
 }
 
 bool StepperMotor::isAbleToRotate(){
