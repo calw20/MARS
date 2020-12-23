@@ -1,14 +1,17 @@
 {
-    "env":{
+    "env": {
         "otherIncludePaths": [
-			"${env:userprofile}\\Documents\\Arduino\\libraries\\**",
-			"${workspaceFolder}\\src\\**"
-		]
+            "${env:userprofile}\\Documents\\Arduino\\libraries\\**",
+            "${workspaceFolder}\\src\\**"
+        ]
     },
     "configurations": [
         {
             "name": "Win32",
             "includePath": [
+                "C:\\Users\\Cal\\Documents\\Arduino\\libraries\\**",
+                "C:\\Program Files (x86)\\Arduino\\libraries\\**",
+                "C:\\Program Files (x86)\\Arduino\\hardware\\tools\\**",
                 "C:\\Program Files (x86)\\Arduino\\tools\\**",
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",
                 "${otherIncludePaths}"
@@ -16,7 +19,10 @@
             "forcedInclude": [
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
             ],
-            "intelliSenseMode": "msvc-x64"
+            "intelliSenseMode": "msvc-x64",
+            "defines": [
+                "USBCON"
+            ]
         }
     ],
     "version": 4

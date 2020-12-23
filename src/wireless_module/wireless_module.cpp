@@ -55,11 +55,12 @@ bool WirelessModule::handleWirelessCommand(WirelessCommands cmd, void *buffer){
         rVal &= sendResponse(WirelessResponses::SystemState, &(marsRoot->data));
     } break;
 
+    //[TODO] Implement Tests
     case WirelessCommands::PerformSelfTest: {
-        PerfromTest testCMD = PerfromTest::NoTest;
-        WirelessCommands nCMD = waitForCommand(500, &testCMD);
-        if (nCMD == WirelessCommands::PerformSelfTest){} //Do reset
-
+        //[HACK] This could be an issue - pointer are no fun.
+        PerformTest testCMD = *((PerformTest*) dataBuffer);
+        //[TODO] Do the tests
+        //runTest(testCMD);
         rVal &= sendResponse(WirelessResponses::SystemState, &(marsRoot->data));        
     } break;
 

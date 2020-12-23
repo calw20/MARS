@@ -47,23 +47,13 @@ size_t WirelessRadio::maxDataBufferSize(){
 
 size_t WirelessRadio::commandDataSize(WirelessCommands cmd){
     size_t dataSize = 0;
-    
-    //Don't Need this
-    /*switch (cmd){
-    //Size of zero should be the default.
-        //case WirelessCommands::NoCommand:
-        //case WirelessCommands::ResendData:
-        //case WirelessCommands::SendState:
-        //case WirelessCommands::SendArmState:
-        //case WirelessCommands::ArmPayload:
-        //case WirelessCommands::ForceFilterRotation:
-        //case WirelessCommands::ResetSystem:
-        //case WirelessCommands::AcceptSystemReset:
-        //case WirelessCommands::PerformSelfTest:
-        //    break;
+    //[NOTE] Unless otherwise specified, the default is to send no data with the command. 
+    switch (cmd){
+    case WirelessCommands::PerformSelfTest:
+        dataSize = sizeof(PerformTest);
     default:
         break;
-    }*/
+    }
 
     return dataSize;
 }

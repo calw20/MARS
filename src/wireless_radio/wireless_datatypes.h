@@ -36,6 +36,6 @@ enum class PerformTest : uint16_t {
     FullCheck,
     FullStepperCheck,
 
-}
+};
 
 #endif
