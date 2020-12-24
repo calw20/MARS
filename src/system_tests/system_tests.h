@@ -9,5 +9,6 @@
 
 #include "stepper_tests.h"
 #include "gps_tests.h"
+#include "fan_tests.h"
 
 #endif
