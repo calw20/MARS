@@ -10,7 +10,7 @@
 #include "../stepper_motor/stepper_motor.h"
 
 #ifndef TEST_STEP_TIMEOUT
-    #define TEST_STEP_TIMEOUT 500 //ms
+    #define TEST_STEP_TIMEOUT 3000 //ms
 #endif
 
 #ifndef TEST_STEPS_FOR_TINY_ROTATION

@@ -1,5 +1,5 @@
-#ifndef __MARS_STEPPER_TESTS_H__
-#define __MARS_STEPPER_TESTS_H__
+#ifndef __MARS_GPS_TESTS_H__
+#define __MARS_GPS_TESTS_H__
 
 #include "Arduino.h"
 #include "../debug/debug.h"
