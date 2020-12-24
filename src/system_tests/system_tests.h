@@ -8,6 +8,6 @@
 #include "../mars_root_module/mars_root_module.h"
 
 #include "stepper_tests.h"
-
+#include "gps_tests.h"
 
 #endif
