@@ -36,58 +36,6 @@ TriColourLED *cLED1;
 TriColourLED *cLED2;
 payloadData &pData = MARS_RootModule.data;
 
-/*
-void mainAirLoop(){
-    //[TODO] Latching
-    bool hitApogee = false;
-
-     while(sandwitch.currentFilter < sandwitch.maxFilterNumber || true){ //! Forced to be always enabled
-        //Get Alt/Pressure
-        pressureSensor.updateAltPressure();
-        if (pressureSensor.altitude != pressureSensor.lastAltitude){
-            DBG_FPRINT_SVLN("Current Altitude: ", pressureSensor.altitude);
-        }
-
-        //Get Accell/Gyro Data
-        accellGyro.getMotion();
-        accellGyro.printDebug("AG");
-
-        //Write data to SD Card
-        sdCard.writeCSVData();
-        
-        //See if we have hit Apogee
-        if (!hitApogee & pressureSensor.altitude > APOGEE_HEIGHT){ //* Apogee detection enabled.
-            hitApogee = true;
-            DBG_FPRINT_SVLN("Just hit Apogee at: ", pressureSensor.altitude);
-            DBG_FPRINTLN("Engaging the sandwich!");
-            
-        }
-
-        //Rotate on button press
-        if (rotateOnButton && digitalRead(BUTTON_PIN) & false){ //!Disabled - Enabled in ./payload_settings.h
-            DBG_FPRINTLN("Button has been pressed!");
-            digitalWrite(LED_PIN, HIGH);
-            NEXT_FILTER(); //Next Filter
-            
-            while(digitalRead(BUTTON_PIN));
-            digitalWrite(LED_PIN, LOW);
-            DBG_FPRINTLN("Button has been released!");
-        }
-
-        //^ I hope this works (´。＿。｀)
-        //\ (╯°□°）╯︵ ┻━┻) - The drift is killing me
-        //Rotate once we have passed the right Altitudes
-        if(rotateOnAltitude && hitApogee){ //* Enable - Enabled in  ./payload_settings.h 
-            if (altitude < filterHeights[currentFilter]){
-                DBG_FPRINT_SV("Reached current filter height ", altitude);
-                DBG_FPRINT_SVLN(", for filter number ", currentFilter);
-                NEXT_FILTER(); //Next Filter
-            }
-        }
-    }
-    
-}*/
-
 void mainAirLoop(){
     cLED1->setColour(LEDColours::CYAN);
     while(sandwitch.isAbleToRotate()){
