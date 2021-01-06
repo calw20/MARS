@@ -1,0 +1,18 @@
+//This is a auto generated file.
+//Cal.W 2020
+#ifndef AUTOGEN_H
+#define AUTOGEN_H
+
+//Auto Generated File to auto complete a few basic vars.
+#define BUILD_DATE "00-00-00 - 00:00:00"
+#define BUILD_VERSION "0 0 0 - DEBUG"
+
+//Custom headers in the json file.
+#define DO_DEBUG true
+#define PRINT_PRAGMA_MESSAGES false
+#define DO_INIT_DELAY false
+#define DO_DATA_LOG true
+#define USE_ACCELL true
+#define USE_PRESSURE_SENSOR true
+#define USE_SD_CARD true
+#endif
