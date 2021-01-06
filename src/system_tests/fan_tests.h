@@ -13,7 +13,7 @@
     #define TEST_FAN_TIMEOUT 3000 //ms
 #endif
 
-bool fanTest(fanController testController, unsigned long timeout);
+bool fanTest(FanController testController, unsigned long timeout);
 
 
 #endif

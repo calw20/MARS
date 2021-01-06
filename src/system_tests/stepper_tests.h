@@ -17,9 +17,9 @@
     #define TEST_STEPS_FOR_TINY_ROTATION 10
 #endif
 
-bool stepperTestRotation(Stepper testStepper, long int steps, unsigned long timeout);
-bool stepperTestFullRotation(Stepper testStepper);
-bool stepperTestOneRotation(Stepper testStepper);
-bool stepperTestTinyRotation(Stepper testStepper);
+bool stepperTestRotation(StepperMotor testStepper, long int steps, unsigned long timeout);
+bool stepperTestFullRotation(StepperMotor testStepper);
+bool stepperTestOneRotation(StepperMotor testStepper);
+bool stepperTestTinyRotation(StepperMotor testStepper);
 
 #endif
