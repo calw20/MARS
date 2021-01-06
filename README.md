@@ -1,11 +1,16 @@
-# MARS-Prototype
+
+# MARS Control Software
+
+## Warning
+
+> :warning: A good ~~30%~~, ~~50%~~, *large amount* of this documentation is out of date or just wrong..... It's being worked on..... - [Cal]
 
 The code for the MARS payload.  
 This Readme _should_ cover everything but if it dosn't then just yell at me... [_Cal_]
 
 ## Install
 
-Once you have [cloned](#git) [or downloaded](https://github.com/calw20/MARS-Prototype/archive/master.zip)  the repo, [setup](#setup) the Arduino making any changes needed and then run the [Upload](Upload.ps1) script. This will download the correct libraries, make sure that the correct header files are created and upload the code to the Arduino.
+Once you have [cloned](#git) [or downloaded](https://github.com/calw20/MARS/archive/master.zip)  the repo, [setup](#setup) the Arduino making any changes needed and then run the [Upload](Upload.ps1) script. This will download the correct libraries, make sure that the correct header files are created and upload the code to the Arduino.
 With some luck everything _should_ just work.
 
 >:notebook_with_decorative_cover: If you try and open [main.ino](main.ino) then the Arduino IDE ~~will~~ _may_ throw a hissy-fit and not want to work with you. Try if you like but it may break....
@@ -44,14 +49,17 @@ If needed the see the sub-components data sheet for information regarding setup 
 * [Stepper Motor Controller](https://wiki.dfrobot.com/TB6600_Stepper_Motor_Driver_SKU__DRI0043)
 * [BMP280 Pressure Sensor](https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/arduino-test)
 * [MPU6050 6-Axis Accelerometer/Gyro ](https://www.dfrobot.com/product-880.html)
-* ~~[nRF24L01+ Transceiver](https://www.sparkfun.com/products/691)~~ <sub>Not currently in use :/</sub>
->~~:orange_book: We may want to use [this](https://www.sparkfun.com/products/705) version of the transceiver as it has an RP-SMA 2.4GHz antenna connector on it~~
+* [nRF24L01+ Transceiver](https://www.sparkfun.com/products/691)
 
->:heavy_exclamation_mark: *Wiring Layout* is out of date. It does not show the MPU6050 ~~or nRF24L01+~~<sub>Not currently in use</sub>
+>:orange_book: We may want to use [this](https://www.sparkfun.com/products/705) version of the transceiver as it has an RP-SMA 2.4GHz antenna connector on it
+
+>:heavy_exclamation_mark: *Wiring Layout* is out of date. It does not show the MPU6050 or nRF24L01+
 
 ![Wiring Layout](Wiring_Layout.png)
 
 ### Debugging
+
+> See [Warning]
 
 At compile time, the pre-build ~~python script~~ _"tool chain"_ will auto-magically* create a header file to add in a few useful things, **but** it will also _ENABLE_ the debug logging to the arduino's serial port. By default the serial port speed is `115200` and if you need to change it, then change the `SERIAL_BAUD` option in [main.ino](main.ino) to what ever speed you need.
 
