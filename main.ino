@@ -137,6 +137,7 @@ void setup(){
     //Hang until armed
     //[TODO] Enable this ¯\_(ツ)_/¯
     DBG_FPRINTLN("System not armed, wating for signal!");
+    //radioModule.sendCommand(WirelessCommands::ArmPayload);
     unsigned long beginArmWait = millis();
     unsigned long cLoop = beginArmWait;
     while(!MARS_RootModule.systemArmed){
