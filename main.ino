@@ -95,6 +95,62 @@ void mainAirLoop(){
     //while(true) {}
 }
 
+void stepperTestMode(){
+    while(1){
+        if (digitalRead(BUTTON_PIN)){
+            while(digitalRead(BUTTON_PIN)){}
+            LEDColours currentColour = cLED1->getColour();
+            cLED1->setColour(LEDColours::YELLOW);
+            sandwitch.rotateSandwitch(STEPS_PER_ROTATION);
+            cLED1->setColour(currentColour);
+        }
+    }
+}
+
+void escTestMode(){
+    while(1){
+        if (digitalRead(BUTTON_PIN))
+            fanController.setSpeed(50);
+        else
+            fanController.setSpeed(0);
+        fanController.writeSpeed();
+    }
+}
+
+void debugMode(){
+    Serial.print("\e[2J"); //Clear the screen
+    Serial.print("\eSP F");  // tell to use 7-bit control codes
+    Serial.print("\e[?25l"); // hide cursor
+    Serial.print("\e[?12l"); // disable cursor highlighting
+    Serial.print("\e[1;1HMARS Payload Data");
+    printf(Serial, "\e[2;1HBuild Date: %s", BUILD_DATE);
+    printf(Serial, "\e[3;1HBuild Version: %s", BUILD_VERSION);
+    
+    while(1){    
+        MARS_RootModule.updatePayloadData(true);
+        sdCard.writeCSVData();
+    
+        Serial.print("\e[5;1HGPS Lat: \e[5;11H"); Serial.print(MARS_RootModule.data.position[0], 6);
+        Serial.print("\e[6;1HGPS Long: \e[6;11H"); Serial.print(MARS_RootModule.data.position[1], 6);
+        Serial.print("\e[7;1HGPS Altitude: \e[7;15H"); Serial.print(MARS_RootModule.data.altitude[0]);
+        printf(Serial, "\e[8;1HUTC Timestamp: \e[8;16H%lu", MARS_RootModule.data.time);
+        printf(Serial, "\e[9;1HRun Time (ms): \e[9;16H%lu", millis());
+        Serial.print("\e[10;1HGPS Ground Level Offset: \e[10;27H"); Serial.print(MARS_RootModule.data.altGndLvlOffset);
+
+        Serial.print("\e[12;1HPressure: \e[12;11H"); Serial.print(MARS_RootModule.data.pressure[0]);
+        Serial.print("\e[13;1HFan Speed: \e[13;12H"); Serial.print(MARS_RootModule.data.fanSpeed[0]);
+        Serial.print("\e[14;1HTemperature: \e[14;14H"); Serial.print(MARS_RootModule.data.temp[0]);
+        
+        Serial.print("\e[16;1HGyro X: \e[16;10H"); Serial.print(MARS_RootModule.data.g[0]);
+        Serial.print("\e[17;1HGyro Y: \e[17;10H"); Serial.print(MARS_RootModule.data.g[1]);
+        Serial.print("\e[18;1HGyro Z: \e[18;10H"); Serial.print(MARS_RootModule.data.g[2]);
+        Serial.print("\e[19;1HAccell X: \e[19;11H"); Serial.print(MARS_RootModule.data.a[0]);
+        Serial.print("\e[20;1HAccell Y: \e[20;11H"); Serial.print(MARS_RootModule.data.a[1]);
+        Serial.print("\e[21;1HAccell Z: \e[21;11H"); Serial.print(MARS_RootModule.data.a[2]);
+    }
+}
+
+
 void setup(){
     //Serial Setup
     #if DO_DEBUG
@@ -102,7 +158,6 @@ void setup(){
         DBG_FPRINTFN("Build Date: ", "%s", BUILD_DATE);
         DBG_FPRINTFN("Build Version: ", "%s", BUILD_VERSION);
     #endif
-
 
     //Build and Initialize all the modules
     DBG_FPRINTLN("Begining Initialization....");
@@ -148,11 +203,49 @@ void setup(){
         //Check if there has been a button press
         if (digitalRead(BUTTON_PIN)){
             DBG_PRINTLN("Button Press Detected!");
-            cLED2->setColour(LEDColours::YELLOW);
-            while(digitalRead(BUTTON_PIN)){} //Wait for button release
-            DBG_PRINTLN("Button Release Detected! Armming from button press");
+            unsigned long buttonTime = millis();
+            while(digitalRead(BUTTON_PIN)){
+                if (millis() - buttonTime < 1000)
+                    cLED2->setColour(LEDColours::YELLOW);
+                else if (millis() - buttonTime < 1500)
+                    cLED2->setColour(LEDColours::GREEN);
+                else if (millis() - buttonTime < 2000)
+                    cLED2->setColour(LEDColours::BLUE);
+                else if (millis() - buttonTime < 2500)
+                    cLED2->setColour(LEDColours::RED);
+                /*else if (millis() - buttonTime < 3000)
+                    cLED2->setColour(LEDColours::CYAN);*/
+                else
+                    cLED2->setColour(LEDColours::WHITE);
+            } //Wait for button release
+
+            switch (cLED2->getColour()){
+            case LEDColours::YELLOW:
+                DBG_FPRINTLN("Yellow: Armming from button press");
+                MARS_RootModule.systemArmed = true;   
+                break;
+            case LEDColours::GREEN:
+                DBG_FPRINTLN("Green: Stepper Test Mode. You will have to reset the system to exit.");
+                DBG_FPRINTLN("Each press of the button will rotate one sample.");
+                //cLED2->setColour(LEDColours::BLACK);
+                stepperTestMode();
+                break;
+            case LEDColours::BLUE:
+                DBG_FPRINTLN("Blue: Fan Controller Test Mode. You will have to reset the system to exit.");
+                DBG_FPRINTLN("Each fans will spin when button is held.");
+                //cLED2->setColour(LEDColours::BLACK);
+                escTestMode();
+                break;
+            case LEDColours::RED:
+                DBG_FPRINTLN("Red: Entering Debug Mode. You will have to reset the system to exit.");
+                DBG_FPRINTLN("Will dump all sensor values to the serial console.");
+                debugMode();
+                //cLED2->setColour(LEDColours::BLACK);
+                break;
+            default:
+                break;
+            }
             cLED2->setColour(LEDColours::BLACK);
-            MARS_RootModule.systemArmed = true;
         }
 
         //Wireless Command Handling
