@@ -133,8 +133,8 @@ void debugMode(){
         Serial.print("\e[5;1HGPS Lat: \e[5;11H"); Serial.print(MARS_RootModule.data.position[0], 6);
         Serial.print("\e[6;1HGPS Long: \e[6;11H"); Serial.print(MARS_RootModule.data.position[1], 6);
         Serial.print("\e[7;1HGPS Altitude: \e[7;15H"); Serial.print(MARS_RootModule.data.altitude[0]);
+        printf(Serial, "\e[9;1HRun Time (s): \e[9;15H%f", (double)(millis()/1000.00));
         printf(Serial, "\e[8;1HUTC Timestamp: \e[8;16H%lu", MARS_RootModule.data.time);
-        printf(Serial, "\e[9;1HRun Time (ms): \e[9;16H%lu", millis());
         Serial.print("\e[10;1HGPS Ground Level Offset: \e[10;27H"); Serial.print(MARS_RootModule.data.altGndLvlOffset);
 
         Serial.print("\e[12;1HPressure: \e[12;11H"); Serial.print(MARS_RootModule.data.pressure[0]);
