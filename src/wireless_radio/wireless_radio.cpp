@@ -68,7 +68,7 @@ bool WirelessRadio::sendCommand(WirelessCommands cmd, void* data){
 }
 
 bool WirelessRadio::sendCommand(uint16_t node_address, WirelessCommands cmd, void* data){
-    updateNetwork();
+    //updateNetwork();
     RF24NetworkHeader header(node_address);
     size_t dataSize = commandDataSize(cmd);
     
@@ -84,7 +84,7 @@ bool WirelessRadio::sendCommand(uint16_t node_address, WirelessCommands cmd, voi
 }
 
 WirelessCommands WirelessRadio::waitForCommand(unsigned long timeout, void* data){
-    updateNetwork();
+    //updateNetwork();
     RF24NetworkHeader header;
 
     WirelessCommands cmd = WirelessCommands::NoCommand;
@@ -142,7 +142,7 @@ bool WirelessRadio::sendResponse(WirelessResponses cmd, void* data){
 }
 
 bool WirelessRadio::sendResponse(uint16_t node_address, WirelessResponses cmd, void* data){
-    updateNetwork();
+    //updateNetwork();
     RF24NetworkHeader header(node_address);
     size_t dataSize = responseDataSize(cmd);
 
@@ -159,7 +159,7 @@ bool WirelessRadio::sendResponse(uint16_t node_address, WirelessResponses cmd, v
 }
 
 WirelessResponses WirelessRadio::waitForResponse(void* data, unsigned long timeout){
-    updateNetwork();
+    //updateNetwork();
     RF24NetworkHeader header;
     
     WirelessResponses rsp = WirelessResponses::NoResponse;

@@ -5,7 +5,7 @@
 #include "../debug/debug.h"
 #include "../../payload_settings.h"
 #include "../mars_root_module/data_types.h"
-#include "../mars_root_module/mars_root_module.h"
+//#include "../mars_root_module/mars_root_module.h"
 
 #include <SPI.h>
 #include <RF24.h>
