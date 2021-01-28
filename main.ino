@@ -147,6 +147,22 @@ void mainAirLoop(){
     //while(true) {}
 }
 
+void wirelessTest(){
+    DBG_FPRINTLN("Wireless Test Mode!!");
+    while(1){
+        pData.time = millis();
+        pData.pressure = rand();
+        pData.prsAltitude = rand();
+        pData.temp = pData.temp[0] + 1;
+        bool val = radioModule.sendResponse(WirelessResponses::SystemState, &pData);
+        DBG_PRINTLN(pData.time);
+        DBG_PRINTFN("Transmission State: %s", val ? "Success" : "Failed");
+        
+        if (val)
+            hexDump("pData", &pData, sizeof(payloadData));
+    }
+}
+
 void setup(){
     //Serial Setup
     #if DO_DEBUG
@@ -155,6 +171,8 @@ void setup(){
         DBG_FPRINTFN("Build Version: ", "%s", BUILD_VERSION);
     #endif
 
+    radioModule.init();
+    wirelessTest();
 
     //Build and Initialize all the modules
     DBG_FPRINTLN("Begining Initialization....");
@@ -191,6 +209,7 @@ void setup(){
     DBG_FPRINTLN("System not armed, wating for signal!");
     unsigned long beginArmWait = millis();
     unsigned long cLoop = beginArmWait;
+
     while(!MARS_RootModule.systemArmed){
         //Flash the light
         if (millis()-cLoop > 500) cLoop = millis();
