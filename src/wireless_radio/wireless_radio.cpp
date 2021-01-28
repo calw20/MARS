@@ -1,27 +1,30 @@
 #include "wireless_radio.h"
 
 WirelessRadio::WirelessRadio(){
-    pRadio = new RF24(CE_PIN, CS_PIN); 
+    pRadio   = new RF24(CE_PIN, CS_PIN);
+    pNetwork = new RF24Network(*radio); 
     dataBuffer = malloc(maxDataBufferSize());
 };
 
 //Initialize the radio
 bool WirelessRadio::begin(){
-    pRadio->begin();
+    //Start the radio   
+    if (!pRadio->begin())
+        return false;
     pRadio->setPALevel(RF24_PA_HIGH); //This *may* want to be RF24_PA_LOW
-    //Setup read/write pipes
-    pRadio->openWritingPipe(radioPipeNames[0 + RADIOMODE]);
-    pRadio->openReadingPipe(1, radioPipeNames[1 - RADIOMODE]);
-    pRadio->startListening();
+
+    //Setup the network
+    pNetwork->begin(RF_RADIO_CHANNEL, node_addresses[NODE_ADDRESS]);
 
     //Send Init Code
-    pRadio->stopListening();
     unsigned long cTime = millis();
     sendResponse(WirelessResponses::SystemInitialized, &cTime);
 
-    pRadio->startListening();
-
     DBG_FPRINT("Initialized Radio");
+}
+
+uint8_t WirelessRadio::updateNetwork(){
+    return pNetwork->update();    
 }
 
 size_t WirelessRadio::maxDataBufferSize(){
@@ -59,38 +62,51 @@ size_t WirelessRadio::commandDataSize(WirelessCommands cmd){
 }
 
 bool WirelessRadio::sendCommand(WirelessCommands cmd, void* data){
-    size_t dataSize = commandDataSize(cmd);
+    //For the sake of "simplicity" by default only send to the next node in the list.
+    uint16_t node_address = node_addresses[(NODE_ADDRESS + 1) % NODE_ADDRESSES_LENGTH];
+    return sendCommand(node_address, cmd, data);
+}
 
+bool WirelessRadio::sendCommand(uint16_t node_address, WirelessCommands cmd, void* data){
+    updateNetwork();
+    RF24NetworkHeader header(node_address);
+    size_t dataSize = commandDataSize(cmd);
+    
     bool returnValue = true;
-    pRadio->stopListening();
-    returnValue &= pRadio->write(&cmd, sizeof(cmd));
+    returnValue &= pNetwork->write(header, &cmd, sizeof(cmd));
     if (dataSize > 0 && data){
-        returnValue &= pRadio->write(data, dataSize);
+        returnValue &= pNetwork->write(header, data, dataSize);
         if (WAIT_FOR_RESEND_REQUEST && WirelessCommands::ResendData == waitForCommand(RESEND_REQUEST_TIMEOUT))
-            returnValue &= pRadio->write(data, dataSize);
+            returnValue &= pNetwork->write(header, data, dataSize);
     }
 
-    pRadio->startListening();
     return returnValue;
 }
 
 WirelessCommands WirelessRadio::waitForCommand(unsigned long timeout, void* data){
+    updateNetwork();
+    RF24NetworkHeader header;
+
     WirelessCommands cmd = WirelessCommands::NoCommand;
     unsigned long timeoutStart = millis();
-    while (pRadio->available() || millis()-timeoutStart < timeout || timeout == 0)
-        if (pRadio->available()){
-            pRadio->read(&cmd, sizeof(WirelessCommands));
+    while (pNetwork->available() || millis()-timeoutStart < timeout || timeout == 0){
+        updateNetwork();
+        if (pNetwork->available()){
+            pNetwork->read(header, &cmd, sizeof(WirelessCommands));
             break;
         }
+    }
 
     size_t dataSize = commandDataSize(cmd);
     if (data && dataSize > 0){
         timeoutStart = millis();
-        while (pRadio->available() || millis()-timeoutStart < timeout || timeout == 0)
-            if (pRadio->available()){
-                pRadio->read(data, dataSize);
+        while (pNetwork->available() || millis()-timeoutStart < timeout || timeout == 0){
+            updateNetwork();
+            if (pNetwork->available()){
+                pNetwork->read(header, data, dataSize);
                 break;
             }
+        }
     }
 
     return cmd;
@@ -120,42 +136,53 @@ size_t WirelessRadio::responseDataSize(WirelessResponses rsp){
 }
 
 bool WirelessRadio::sendResponse(WirelessResponses cmd, void* data){
+    //For the sake of "simplicity" by default only send to the next node in the list.
+    uint16_t node_address = node_addresses[(NODE_ADDRESS + 1) % NODE_ADDRESSES_LENGTH];
+    return sendResponse(node_address, cmd, data);
+}
+
+bool WirelessRadio::sendResponse(uint16_t node_address, WirelessResponses cmd, void* data){
+    updateNetwork();
+    RF24NetworkHeader header(node_address);
     size_t dataSize = responseDataSize(cmd);
 
     bool returnValue = true;
-    pRadio->stopListening();
-
-    returnValue &= pRadio->write(&cmd, sizeof(cmd));
+    returnValue &= pNetwork->write(header, &cmd, sizeof(cmd));
     if (dataSize > 0 && data){
         delay(10);
-        returnValue &= pRadio->write(data, dataSize);
+        returnValue &= pNetwork->write(header, data, dataSize);
         if (WAIT_FOR_RESEND_REQUEST && WirelessCommands::ResendData == waitForCommand(RESEND_REQUEST_TIMEOUT)) //Real short timeout
-            returnValue &= pRadio->write(data, dataSize);
+            returnValue &= pNetwork->write(header, data, dataSize);
     }
-    
-    pRadio->startListening();
+
     return returnValue;
 }
 
 WirelessResponses WirelessRadio::waitForResponse(void* data, unsigned long timeout){
+    updateNetwork();
+    RF24NetworkHeader header;
+    
     WirelessResponses rsp = WirelessResponses::NoResponse;
     unsigned long timeoutStart = millis();
-    while (pRadio->available() || millis()-timeoutStart < timeout || timeout == 0)
-        if (pRadio->available()){
-            pRadio->read(&rsp, sizeof(WirelessResponses));
+    while (pNetwork->available() || millis()-timeoutStart < timeout || timeout == 0){
+        updateNetwork();
+        if (pNetwork->available()){
+            pNetwork->read(header, &rsp, sizeof(WirelessResponses));
             break;
         }
-    
+    }
+
     size_t dataSize = responseDataSize(rsp);
     if (data && dataSize > 0){
         timeoutStart = millis();
-        while (pRadio->available() || millis()-timeoutStart < timeout || timeout == 0)
-            if (pRadio->available()){
-                pRadio->read(data, dataSize);
+        while (pNetwork->available() || millis()-timeoutStart < timeout || timeout == 0){
+            updateNetwork();
+            if (pNetwork->available()){
+                pNetwork->read(header, data, dataSize);
                 break;
             }
+        }
     }
 
     return rsp;
-
 }

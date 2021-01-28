@@ -59,23 +59,25 @@ class WirelessRadio {
     public:
         WirelessRadio();
         bool begin();
+        uint8_t updateNetwork()
         
         size_t commandDataSize(WirelessCommands cmd);
         bool sendCommand(WirelessCommands cmd, void* data = nullptr);
+        bool sendCommand(uint16_t node_address, WirelessCommands cmd, void* data)
         WirelessCommands waitForCommand(unsigned long timeout = RADIO_TIMEOUT, void* data = nullptr); //May not have timeout?
         
         size_t responseDataSize(WirelessResponses rsp);
         bool sendResponse(WirelessResponses rsp, void* data = nullptr);
+        bool sendResponse(uint16_t node_address, WirelessResponses cmd, void* data)
         WirelessResponses waitForResponse(void* data = nullptr, unsigned long timeout = RADIO_TIMEOUT); //May not have timeout?
-
+        
     protected:
         size_t maxDataBufferSize();
 
     protected:
-        //byte radioPipeNames[2][8] = RADIOPIPENAMES;
         uint16_t node_addresses[NODE_ADDRESSES_LENGTH] = NODE_ADDRESSES;
         RF24 *pRadio;
-        RF24Network *network;
+        RF24Network *pNetwork;
         void *dataBuffer;
 };
 
