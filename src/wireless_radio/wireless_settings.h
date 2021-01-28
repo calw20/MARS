@@ -3,7 +3,7 @@
 
 #define CE_PIN 49
 #define CS_PIN 48
-#define RADIOMODE 0
+#define NODE_ADDRESS 0
 
 #ifndef RADIO_TIMEOUT
     #define RADIO_TIMEOUT 500UL //ms

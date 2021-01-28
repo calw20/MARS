@@ -9,9 +9,13 @@
 
 #include <SPI.h>
 #include <RF24.h>
+#include <RF24Network.h>
 #include "wireless_datatypes.h"
-#include "../wireless_module/wireless_settings.h"
+#include "wireless_settings.h"
 //#include "../wireless_module/wireless_module.h"
+
+//[TODO] Pull Nano pinout from docs/board.
+//I.G CE/CS; Mega2560 [49,48], ESP8266 [2,4], Nano [??/??]
 
 #ifndef CE_PIN
     #define CE_PIN 8
@@ -21,8 +25,21 @@
     #define CS_PIN 9
 #endif
 
-#ifndef RADIOMODE
-    #define RADIOMODE 0
+//Default to being the base station
+//This is the index of NODE_ADDRESSES
+#ifndef NODE_ADDRESS
+    #define NODE_ADDRESS 0
+#endif
+
+//See "Octal Addressing and Topology" in https://nrf24.github.io/RF24Network/
+#ifndef NODE_ADDRESSES
+    #define NODE_ADDRESSES {00, 01}
+    #define NODE_ADDRESSES_LENGTH 2
+#endif
+
+//Channel Range; [0, 125]
+#ifndef RF_RADIO_CHANNEL
+    #define RF_RADIO_CHANNEL 90
 #endif
 
 #ifndef RADIO_TIMEOUT
@@ -55,8 +72,10 @@ class WirelessRadio {
         size_t maxDataBufferSize();
 
     protected:
-        byte radioPipeNames[2][8] = RADIOPIPENAMES;
+        //byte radioPipeNames[2][8] = RADIOPIPENAMES;
+        uint16_t node_addresses[NODE_ADDRESSES_LENGTH] = NODE_ADDRESSES;
         RF24 *pRadio;
+        RF24Network *network;
         void *dataBuffer;
 };
 

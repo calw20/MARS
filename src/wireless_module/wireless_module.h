@@ -15,7 +15,7 @@
 //#include "../gps/gps.h"
 
 #include "../wireless_radio/wireless_datatypes.h"
-#include "wireless_settings.h"
+#include "../wireless_radio/wireless_settings.h"
 #include "../wireless_radio/wireless_radio.h"
 
 
