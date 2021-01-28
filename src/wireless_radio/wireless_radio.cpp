@@ -62,13 +62,15 @@ bool WirelessRadio::sendCommand(WirelessCommands cmd, void* data){
     size_t dataSize = commandDataSize(cmd);
 
     bool returnValue = true;
+    pRadio->stopListening();
     returnValue &= pRadio->write(&cmd, sizeof(cmd));
     if (dataSize > 0 && data){
         returnValue &= pRadio->write(data, dataSize);
         if (WAIT_FOR_RESEND_REQUEST && WirelessCommands::ResendData == waitForCommand(RESEND_REQUEST_TIMEOUT))
             returnValue &= pRadio->write(data, dataSize);
     }
-    
+
+    pRadio->startListening();
     return returnValue;
 }
 
@@ -121,13 +123,17 @@ bool WirelessRadio::sendResponse(WirelessResponses cmd, void* data){
     size_t dataSize = responseDataSize(cmd);
 
     bool returnValue = true;
+    pRadio->stopListening();
+
     returnValue &= pRadio->write(&cmd, sizeof(cmd));
     if (dataSize > 0 && data){
+        delay(10);
         returnValue &= pRadio->write(data, dataSize);
         if (WAIT_FOR_RESEND_REQUEST && WirelessCommands::ResendData == waitForCommand(RESEND_REQUEST_TIMEOUT)) //Real short timeout
             returnValue &= pRadio->write(data, dataSize);
     }
     
+    pRadio->startListening();
     return returnValue;
 }
 
