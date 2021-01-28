@@ -21,7 +21,7 @@ void WirelessModule::printDebug(String printValues){
     if (CHK_LETTER("H")) DBG_FPRINTLN("===================== Wireless Radio Info =====================");
     
     if (CHK_LETTER("R")){
-        DBG_FPRINTFN("Radio acting in ", "%s mode.", RADIOMODE ? "Rocket" : "Control");
+        DBG_FPRINTFN("Radio acting in ", "%s mode.", NODE_ADDRESS ? "Rocket" : "Control");
         DBG_FPRINT_SVLN("Max Buffer Size: ", maxDataBufferSize());
         DBG_FPRINT_SVLN("Radio timeout (ms): ", RADIO_TIMEOUT);
         DBG_FPRINT_SVLN("Radio data resend request timout (ms): ", RESEND_REQUEST_TIMEOUT);

@@ -59,16 +59,16 @@ class WirelessRadio {
     public:
         WirelessRadio();
         bool begin();
-        uint8_t updateNetwork()
+        uint8_t updateNetwork();
         
         size_t commandDataSize(WirelessCommands cmd);
         bool sendCommand(WirelessCommands cmd, void* data = nullptr);
-        bool sendCommand(uint16_t node_address, WirelessCommands cmd, void* data)
+        bool sendCommand(uint16_t node_address, WirelessCommands cmd, void* data);
         WirelessCommands waitForCommand(unsigned long timeout = RADIO_TIMEOUT, void* data = nullptr); //May not have timeout?
         
         size_t responseDataSize(WirelessResponses rsp);
         bool sendResponse(WirelessResponses rsp, void* data = nullptr);
-        bool sendResponse(uint16_t node_address, WirelessResponses cmd, void* data)
+        bool sendResponse(uint16_t node_address, WirelessResponses cmd, void* data);
         WirelessResponses waitForResponse(void* data = nullptr, unsigned long timeout = RADIO_TIMEOUT); //May not have timeout?
         
     protected:

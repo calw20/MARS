@@ -2,7 +2,7 @@
 
 WirelessRadio::WirelessRadio(){
     pRadio   = new RF24(CE_PIN, CS_PIN);
-    pNetwork = new RF24Network(*radio); 
+    pNetwork = new RF24Network(*pRadio); 
     dataBuffer = malloc(maxDataBufferSize());
 };
 
