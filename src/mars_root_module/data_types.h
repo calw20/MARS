@@ -123,7 +123,7 @@ struct payloadData {
     double altGndLvlOffset = 0;
     fStoredData altitude;
 
-    //Fan Control Info - Doesn't rely change
+    //Fan Control Info - Doesn't really change
     int fanSpeed[3];
     int transFanSpeed[3];
 

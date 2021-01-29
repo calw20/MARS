@@ -13,6 +13,8 @@
 #include "src/wireless_module/wireless_module.h"
 #include "src/wireless_radio/wireless_datatypes.h"
 
+#include "src/mars_root_module/serial_handling.h"
+
 #include <SdFat.h>
 
 //^You really should only have to change these...
@@ -95,37 +97,6 @@ void mainAirLoop(){
     //while(true) {}
 }
 
-void setupSerialCodes(){
-    Serial.print("\e[2J"); //Clear the screen
-    Serial.print("\eSP F");  // tell to use 7-bit control codes
-    Serial.print("\e[?25l"); // hide cursor
-    Serial.print("\e[?12l"); // disable cursor highlighting
-}
-
-void printPayloadData(payloadData data){
-    Serial.print("\e[1;1HMARS Payload Data");
-    Serial.print("\e[2;1HBuild Date: "); Serial.print(BUILD_DATE);
-    Serial.print("\e[3;1HBuild Version: "); Serial.print(BUILD_VERSION);
-
-    Serial.print("\e[5;1HGPS Lat: \e[5;11H"); Serial.print(data.position[0], 6);
-    Serial.print("\e[6;1HGPS Long: \e[6;11H"); Serial.print(data.position[1], 6);
-    Serial.print("\e[7;1HGPS Altitude: \e[7;15H"); Serial.print(data.altitude[0]);
-    Serial.print("\e[9;1HRun Time (s): \e[9;15H"); Serial.print((double)(millis()/1000.00));
-    Serial.print("\e[8;1HUTC Timestamp: \e[8;16H"); Serial.print(data.time);
-    Serial.print("\e[10;1HGPS Ground Level Offset: \e[10;27H"); Serial.print(data.altGndLvlOffset);
-
-    Serial.print("\e[12;1HPressure: \e[12;11H"); Serial.print(data.pressure[0]);
-    Serial.print("\e[13;1HFan Speed: \e[13;12H"); Serial.print(data.fanSpeed[0]);
-    Serial.print("\e[14;1HTemperature: \e[14;14H"); Serial.print(data.temp[0]);
-        
-    Serial.print("\e[16;1HGyro X: \e[16;10H"); Serial.print(data.g[0]);
-    Serial.print("\e[17;1HGyro Y: \e[17;10H"); Serial.print(data.g[1]);
-    Serial.print("\e[18;1HGyro Z: \e[18;10H"); Serial.print(data.g[2]);
-    Serial.print("\e[19;1HAccell X: \e[19;11H"); Serial.print(data.a[0]);
-    Serial.print("\e[20;1HAccell Y: \e[20;11H"); Serial.print(data.a[1]);
-    Serial.print("\e[21;1HAccell Z: \e[21;11H"); Serial.print(data.a[2]);
-}
-
 void wirelessTest(){
     DBG_FPRINTLN("Wireless Test Mode!!");
     setupSerialCodes();
@@ -140,9 +111,11 @@ void wirelessTest(){
         //DBG_PRINTLN(pData.time);
         //DBG_PRINTFN("Transmission State: %s", val ? "Success" : "Failed");
         
-        if (val)
-            printPayloadData(pData);
-            //hexDump("pData", &pData, sizeof(payloadData));
+        if (val){
+            dumpPayloadData(pData);
+            hexDump("pData", &pData, sizeof(payloadData));
+        }
+
         delay(3000);
     }
 }
