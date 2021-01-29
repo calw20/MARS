@@ -34,6 +34,13 @@ void dumpPayloadDataGrid(payloadData data){
     Serial.print(F("\e[19;1HAccell X: \e[19;11H")); Serial.print(data.a[0]);
     Serial.print(F("\e[20;1HAccell Y: \e[20;11H")); Serial.print(data.a[1]);
     Serial.print(F("\e[21;1HAccell Z: \e[21;11H")); Serial.print(data.a[2]);
+
+    Serial.print(F("\e[23;1HCurrent Filter: \e[23;17H")); Serial.print(data.currentFilter);
+    Serial.print(F("\e[24;1HNum of Filters: \e[24;17H")); Serial.print(data.maxFilterNumber);
+    
+    Serial.print(F("\e[26;1HHit Apogee? \e[26;13H")); Serial.print(data.hitApogee ? F("Yes") : F("No"));
+    Serial.print(F("\e[27;1HRotate on Button?    \e[27;22H")); Serial.print(data.rotateOnButton ? F("Yes") : F("No"));
+    Serial.print(F("\e[28;1HRotate on Altitude?  \e[28;22H")); Serial.print(data.rotateOnAltitude ? F("Yes") : F("No"));
 }
 
 void dumpPayloadData(payloadData data){
@@ -64,4 +71,15 @@ void dumpPayloadData(payloadData data){
     Serial.print(F("Accell X: ")); Serial.println(data.a[0]);
     Serial.print(F("Accell Y: ")); Serial.println(data.a[1]);
     Serial.print(F("Accell Z: ")); Serial.println(data.a[2]);
+
+    Serial.println();
+
+    Serial.print(F("Current Filter: ")); Serial.println(data.currentFilter);
+    Serial.print(F("Num of Filters: ")); Serial.println(data.maxFilterNumber);
+    
+    Serial.println();
+
+    Serial.print(F("Hit Apogee? ")); Serial.println(data.hitApogee ? F("Yes") : F("No"));
+    Serial.print(F("Rotate on Button?    ")); Serial.println(data.rotateOnButton ? F("Yes") : F("No"));
+    Serial.print(F("Rotate on Altitude?  ")); Serial.println(data.rotateOnAltitude ? F("Yes") : F("No"));
 }
