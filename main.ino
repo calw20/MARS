@@ -14,6 +14,7 @@
 #include "src/wireless_radio/wireless_datatypes.h"
 
 #include "src/mars_root_module/serial_handling.h"
+#include "src/system_tests/system_tests.h"
 
 #include <SdFat.h>
 
@@ -176,11 +177,37 @@ void setup(){
         //Check if there has been a button press
         if (digitalRead(BUTTON_PIN)){
             DBG_PRINTLN("Button Press Detected!");
-            cLED2->setColour(LEDColours::YELLOW);
-            while(digitalRead(BUTTON_PIN)){} //Wait for button release
-            DBG_PRINTLN("Button Release Detected! Armming from button press");
-            cLED2->setColour(LEDColours::BLACK);
-            MARS_RootModule.systemArmed = true;
+            unsigned long buttonTime = millis();
+            while(digitalRead(BUTTON_PIN)){
+                if (millis() - buttonTime < 1000)
+                    cLED2->setColour(LEDColours::YELLOW);
+                else if (millis() - buttonTime < 1500)
+                    cLED2->setColour(LEDColours::GREEN);
+                else if (millis() - buttonTime < 2000)
+                    cLED2->setColour(LEDColours::BLUE);
+                else if (millis() - buttonTime < 2500)
+                    cLED2->setColour(LEDColours::RED);
+                /*else if (millis() - buttonTime < 3000)
+                    cLED2->setColour(LEDColours::CYAN);*/
+                else
+                    cLED2->setColour(LEDColours::WHITE);
+            } //Wait for button release
+
+            switch (cLED2->getColour()){
+            case LEDColours::YELLOW:
+                DBG_FPRINTLN("Yellow: Armming from button press");
+                MARS_RootModule.systemArmed = true;   
+                break;
+            case LEDColours::GREEN:
+            case LEDColours::BLUE:
+            case LEDColours::RED:
+                DBG_FPRINTLN("Red: Entering test mode. You will have to reset the system to exit.");
+                cLED2->setColour(LEDColours::BLACK);
+                testMode();
+                break;
+            default:
+                break;
+            }
         }
 
         //Wireless Command Handling

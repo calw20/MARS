@@ -27,6 +27,7 @@ class StepperMotor : public MARSCrashableModule {
         
     public:
         void rotateSandwitch(long int steps);
+        void rotateAndSignal(long int steps);
         //void nextFilter(u8& currentFilter);
         bool nextFilter();
         u8 getCurrentFilter();
