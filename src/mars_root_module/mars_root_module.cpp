@@ -164,3 +164,16 @@ payloadData generateRandomPayload(payloadData* pData){
     rData.rotateOnButton = (rand() > 16383);
     rData.rotateOnAltitude = (rand() > 16383);
 }
+
+//Use the AVR watchdog timer to do a reset.
+#if defined(__AVR__)
+    void resetSystem(){
+        wdt_disable();
+        wdt_enable(WDTO_15MS);
+        while (1) {};
+    }
+#else
+    void resetSystem(){
+        Serial.println(F("Software reset not defined, please hard-reset manually."));
+    }
+#endif

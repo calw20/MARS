@@ -7,6 +7,10 @@
 #include "../ledDriver/ledDriver.h"
 #include "../../payload_settings.h"
 
+#if defined(__AVR__)
+    #include <avr/wdt.h>
+#endif
+
 #define LEDPIN_R_1 22
 #define LEDPIN_G_1 24
 #define LEDPIN_B_1 26
@@ -49,5 +53,7 @@ class MARSCrashableModule : public CrashableModule {
 };
 
 payloadData generateRandomPayload(payloadData* pData = nullptr);
+
+void resetSystem();
 
 #endif

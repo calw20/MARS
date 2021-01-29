@@ -73,10 +73,7 @@ bool WirelessModule::handleWirelessCommand(WirelessCommands cmd, void *buffer){
         unsigned long timeNow = millis();
         rVal &= sendResponse(WirelessResponses::SystemReinitializing, &timeNow);
         
-        //Use the watchdog to reset...
-        wdt_disable();
-        wdt_enable(WDTO_15MS);
-        while (1) {};
+        resetSystem();
     } break;
 
     default: {
