@@ -2,7 +2,7 @@
 
 WirelessModule::WirelessModule(RootModule &uncrashableParent, StepperMotor* ptrStepper, bool addSelfToParent) 
     : WirelessRadio(), MARSCrashableModule(uncrashableParent, addSelfToParent) {
-    ptrSandwitch = ptrStepper;        
+    testHandler = ptrTestHandler;        
 };
 
 void WirelessModule::genericError(const char* func, const char* file, u16 failLine){

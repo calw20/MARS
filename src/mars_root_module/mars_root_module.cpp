@@ -45,7 +45,7 @@ void RootModule::printDebug(String printValues){
         return;
     }
 
-    if (CHK_LETTER("-H")) printValues = "NHTB";
+    if (CHK_LETTER("-H")) printValues = "NHTM";
 
     //Header
     if (CHK_LETTER("NH")) DBG_FPRINTLN("====================== M.A.R.S Debug Info ======================");
