@@ -7,6 +7,8 @@
 #include "../mars_root_module/data_types.h"
 #include "../mars_root_module/mars_root_module.h"
 
+#include <avr/wdt.h>
+
 //#include "../pressure_sensor/pressure_senor.h"
 #include "../stepper_motor/stepper_motor.h"
 //#include "../sd_card/sd_card.h"

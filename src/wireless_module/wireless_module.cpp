@@ -22,6 +22,7 @@ void WirelessModule::printDebug(String printValues){
     
     if (CHK_LETTER("R")){
         DBG_FPRINTFN("Radio acting in ", "%s mode.", NODE_ADDRESS ? "Rocket" : "Control");
+        DBG_FPRINT_SVLN("Radio Address: ", node_addresses[NODE_ADDRESS]);
         DBG_FPRINT_SVLN("Max Buffer Size: ", maxDataBufferSize());
         DBG_FPRINT_SVLN("Radio timeout (ms): ", RADIO_TIMEOUT);
         DBG_FPRINT_SVLN("Radio data resend request timout (ms): ", RESEND_REQUEST_TIMEOUT);
@@ -38,8 +39,13 @@ bool WirelessModule::handleWirelessCommand(WirelessCommands cmd, void *buffer){
     //These *should* never be implimented (ie send a noResponse)
     //NoCommand, ResendData, AcceptSystemReset
     
-    case WirelessCommands::ArmPayload:
-        { marsRoot->systemArmed = true; }
+    case WirelessCommands::SendState: {
+        rVal &= sendResponse(WirelessResponses::SystemState, &(marsRoot->data));
+    } break;
+
+    case WirelessCommands::ArmPayload: { 
+        marsRoot->systemArmed = true; 
+    }
     case WirelessCommands::SendArmState: {
         rVal &= sendResponse(WirelessResponses::SystemArmed, &(marsRoot->systemArmed));
     } break;
@@ -48,10 +54,6 @@ bool WirelessModule::handleWirelessCommand(WirelessCommands cmd, void *buffer){
         bool val = ptrSandwitch->nextFilter();
         //Not an important value to track but nice to have
         sendResponse(WirelessResponses::CommandSucceeded, &val);
-        rVal &= sendResponse(WirelessResponses::SystemState, &(marsRoot->data));
-    } break;
-
-    case WirelessCommands::SendState: {
         rVal &= sendResponse(WirelessResponses::SystemState, &(marsRoot->data));
     } break;
 
@@ -69,7 +71,12 @@ bool WirelessModule::handleWirelessCommand(WirelessCommands cmd, void *buffer){
         WirelessCommands nCMD = waitForCommand(500);
         if (nCMD == WirelessCommands::AcceptSystemReset){} //Do reset
         unsigned long timeNow = millis();
-        rVal &= sendResponse(WirelessResponses::SystemReinitialized, &timeNow);
+        rVal &= sendResponse(WirelessResponses::SystemReinitializing, &timeNow);
+        
+        //Use the watchdog to reset...
+        wdt_disable();
+        wdt_enable(WDTO_15MS);
+        while (1) {};
     } break;
 
     default: {

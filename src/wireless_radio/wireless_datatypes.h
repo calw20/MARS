@@ -5,22 +5,25 @@
 
 #include "../mars_root_module/data_types.h"
 
+//[TODO] Add 'const char* stateStr[] =' arrays or F() switch cases in a function 
+
 enum class WirelessCommands : uint16_t {
     NoCommand,  //None
     ResendData, //None
     SendState, //None
-    SendArmState, //None
     ArmPayload, //None
+    SendArmState, //None
     ForceFilterRotation, //None 
+    PerformSelfTest, //None
     ResetSystem, //None
     AcceptSystemReset, //None
-    PerformSelfTest, //None
 };
 
 enum class WirelessResponses : uint16_t {
     NoResponse, //None
     SystemInitialized, //Unsigned Long
-    SystemReinitialized, //Unsigned Long
+    SystemReinitialized, //Unsigned Long //![WARN] To be Depreciated
+    SystemReinitializing, //Unsigned Long
     SystemArmed, //Bool
     SystemState, //PayloadData,
     CommandSucceeded, //Bool

@@ -32,7 +32,7 @@
 #endif
 
 //See "Octal Addressing and Topology" in https://nrf24.github.io/RF24Network/
-#ifndef NODE_ADDRESSES
+#if !defined(NODE_ADDRESSES) || !defined(NODE_ADDRESSES_LENGTH)
     #define NODE_ADDRESSES {00, 01}
     #define NODE_ADDRESSES_LENGTH 2
 #endif
