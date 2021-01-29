@@ -117,3 +117,49 @@ MARSCrashableModule::MARSCrashableModule(RootModule &uncrashableParent, bool add
     //pData = &uncrashableParent.data;
     if (addSelfToParent) marsRoot->addModule(*this); //Add itself to the parent.
 }
+
+payloadData generateRandomPayload(payloadData* pData){
+    payloadData rData;
+    if (pData) {
+        rData.pressure = pData->pressure;
+        rData.prsAltitude = pData->prsAltitude;
+        rData.temp = pData->temp;
+        rData.gpsAltitude = pData->gpsAltitude;
+        rData.altitude = pData->altitude;
+        rData.time = pData->time + 1;
+    } else {
+        rData.pressure = rand();
+        rData.prsAltitude = rand();
+        rData.temp = rand();
+        rData.gpsAltitude = rand();
+        rData.altitude = rand();
+        rData.time = rand();
+    }
+
+    rData.pressure = rand();
+    rData.prsAltitude = rand();
+    rData.temp = rand();
+
+    rData.a = { rand(), rand(), rand() };
+    rData.g = { rand(), rand(), rand() };
+
+    rData.gpsAltitude = rand();
+    rData.position = { rand(), rand() };
+
+    rData.altGndLvlOffset = rand();
+    rData.altitude = rand();
+    
+    rData.fanSpeed[0] = rand(); 
+    rData.fanSpeed[1] = rand(); 
+    rData.fanSpeed[2] = rand();
+    rData.transFanSpeed[0] = rand();
+    rData.transFanSpeed[1] = rand();
+    rData.transFanSpeed[2] = rand();
+
+    rData.currentFilter = rand();
+    rData.maxFilterNumber = rand();
+    
+    rData.hitApogee = (rand() > 16383);
+    rData.rotateOnButton = (rand() > 16383);
+    rData.rotateOnAltitude = (rand() > 16383);
+}

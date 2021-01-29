@@ -48,4 +48,6 @@ class MARSCrashableModule : public CrashableModule {
         RootModule *marsRoot;
 };
 
+payloadData generateRandomPayload(payloadData* pData = nullptr);
+
 #endif
