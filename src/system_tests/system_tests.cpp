@@ -10,18 +10,17 @@ void rootDebugMode(RootModule *marsRoot, SDCardAdapter *sdCard){
     while(inDebugMode){
         if(Serial.available() > 0){
             char inChar = (char)Serial.read();
+            Serial.print("\b");
             if (inChar == 27 || inChar == 172 || inChar == 'e')
                 inDebugMode = false;
         }
         //marsRoot->updatePayloadData(true);
         //if (sdCard) sdCard->writeCSVData();
         
-        //[NOTE] Too much lag with this enabled.
-        //Every second or so wipe the screen and re-draw
-        /*if (millis() % 5000)
+        //Every 10 seconds or so wipe the screen and re-draw
+        if (millis() % 10000 < 100)
             for(int i = 4; i < 31; i++)
                 DBG_PRINTF("\e[%i;1H\e[2K", i);
-        */
 
         dumpPayloadDataGrid(marsRoot->data, false);
         
@@ -31,6 +30,10 @@ void rootDebugMode(RootModule *marsRoot, SDCardAdapter *sdCard){
     DBG_FPRINT("\e[?12h"); // enable cursor highlighting
     clearSerial();
     DBG_FPRINTLN("Quit Debug Mode.");
+}
+
+void printConsoleChar(){
+    DBG_FPRINT("> ");
 }
 
 //System Test Handler
@@ -52,6 +55,9 @@ SystemTestHandler::init(RootModule* ptrMARSRoot,
 
     //Setup Serial Commands
     setDefaultHandler(SystemTestHandler::staticUnknownCommand);
+    setPostCommandHandler(printConsoleChar);
+    setSerialEcho(true);
+
     addCommand("?", SystemTestHandler::staticCmdHelp);
     addCommand("help", SystemTestHandler::staticCmdHelp);
     addCommand("info", SystemTestHandler::staticCmdInfo);
@@ -69,6 +75,7 @@ SystemTestHandler::init(RootModule* ptrMARSRoot,
 void SystemTestHandler::testMode(){
     DBG_FPRINTLN("Entering Test Mode.");
     DBG_FPRINTLN("Enter 'help' for useage.");
+    printConsoleChar();
     inTestMode = true;
     while(inTestMode){
         readSerial();

@@ -28,6 +28,7 @@
 static void* gPtrSystemTestHandler;
 
 void rootDebugMode(RootModule *marsRoot, SDCardAdapter *sdCard = nullptr);
+void printConsoleChar();
 
 class WirelessModule;
 class SystemTestHandler : public SerialTerminal {
