@@ -39,8 +39,7 @@ void SystemTestHandler::testMode(){
 }
 
 void SystemTestHandler::unknownCommand(const char *command){
-    DBG_FPRINTLN("Unknown command: ");
-    DBG_PRINTLN(command);
+    DBG_FPRINT_SVLN("Unknown command: ", command);
 }
 
 //Help Menu
@@ -110,7 +109,7 @@ void SystemTestHandler::cmdLEDs(){
 
 //[TODO] Create Wireless Tests
 void SystemTestHandler::cmdWirelessTest(){
-
+    DBG_FPRINTLN("Not Implimented :/ (Yet)");
 }
 
 void SystemTestHandler::cmdInfo(){
