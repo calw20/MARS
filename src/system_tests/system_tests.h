@@ -29,7 +29,7 @@ static void* gPtrSystemTestHandler;
 class WirelessModule;
 class SystemTestHandler : public SerialTerminal {
     public:
-        SystemTestHandler(char newlineChar = '\n', char delimiterChar = ' ')
+        SystemTestHandler(char newlineChar = '\r', char delimiterChar = ' ')
             : SerialTerminal(newlineChar, delimiterChar){};
         init(RootModule* ptrMARSRoot, PressureSensor* ptrPrsSensor, 
             SDCardAdapter* ptrSdCard, StepperMotor* ptrStepper, 
@@ -51,6 +51,7 @@ class SystemTestHandler : public SerialTerminal {
         void cmdLEDs();
         void cmdWirelessTest();
 
+    //It's either re-write the SerialTerminal Code or have static wrappers.
     public:
         static void staticUnknownCommand(const char *command);
         static void staticCmdHelp();

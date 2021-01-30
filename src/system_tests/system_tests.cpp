@@ -22,6 +22,7 @@ SystemTestHandler::init(RootModule* ptrMARSRoot,
     addCommand("help", SystemTestHandler::staticCmdHelp);
     addCommand("info", SystemTestHandler::staticCmdInfo);
     addCommand("reset", SystemTestHandler::staticCmdReset);
+    addCommand("reboot", SystemTestHandler::staticCmdReset); //Shhh this is undocumented
     addCommand("stepper", SystemTestHandler::staticCmdStepper);
     addCommand("fans", SystemTestHandler::staticCmdFans);
     addCommand("leds", SystemTestHandler::staticCmdLEDs);
