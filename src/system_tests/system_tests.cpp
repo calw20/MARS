@@ -103,7 +103,6 @@ void SystemTestHandler::cmdFans(){
     fanTest(*fanController, val, 5000);
 }
 
-//[TODO] Create LED Tests
 void SystemTestHandler::cmdLEDs(){
     ledTest(*marsRoot);
 }
