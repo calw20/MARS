@@ -131,15 +131,17 @@ void setup(){
         DBG_FPRINTFN("Build Version: ", "%s", BUILD_VERSION);
     #endif
 
+    systemTests.init(&MARS_RootModule, &pressureSensor, &sdCard, &sandwitch,
+        &accellGyro, &fanController, &gpsRadio, &radioModule);
+    systemTests.testMode();
+
     //radioModule.init();
     //wirelessTest();
 
     //Build and Initialize all the modules
     DBG_FPRINTLN("Begining Initialization....");
     MARS_RootModule.init();
-    systemTests.init(&MARS_RootModule, &pressureSensor, &sdCard, &sandwitch,
-        &accellGyro, &fanController, &gpsRadio, &radioModule);
-
+    
     //[TODO] Move this to SDCard Module?
     //Write all the consts to a file
     char constFileName[14] = "constFile.csv";

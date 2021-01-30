@@ -65,7 +65,8 @@ void SystemTestHandler::cmdReset(){
     Serial.print(F("About to reset system"));
     for(int i; i < 4; i++)
         Serial.print(F("."));
-    
+    Serial.println();
+
     resetSystem();
 }
 
@@ -115,7 +116,7 @@ void SystemTestHandler::cmdWirelessTest(){
 void SystemTestHandler::cmdInfo(){
     char *arg;
     arg = getNext();
-    if (strcmp(arg, "info")){
+    if (strcmp(arg, "help") == 0){
         DBG_FPRINTLN("Available \'info\' arguments are:");
         DBG_FPRINTLN("   all          Print all sensor info.");
         DBG_FPRINTLN("   root         Print root module info.");
@@ -127,30 +128,31 @@ void SystemTestHandler::cmdInfo(){
         DBG_FPRINTLN("   gps          Print GPS Radio info.");
         DBG_FPRINTLN("   wireless     Print Wireless Comms info.");
     }
-    else if (strcmp(arg, "all"))
+    else if (strcmp(arg, "all") == 0)
         marsRoot->printDebug();
-    else if (strcmp(arg, "root")){
+    else if (strcmp(arg, "root") == 0){
         marsRoot->inError = true;
         marsRoot->printDebug();
         marsRoot->inError = false;
     }
-    else if (strcmp(arg, "pressure"))
+    else if (strcmp(arg, "pressure") == 0)
         prsSensor->printDebug();
-    else if (strcmp(arg, "sdcard"))
+    else if (strcmp(arg, "sdcard") == 0)
         sdCard->printDebug();
-    else if (strcmp(arg, "stepper"))
+    else if (strcmp(arg, "stepper") == 0)
         sandwitch->printDebug();
-    else if (strcmp(arg, "accellgyro"))
+    else if (strcmp(arg, "accellgyro") == 0)
         accellGyro->printDebug();
-    else if (strcmp(arg, "fans"))
+    else if (strcmp(arg, "fans") == 0)
         fanController->printDebug();
-    else if (strcmp(arg, "gps"))
+    else if (strcmp(arg, "gps") == 0)
         gpsRadio->printDebug();
-    else if (strcmp(arg, "wireless"))
+    else if (strcmp(arg, "wireless") == 0)
         wirelessModule->printDebug();
-    else
+    else {
         DBG_FPRINT_SVLN("Unknown Argument: ", arg);
         DBG_FPRINTLN("Use \'info help\' for more infomation.");
+    }
 }
 
 
