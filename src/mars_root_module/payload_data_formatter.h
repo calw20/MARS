@@ -9,7 +9,10 @@
 
 void setupSerialCodes();
 void clearSerial();
-void dumpPayloadDataGrid(payloadData data);
-void dumpPayloadData(payloadData data);
+void dumpPayloadDataGrid(payloadData data, bool printHeaders = true);
+
+#ifdef USE_NON_GRID_DUMP
+    void dumpPayloadData(payloadData data, bool printHeaders = true);
+#endif
 
 #endif

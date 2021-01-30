@@ -18,6 +18,7 @@
 //Grabbed from [https://github.com/Erriez/ErriezSerialTerminal] on 2020-06-2021
 //Licensed under MIT
 #include "../ErriezSerialTerminal/ErriezSerialTerminal.h"
+#include "../mars_root_module/payload_data_formatter.h"
 
 #include "stepper_tests.h"
 #include "gps_tests.h"
@@ -26,7 +27,7 @@
 
 static void* gPtrSystemTestHandler;
 
-void rootDebugMode(RootModule marsRoot, SDCardAdapter *sdCard = nullptr);
+void rootDebugMode(RootModule *marsRoot, SDCardAdapter *sdCard = nullptr);
 
 class WirelessModule;
 class SystemTestHandler : public SerialTerminal {

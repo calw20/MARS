@@ -13,7 +13,7 @@
 #include "src/wireless_module/wireless_module.h"
 #include "src/wireless_radio/wireless_datatypes.h"
 
-#include "src/mars_root_module/serial_handling.h"
+#include "src/mars_root_module/payload_data_formatter.h"
 #include "src/system_tests/system_tests.h"
 
 #include <SdFat.h>
@@ -99,6 +99,7 @@ void mainAirLoop(){
     //while(true) {}
 }
 
+/*
 void wirelessTest(){
     DBG_FPRINTLN("Wireless Test Mode!!");
     setupSerialCodes();
@@ -120,7 +121,7 @@ void wirelessTest(){
 
         delay(3000);
     }
-}
+}*/
 
 void setup(){
     //Serial Setup
