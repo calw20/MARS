@@ -16,10 +16,12 @@ void rootDebugMode(RootModule *marsRoot, SDCardAdapter *sdCard){
         //marsRoot->updatePayloadData(true);
         //if (sdCard) sdCard->writeCSVData();
         
+        //[NOTE] Too much lag with this enabled.
         //Every second or so wipe the screen and re-draw
-        if (millis() % 5000)
+        /*if (millis() % 5000)
             for(int i = 4; i < 31; i++)
                 DBG_PRINTF("\e[%i;1H\e[2K", i);
+        */
 
         dumpPayloadDataGrid(marsRoot->data, false);
         
