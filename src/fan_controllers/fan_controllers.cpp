@@ -63,7 +63,7 @@ void FanController::writeSpeed(){
 //Convert a value in [lowerESCmap, upperESCmap] to [LOWER_SERVO_MAP, UPPER_SERVO_MAP] for the Servo Lib
 void FanController::setSpeed(int newSpeed){
     currentSpeed = map(newSpeed, lowerESCmap, upperESCmap, LOWER_SERVO_MAP, UPPER_SERVO_MAP);
-    //DBG_FPRINT_SVLN("New FanSpeed: ", currentSpeed);
+    DBG_FPRINT_SVLN("New FanSpeed: ", currentSpeed);
     writeSpeed();
 }
 
