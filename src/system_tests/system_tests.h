@@ -29,6 +29,7 @@ static void* gPtrSystemTestHandler;
 
 void rootDebugMode(RootModule *marsRoot, SDCardAdapter *sdCard = nullptr);
 void printConsoleChar();
+void badArgument();
 
 class WirelessModule;
 class SystemTestHandler : public SerialTerminal {
@@ -55,6 +56,7 @@ class SystemTestHandler : public SerialTerminal {
         void cmdLEDs();
         void cmdWirelessTest();
         void cmdDebugMode();
+        //void cmdSet();
 
     //It's either re-write the SerialTerminal Code or have static wrappers.
     public:
@@ -67,6 +69,7 @@ class SystemTestHandler : public SerialTerminal {
         static void staticCmdLEDs();
         static void staticCmdWirelessTest();
         static void staticCmdDebugMode();
+        //static void staticCmdSet();
 
 
     private:

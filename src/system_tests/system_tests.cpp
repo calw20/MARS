@@ -36,6 +36,10 @@ void printConsoleChar(){
     DBG_FPRINT("> ");
 }
 
+void badArgument(){
+    DBG_FPRINT_SVLN("Error! Bad Command, see \'help\' for more info.");
+}
+
 //System Test Handler
 SystemTestHandler::init(RootModule* ptrMARSRoot,
     PressureSensor* ptrPrsSensor, SDCardAdapter* ptrSdCard,
@@ -61,6 +65,7 @@ SystemTestHandler::init(RootModule* ptrMARSRoot,
     addCommand("?", SystemTestHandler::staticCmdHelp);
     addCommand("help", SystemTestHandler::staticCmdHelp);
     addCommand("info", SystemTestHandler::staticCmdInfo);
+    //addCommand("set", SystemTestHandler::staticCmdSet);
     addCommand("reset", SystemTestHandler::staticCmdReset);
     addCommand("reboot", SystemTestHandler::staticCmdReset); //Shhh this is undocumented
     addCommand("debug", SystemTestHandler::staticCmdDebugMode);
@@ -89,15 +94,16 @@ void SystemTestHandler::unknownCommand(const char *command){
 //Help Menu
 void SystemTestHandler::cmdHelp(){
     DBG_FPRINTLN("Serial terminal usage:");
-    DBG_FPRINTLN("  help or ?       Print this usage");
-    DBG_FPRINTLN("  info <sensor>   Print sensor info, use \'info help\' for more infomation.");
-    DBG_FPRINTLN("  reset           Reset the system");
-    DBG_FPRINTLN("  debug           Enter Debug Mode.");
-    DBG_FPRINTLN("  clear           Clear the terminal");
-    DBG_FPRINTLN("  stepper <steps> Test Stepper");
-    DBG_FPRINTLN("  fans <speed>    Test Fan Controllers / EDFs");
-    DBG_FPRINTLN("  leds            Test LEDs");
-    DBG_FPRINTLN("  wirelessTest    Test the Wireles Comms");
+    DBG_FPRINTLN("    help or ?        Print this usage");
+    DBG_FPRINTLN("    info <sensor>    Print sensor info, use \'info help\' for more infomation.");
+    //DBG_FPRINTLN("    set <sensor> ... Set system values, use \'set help\' for more info.");
+    DBG_FPRINTLN("    reset            Reset the system");
+    DBG_FPRINTLN("    debug            Enter Debug Mode");
+    DBG_FPRINTLN("    clear            Clear the terminal");
+    DBG_FPRINTLN("    stepper <steps>  Test Stepper");
+    DBG_FPRINTLN("    fans <speed>     Test Fan Controllers / EDFs");
+    DBG_FPRINTLN("    leds             Test LEDs");
+    DBG_FPRINTLN("    wirelessTest     Test the Wireles Comms");
 
     //DBG_FPRINTLN("  ");
     /*DBG_FPRINTLN("  off                   Turn LED off");
@@ -203,6 +209,74 @@ void SystemTestHandler::cmdInfo(){
     }
 }
 
+/*
+void SystemTestHandler::cmdSet(){
+    char *arg;
+    arg = getNext();
+    if (strcmp(arg, "help") == 0){
+        DBG_FPRINTLN("Available \'set\' arguments are:");
+        DBG_FPRINTLN("    fan <options>         [Fan Controller Options]");
+        DBG_FPRINTLN("        speed <int>       Set the ESC / EDF speed.");
+        DBG_FPRINTLN("        loop              Begin a loop to actually start the EDF\'s.");
+        //DBG_FPRINTLN("    pressure <options>    [Pressure Sensor Options]");
+        //DBG_FPRINTLN("        ");
+        //DBG_FPRINTLN("    sdcard <options>      [SDCard Options]");
+        //DBG_FPRINTLN("        ");
+        //DBG_FPRINTLN("    stepper <options>     [Stepper Controller Options]");
+        //DBG_FPRINTLN("        ");
+        //DBG_FPRINTLN("    accellgyro <options>  [Accell/Gyro Sensor Options]");
+        //DBG_FPRINTLN("        ");
+        //DBG_FPRINTLN("    gps <options>         [GPS Radio Options]");
+        //DBG_FPRINTLN("        ");
+        //DBG_FPRINTLN("    wireless <options>    [Wireless Module Options]");
+        //DBG_FPRINTLN("        ");
+    }
+    else if (strcmp(arg, "fan") == 0){
+        char *arg2;
+        arg2 = getNext();
+        if (strcmp(arg2, "speed") == 0){
+            char *arg3;
+            arg3 = getNext();
+            if (arg3 == NULL){
+                DBG_FPRINT("No speed given!");
+                return;
+            }
+            int newSpeed = atoi(arg3);
+            DBG_FPRINT_SVLN("New Speed set to: ", newSpeed);
+            sandwitch->write(newSpeed);
+
+        } else if (strcmp(arg2, "loop") == 0){
+                bool inLoop = true;
+                clearSerial();
+                while(inLoop){
+                    DBG_FPRINTLN("\e[1;1HFan Speed Loop");
+                    DBG_FPRINT("\e[2;1HUse the \'ESC\' or \'e\' key to exit.");
+                    while (Serial.available() > 0){
+                        char key = (char)Serial.read();
+                        if (key == 27 || key == 127 || key == 'e')
+                            inLoop = false;
+                    }
+                    while (!Serial.available())
+                        sandwitch->writeSpeed();
+                }
+        } else
+            badArgument()
+    }
+    else if (strcmp(arg, "stepper") == 0){}
+    else if (strcmp(arg, "sdcard") == 0){}
+    else if (strcmp(arg, "wireless") == 0){}
+
+    else if (strcmp(arg, "gps") == 0){}
+    else if (strcmp(arg, "root") == 0){}
+    else if (strcmp(arg, "pressure") == 0){}
+    //else if (strcmp(arg, "accellgyro") == 0){}
+    
+    else {
+        DBG_FPRINT_SVLN("Unknown Argument: ", arg);
+        DBG_FPRINTLN("Use \'set help\' for more infomation.");
+    }
+}
+*/
 
 //Static Wrappers for the Serial Handler
 static void SystemTestHandler::staticUnknownCommand(const char *command){
@@ -232,3 +306,8 @@ static void SystemTestHandler::staticCmdWirelessTest(){
 static void SystemTestHandler::staticCmdDebugMode(){
     ((SystemTestHandler*) gPtrSystemTestHandler)->cmdDebugMode();
 }
+/*
+static void SystemTestHandler::staticCmdSet(){
+    ((SystemTestHandler*) gPtrSystemTestHandler)->cmdSet();
+}
+*/
