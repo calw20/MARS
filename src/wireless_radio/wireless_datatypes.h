@@ -29,4 +29,10 @@ enum class WirelessResponses : uint16_t {
     CommandSucceeded, //Bool
 };
 
+enum class PerformTest : uint16_t {
+    NoTest,
+    FullCheck,
+    FullStepperCheck
+};
+
 #endif

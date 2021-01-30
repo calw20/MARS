@@ -23,15 +23,14 @@
 #define BUTTON_PIN A0
 
 RootModule MARS_RootModule;
+SystemTestHandler systemTests;
 PressureSensor pressureSensor(MARS_RootModule);
 SDCardAdapter sdCard(MARS_RootModule);
 StepperMotor sandwitch(MARS_RootModule);
 AccellGyro accellGyro(MARS_RootModule);
 FanController fanController(MARS_RootModule);
 GPSModule gpsRadio(MARS_RootModule);
-SystemTestHandler systemTests(&MARS_RootModule, &pressureSensor, &sdCard, 
-    &sandwitch, &accellGyro, &fanController, &gpsRadio, &wirelessModule);
-WirelessModule radioModule(MARS_RootModule, &systemTests);
+WirelessModule radioModule(MARS_RootModule, &systemTests, &sandwitch);
 
 //Define a constant array - this defined in ./payload_settings.h
 const float apogeeHeight = APOGEE_HEIGHT;
@@ -132,13 +131,14 @@ void setup(){
         DBG_FPRINTFN("Build Version: ", "%s", BUILD_VERSION);
     #endif
 
-    radioModule.init();
-    wirelessTest();
+    //radioModule.init();
+    //wirelessTest();
 
     //Build and Initialize all the modules
     DBG_FPRINTLN("Begining Initialization....");
     MARS_RootModule.init();
-    
+    systemTests.init(&MARS_RootModule, &pressureSensor, &sdCard, &sandwitch,
+        &accellGyro, &fanController, &gpsRadio, &radioModule);
 
     //[TODO] Move this to SDCard Module?
     //Write all the consts to a file
@@ -205,7 +205,7 @@ void setup(){
             case LEDColours::RED:
                 DBG_FPRINTLN("Red: Entering test mode. You will have to reset the system to exit.");
                 cLED2->setColour(LEDColours::BLACK);
-                testMode();
+                systemTests.testMode();
                 break;
             default:
                 break;

@@ -1,8 +1,9 @@
 #include "wireless_module.h"
 
-WirelessModule::WirelessModule(RootModule &uncrashableParent, StepperMotor* ptrStepper, bool addSelfToParent) 
+WirelessModule::WirelessModule(RootModule &uncrashableParent, SystemTestHandler *ptrTestHandler, StepperMotor *ptrStepper, bool addSelfToParent) 
     : WirelessRadio(), MARSCrashableModule(uncrashableParent, addSelfToParent) {
-    testHandler = ptrTestHandler;        
+    testHandler = ptrTestHandler;
+    ptrSandwitch = ptrStepper;    
 };
 
 void WirelessModule::genericError(const char* func, const char* file, u16 failLine){

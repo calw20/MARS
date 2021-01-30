@@ -1,14 +1,13 @@
 #include "system_tests.h"
 
-SystemTestHandler::SystemTestHandler(RootModule* ptrMARSRoot,
+SystemTestHandler::init(RootModule* ptrMARSRoot,
     PressureSensor* ptrPrsSensor, SDCardAdapter* ptrSdCard,
     StepperMotor* ptrStepper, AccellGyro* ptrAccellGyro, 
     FanController* ptrFanController, GPSModule* ptrGPSRadio, 
-    WirelessModule* ptrWirelessModule, 
-    char newlineChar, char delimiterChar)
-    : SerialTerminal(newlineChar, delimiterChar) {
+    WirelessModule* ptrWirelessModule) {
     
     //Setup Pointers
+    gPtrSystemTestHandler = (void*) this;
     prsSensor = ptrPrsSensor;
     sdCard = ptrSdCard;
     sandwitch = ptrStepper;
@@ -18,15 +17,15 @@ SystemTestHandler::SystemTestHandler(RootModule* ptrMARSRoot,
     wirelessModule = ptrWirelessModule;
 
     //Setup Serial Commands
-    setDefaultHandler(unknownCommand);
-    addCommand("?", cmdHelp);
-    addCommand("help", cmdHelp);
-    addCommand("info", cmdInfo);
-    addCommand("reset", cmdReset);
-    addCommand("stepper", cmdStepper);
-    addCommand("fans", cmdFans);
-    addCommand("leds", cmdLEDs);
-    addCommand("wirelessTest", cmdWirelessTest);
+    setDefaultHandler(SystemTestHandler::staticUnknownCommand);
+    addCommand("?", SystemTestHandler::staticCmdHelp);
+    addCommand("help", SystemTestHandler::staticCmdHelp);
+    addCommand("info", SystemTestHandler::staticCmdInfo);
+    addCommand("reset", SystemTestHandler::staticCmdReset);
+    addCommand("stepper", SystemTestHandler::staticCmdStepper);
+    addCommand("fans", SystemTestHandler::staticCmdFans);
+    addCommand("leds", SystemTestHandler::staticCmdLEDs);
+    addCommand("wirelessTest", SystemTestHandler::staticCmdWirelessTest);
 
 };
 
@@ -49,7 +48,7 @@ void SystemTestHandler::cmdHelp(){
     DBG_FPRINTLN("Serial terminal usage:");
     DBG_FPRINTLN("  help or ?       Print this usage");
     DBG_FPRINTLN("  info <sensor>   Print sensor info, use \'info help\' for more infomation.");
-    DBG_FPRINTLN("  reset           Reset the system")
+    DBG_FPRINTLN("  reset           Reset the system");
     DBG_FPRINTLN("  stepper <steps> Test Stepper");
     DBG_FPRINTLN("  fans <speed>    Test Fan Controllers / EDFs");
     DBG_FPRINTLN("  leds            Test LEDs");
@@ -75,15 +74,16 @@ void SystemTestHandler::cmdStepper(){
     int val;
 
     // Get argument
-    arg = term.getNext();
+    arg = getNext();
     if (arg == NULL) {
         DBG_FPRINTLN("Steps not specified.");
         return;
     }
+
     val = atoi(arg);
 
     DBG_FPRINTLN("Testing Stepper...");
-    stepperTestRotation(sandwitch*, val, 1000);
+    stepperTestRotation(*sandwitch, val, 1000);
 }
 
 void SystemTestHandler::cmdFans(){
@@ -91,7 +91,7 @@ void SystemTestHandler::cmdFans(){
     int val;
 
     // Get argument
-    arg = term.getNext();
+    arg = getNext();
     if (arg == NULL) {
         DBG_FPRINTLN("Speed not specified.");
         return;
@@ -99,12 +99,12 @@ void SystemTestHandler::cmdFans(){
     val = atoi(arg);
 
     DBG_FPRINTLN("Testing Fans...");
-    fanTest(fanController*, val, 5000);
+    fanTest(*fanController, val, 5000);
 }
 
 //[TODO] Create LED Tests
 void SystemTestHandler::cmdLEDs(){
-
+    ledTest(*marsRoot);
 }
 
 //[TODO] Create Wireless Tests
@@ -151,4 +151,31 @@ void SystemTestHandler::cmdInfo(){
     else
         DBG_FPRINT_SVLN("Unknown Argument: ", arg);
         DBG_FPRINTLN("Use \'info help\' for more infomation.");
+}
+
+
+//Static Wrappers for the Serial Handler
+static void SystemTestHandler::staticUnknownCommand(const char *command){
+    ((SystemTestHandler*) gPtrSystemTestHandler)->unknownCommand(command);
+}
+static void SystemTestHandler::staticCmdHelp(){
+    ((SystemTestHandler*) gPtrSystemTestHandler)->cmdHelp();
+}
+static void SystemTestHandler::staticCmdInfo(){
+    ((SystemTestHandler*) gPtrSystemTestHandler)->cmdInfo();
+}
+static void SystemTestHandler::staticCmdReset(){
+    ((SystemTestHandler*) gPtrSystemTestHandler)->cmdReset();
+}
+static void SystemTestHandler::staticCmdStepper(){
+    ((SystemTestHandler*) gPtrSystemTestHandler)->cmdStepper();
+}
+static void SystemTestHandler::staticCmdFans(){
+    ((SystemTestHandler*) gPtrSystemTestHandler)->cmdFans();
+}
+static void SystemTestHandler::staticCmdLEDs(){
+    ((SystemTestHandler*) gPtrSystemTestHandler)->cmdLEDs();
+}
+static void SystemTestHandler::staticCmdWirelessTest(){
+    ((SystemTestHandler*) gPtrSystemTestHandler)->cmdWirelessTest();
 }

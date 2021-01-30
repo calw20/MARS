@@ -13,10 +13,10 @@
 #include "../wireless_radio/wireless_settings.h"
 #include "../wireless_radio/wireless_radio.h"
 
-
+class SystemTestHandler;
 class WirelessModule : public WirelessRadio, public MARSCrashableModule {
     public:
-        WirelessModule(RootModule &uncrashableParent, SystemTestHandler* ptrTestHandler, bool addSelfToParent = true);
+        WirelessModule(RootModule &uncrashableParent, SystemTestHandler *ptrTestHandler, StepperMotor *ptrStepper, bool addSelfToParent = true);
         bool init() override { return begin();} ;
         void printDebug(String = "R") override;
         void genericError(const char* func, const char* file, u16 failLine) override;
@@ -27,7 +27,8 @@ class WirelessModule : public WirelessRadio, public MARSCrashableModule {
         bool waitForHandledCommand(unsigned long timeout = RADIO_TIMEOUT);
     
     private:
-        SystemTestHandler* testHandler;
+        SystemTestHandler *testHandler;
+        StepperMotor *ptrSandwitch;
 };
 
 #endif
