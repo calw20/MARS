@@ -37,7 +37,7 @@ void printConsoleChar(){
 }
 
 void badArgument(){
-    DBG_FPRINT_SVLN("Error! Bad Command, see \'help\' for more info.");
+    DBG_FPRINTLN("Error! Bad Command, see \'help\' for more info.");
 }
 
 //System Test Handler

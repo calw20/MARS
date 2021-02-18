@@ -99,29 +99,40 @@ void mainAirLoop(){
     //while(true) {}
 }
 
-/*
+//Generate a serial studio data string
+//https://github.com/Serial-Studio/Serial-Studio/wiki/Communication-Protocol
+void sendPayloadDataSerial(payloadData data){
+    Serial.print("/*PAYLOAD_DATA,");
+    Serial.print(millis()); Serial.print(",");
+    Serial.print(data.temp[0]); Serial.print(",");
+    Serial.print(data.altitude[0]); Serial.print(",");
+    Serial.print(data.pressure[0]); Serial.print(",");
+    Serial.print(data.time); Serial.print(",");
+    Serial.print(data.position[0]); Serial.print(",");
+    Serial.print(data.position[1]); Serial.print(",");
+    Serial.print(data.gpsAltitude[0]); Serial.print(",");
+    Serial.print(data.a.x); 
+    Serial.print(",");
+    Serial.print(data.a.y); Serial.print(",");
+    Serial.print(data.a.z); Serial.print(",");
+    Serial.print(data.g.x); Serial.print(",");
+    Serial.print(data.g.y); Serial.print(",");
+    Serial.print(data.g.z);
+    Serial.println("*/");
+}
+
 void wirelessTest(){
     DBG_FPRINTLN("Wireless Test Mode!!");
-    setupSerialCodes();
     while(1){
         radioModule.updateNetwork();
-        pData.time = millis();
-        pData.pressure = rand();
-        pData.prsAltitude = rand();
-        pData.temp = pData.temp[0] + 1;
-        pData.a.z = rand();
+        pData = generateRandomPayload(&pData);
         bool val = radioModule.sendResponse(WirelessResponses::SystemState, &pData);
-        //DBG_PRINTLN(pData.time);
-        //DBG_PRINTFN("Transmission State: %s", val ? "Success" : "Failed");
-        
-        if (val){
-            dumpPayloadData(pData);
+        DBG_PRINTFN("Transmission State: %s", val ? "Success" : "Failed");
+        if (val)
             hexDump("pData", &pData, sizeof(payloadData));
-        }
-
-        delay(3000);
+        delay(500);
     }
-}*/
+}
 
 void setup(){
     //Serial Setup
@@ -132,12 +143,17 @@ void setup(){
         DBG_FPRINTFN("Build Version: ", "%s", BUILD_VERSION);
     #endif
 
+    if(!radioModule.init()){
+        Serial.println("\n\nNope");
+        delay(500);
+        resetSystem();
+    }
+
+    wirelessTest();
+
     systemTests.init(&MARS_RootModule, &pressureSensor, &sdCard, &sandwitch,
         &accellGyro, &fanController, &gpsRadio, &radioModule);
     systemTests.testMode();
-
-    //radioModule.init();
-    //wirelessTest();
 
     //Build and Initialize all the modules
     DBG_FPRINTLN("Begining Initialization....");

@@ -21,6 +21,7 @@ bool WirelessRadio::begin(){
     sendResponse(WirelessResponses::SystemInitialized, &cTime);
 
     DBG_FPRINT("Initialized Radio");
+    return pRadio->isChipConnected();
 }
 
 uint8_t WirelessRadio::updateNetwork(){

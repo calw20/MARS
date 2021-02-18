@@ -106,35 +106,35 @@ typedef V3d<float> fV3d;
 struct payloadData {
     //Basic Sensor Data
     //Pressure Sensor (BMP280)
-    fStoredData pressure;
+    fStoredData pressure; //✔
     fStoredData prsAltitude;
-    fStoredData temp;
+    fStoredData temp; //✔
     
     //Accell/Gyro (MPU6050)
     //[TODO] Make these StoredData?
-    i16V3d a; //Accell Data
-    i16V3d g; //Gyro Data
+    i16V3d a; //Accell Data  //✔
+    i16V3d g; //Gyro Data    //✔
 
     //GPS
-    dStoredData gpsAltitude; //meters
-    uint32_t time; //How often will this be used really? (Is that forshadowing? :P)
-    dV2d position; //I don't care about previous positions its just usefull to have
+    dStoredData gpsAltitude; //✔ //meters
+    uint32_t time;  //✔ //How often will this be used really? (Is that forshadowing? :P)
+    dV2d position;  //✔ //I don't care about previous positions its just usefull to have
 
-    double altGndLvlOffset = 0;
-    fStoredData altitude;
+    double altGndLvlOffset = 0; //[TODO] Should this be givin a wireless response??
+    fStoredData altitude;  //✔
 
     //Fan Control Info - Doesn't really change
-    int fanSpeed[3];
-    int transFanSpeed[3];
+    int fanSpeed[3]; //✔
+    int transFanSpeed[3]; //✔
 
     //Sandwitch Info
-    u8 currentFilter;
-    u8 maxFilterNumber;
+    u8 currentFilter;  //✔
+    u8 maxFilterNumber;//✔
 
     //System Info
-    bool hitApogee;
-    bool rotateOnButton;
-    bool rotateOnAltitude;
+    bool hitApogee; //✔
+    bool rotateOnButton; //✔
+    bool rotateOnAltitude; //✔
 };
 
 #endif

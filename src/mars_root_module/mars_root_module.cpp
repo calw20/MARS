@@ -119,6 +119,7 @@ MARSCrashableModule::MARSCrashableModule(RootModule &uncrashableParent, bool add
 }
 
 //[TODO] Move this to the tests section?
+//[TODO] Make the rands more "real"??
 payloadData generateRandomPayload(payloadData* pData){
     payloadData rData;
     if (pData) {
@@ -129,40 +130,42 @@ payloadData generateRandomPayload(payloadData* pData){
         rData.altitude = pData->altitude;
         rData.time = pData->time + 1;
     } else {
-        rData.pressure = rand();
-        rData.prsAltitude = rand();
-        rData.temp = rand();
-        rData.gpsAltitude = rand();
-        rData.altitude = rand();
-        rData.time = rand();
+        rData.pressure = rand() % 100;
+        rData.prsAltitude = rand() % 500;
+        rData.temp = rand() % 600;
+        rData.gpsAltitude = rand() % 135;
+        rData.altitude = rand() % 135;
+        rData.time = rand() % 500;
     }
 
-    rData.pressure = rand();
-    rData.prsAltitude = rand();
-    rData.temp = rand();
+    rData.pressure = rand() % 55;
+    rData.prsAltitude = rand() % 300;
+    rData.temp = rand() % 500;
 
-    rData.a = { rand(), rand(), rand() };
-    rData.g = { rand(), rand(), rand() };
+    rData.a = { rand() % 800, rand() % 800, rand() % 800 };
+    rData.g = { rand() % 800, rand() % 800, rand() % 800 };
 
-    rData.gpsAltitude = rand();
-    rData.position = { rand(), rand() };
+    rData.gpsAltitude = rand() % 700;
+    rData.position = { rand() % 500, rand() % 500};
 
-    rData.altGndLvlOffset = rand();
-    rData.altitude = rand();
+    rData.altGndLvlOffset = rand() % 700;
+    rData.altitude = rand() % 700;
     
-    rData.fanSpeed[0] = rand(); 
-    rData.fanSpeed[1] = rand(); 
-    rData.fanSpeed[2] = rand();
-    rData.transFanSpeed[0] = rand();
-    rData.transFanSpeed[1] = rand();
-    rData.transFanSpeed[2] = rand();
+    rData.fanSpeed[0] = rand() % 900; 
+    rData.fanSpeed[1] = rand() % 900; 
+    rData.fanSpeed[2] = rand() % 900;
+    rData.transFanSpeed[0] = rand() % 200;
+    rData.transFanSpeed[1] = rand() % 200;
+    rData.transFanSpeed[2] = rand() % 200;
 
-    rData.currentFilter = rand();
-    rData.maxFilterNumber = rand();
+    rData.currentFilter = rand() % 700;
+    rData.maxFilterNumber = rand() % 700;
     
     rData.hitApogee = (rand() > 16383);
     rData.rotateOnButton = (rand() > 16383);
     rData.rotateOnAltitude = (rand() > 16383);
+    
+    return rData; //This might help *WOW*
 }
 
 //Use the AVR watchdog timer to do a reset.
@@ -174,6 +177,6 @@ payloadData generateRandomPayload(payloadData* pData){
     }
 #else
     void resetSystem(){
-        Serial.println(F("Software reset not defined, please hard-reset manually."));
+        Serial.println("Software reset not defined, please hard-reset manually.");
     }
 #endif

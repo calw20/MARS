@@ -81,6 +81,31 @@ bool SDCardAdapter::initFlightDataFile(){
     return true;
 }
 
+#define BOOL_STRING(val) ( ? "True" : "False")
+
+int SDCardAdapter::genLongCSVData(bool pollNewData, bool forceDataUpdate){
+    if (pollNewData) marsRoot->updatePayloadData(forceDataUpdate);
+    
+    payloadData &pData = marsRoot->data;
+    //UTC, Used Alt, Current Filt, Temp, Lat, Long, Millis,Pressure, Ax,Ay,Az, Gx,Gy,Gz, Passed Apogee,
+        //
+    return sprintf(fmtedFlightData, "%lu,%f,%u,%f,%lu,%lu,%lu,%hi,%hi,%hi,%hi,%hi,%hi,%s,%f,%f,%s,%s,%u,%i,%i,%i,%i,%i,%i,%lu",
+        pData.time, pData.altitude[0], pData.currentFilter, pData.temp[0],
+        (unsigned long)pData.position[0], (unsigned long)pData.position[1],
+        millis(), pData.pressure[0],
+        pData.a.x, pData.a.y, pData.a.z,
+        pData.g.x, pData.g.y, pData.g.z,
+        BOOL_STRING(pData.hitApogee),
+
+        pData.prsAltitude, pData.gpsAltitude,
+        BOOL_STRING(pData.rotateOnButton), BOOL_STRING(pData.rotateOnAltitude), pData.maxFilterNumber,
+        pData.fanSpeed[0], pData.fanSpeed[1], pData.fanSpeed[2],
+        pData.transFanSpeed[0], pData.transFanSpeed[1], pData.transFanSpeed[2],
+        (unsigned long)pData.altGndLvlOffset
+    );
+}
+
+
 //[TODO] Add fan speed?
 int SDCardAdapter::genCSVData(bool pollNewData, bool forceDataUpdate){
     if (pollNewData) marsRoot->updatePayloadData(forceDataUpdate);

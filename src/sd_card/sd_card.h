@@ -52,6 +52,7 @@ class SDCardAdapter : public MARSCrashableModule {
         bool initFlightDataFile();
         void writeCSVData();
         void printCSVData(bool doUpdate = false, bool forceDataUpdate = false);
+        int genLongCSVData(bool doUpdate = true, bool forceDataUpdate = false);
         //int genCSVData(bool pollNewData = true);
         int genCSVData(bool pollNewData = true, bool forceDataUpdate = false);
 

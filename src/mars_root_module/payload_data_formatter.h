@@ -5,7 +5,6 @@
 #include "../debug/debug.h"
 #include "../../payload_settings.h"
 #include "data_types.h"
-#include "mars_root_module.h"
 
 void setupSerialCodes();
 void clearSerial();
