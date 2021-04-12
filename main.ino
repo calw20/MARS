@@ -143,17 +143,17 @@ void setup(){
         DBG_FPRINTFN("Build Version: ", "%s", BUILD_VERSION);
     #endif
 
-    if(!radioModule.init()){
-        Serial.println("\n\nNope");
-        delay(500);
-        resetSystem();
-    }
+    //if(!radioModule.init()){
+    //    Serial.println("\n\nNope");
+    //    delay(500);
+    //    resetSystem();
+    //}
 
-    wirelessTest();
+    //wirelessTest();
 
-    systemTests.init(&MARS_RootModule, &pressureSensor, &sdCard, &sandwitch,
-        &accellGyro, &fanController, &gpsRadio, &radioModule);
-    systemTests.testMode();
+    //systemTests.init(&MARS_RootModule, &pressureSensor, &sdCard, &sandwitch,
+    //    &accellGyro, &fanController, &gpsRadio, &radioModule);
+    //systemTests.testMode();
 
     //Build and Initialize all the modules
     DBG_FPRINTLN("Begining Initialization....");
@@ -193,13 +193,15 @@ void setup(){
     while(!MARS_RootModule.systemArmed){
         //Flash the light
         if (millis()-cLoop > 500) cLoop = millis();
-        cLED2->setColour((millis()-cLoop > 500) ? LEDColours::CYAN : LEDColours::BLACK);
+        cLED1->setColour((millis()-cLoop > 500) ? LEDColours::CYAN : LEDColours::BLACK);
+        
+        DBG_FPRINTLN("Test1");
 
         //Check if there has been a button press
-        if (digitalRead(BUTTON_PIN)){
+        if (!digitalRead(BUTTON_PIN)){
             DBG_PRINTLN("Button Press Detected!");
             unsigned long buttonTime = millis();
-            while(digitalRead(BUTTON_PIN)){
+            while(!digitalRead(BUTTON_PIN)){
                 if (millis() - buttonTime < 1000)
                     cLED2->setColour(LEDColours::YELLOW);
                 else if (millis() - buttonTime < 1500)
@@ -230,10 +232,13 @@ void setup(){
                 break;
             }
         }
+        DBG_FPRINTLN("Test2");
 
         //Wireless Command Handling
         radioModule.waitForHandledCommand();
-
+        
+        DBG_FPRINTLN("Test3");
+         
         //Arming Timeout
         if (ARMING_TIMEOUT > 0 && millis()-beginArmWait > ARMING_TIMEOUT){
             DBG_PRINTLN("Arming order timed out. System will arm based on this.");

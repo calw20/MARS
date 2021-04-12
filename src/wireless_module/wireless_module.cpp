@@ -78,7 +78,9 @@ bool WirelessModule::handleWirelessCommand(WirelessCommands cmd, void *buffer){
     } break;
 
     default: {
+        Serial.print(7);
         rVal &= sendResponse(WirelessResponses::NoResponse);
+        Serial.print(8);
     } break;
     }
     return rVal;
@@ -86,5 +88,6 @@ bool WirelessModule::handleWirelessCommand(WirelessCommands cmd, void *buffer){
 
 bool WirelessModule::waitForHandledCommand(unsigned long timeout){
    WirelessCommands cmd = waitForCommand(timeout, dataBuffer);
+   Serial.print(5);
    return handleWirelessCommand(cmd, dataBuffer);
 }

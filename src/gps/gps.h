@@ -15,7 +15,7 @@
 //#define GPS_TX 18
 #define GPS_BAUD 9600
 #define GPS_TIMEOUT 500 //milliSeconds
-#define GPS_INIT_TIMEOUT 5*60*10*100UL //milliSeconds [Note the UL for forced typeing]
+#define GPS_INIT_TIMEOUT 5*10*100UL //milliSeconds [Note the UL for forced typeing]
 
 #ifndef USE_GPS
     #define USE_GPS true

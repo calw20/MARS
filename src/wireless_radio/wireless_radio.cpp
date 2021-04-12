@@ -84,10 +84,12 @@ bool WirelessRadio::sendCommand(uint16_t node_address, WirelessCommands cmd, voi
     return returnValue;
 }
 
+//[TODO] Urgent
+//This seems to hang :/
 WirelessCommands WirelessRadio::waitForCommand(unsigned long timeout, void* data){
     //updateNetwork();
     RF24NetworkHeader header;
-
+    Serial.print("1");
     WirelessCommands cmd = WirelessCommands::NoCommand;
     unsigned long timeoutStart = millis();
     while (pNetwork->available() || millis()-timeoutStart < timeout || timeout == 0){
@@ -97,6 +99,7 @@ WirelessCommands WirelessRadio::waitForCommand(unsigned long timeout, void* data
             break;
         }
     }
+    Serial.print("2");
 
     size_t dataSize = commandDataSize(cmd);
     if (data && dataSize > 0){
@@ -109,6 +112,8 @@ WirelessCommands WirelessRadio::waitForCommand(unsigned long timeout, void* data
             }
         }
     }
+
+    Serial.print("3");
 
     return cmd;
 
@@ -148,14 +153,17 @@ bool WirelessRadio::sendResponse(uint16_t node_address, WirelessResponses cmd, v
     size_t dataSize = responseDataSize(cmd);
 
     bool returnValue = true;
+    Serial.print(9);
     returnValue &= pNetwork->write(header, &cmd, sizeof(cmd));
+    Serial.print(10);
     if (dataSize > 0 && data){
+        Serial.print(11);
         delay(10);
         returnValue &= pNetwork->write(header, data, dataSize);
         if (WAIT_FOR_RESEND_REQUEST && WirelessCommands::ResendData == waitForCommand(RESEND_REQUEST_TIMEOUT)) //Real short timeout
             returnValue &= pNetwork->write(header, data, dataSize);
     }
-
+    Serial.print(12);
     return returnValue;
 }
 

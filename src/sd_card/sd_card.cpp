@@ -81,7 +81,7 @@ bool SDCardAdapter::initFlightDataFile(){
     return true;
 }
 
-#define BOOL_STRING(val) ( ? "True" : "False")
+#define BOOL_STRING(val) ( val ? "True" : "False")
 
 int SDCardAdapter::genLongCSVData(bool pollNewData, bool forceDataUpdate){
     if (pollNewData) marsRoot->updatePayloadData(forceDataUpdate);
